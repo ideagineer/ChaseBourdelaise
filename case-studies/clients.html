@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Representative Clients — Chase Bourdelaise</title>
-<meta name="description" content="Organizations advised and represented by Chase Bourdelaise across portfolio management, headquarters strategy, life sciences, healthcare, logistics, and financial services."/>
+<title>Experience — Chase Bourdelaise</title>
+<meta name="description" content="Case studies, transaction history, and representative clients from Chase Bourdelaise — corporate real estate strategist."/>
 <meta name="author" content="Chase Bourdelaise"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -571,6 +571,37 @@
   .inner-hero h1 { font-family: "Cormorant Garamond", serif; font-size: clamp(34px, 5vw, 60px); font-weight: 600; line-height: 1.05; letter-spacing: -1.5px; color: var(--navy); max-width: 820px; margin-bottom: 20px; }
   .inner-label { display: block; margin-bottom: 16px; }
   .inner-desc { font-size: 18px; font-weight: 300; line-height: 1.8; color: var(--mid); max-width: 680px; }
+
+  .exp-card {
+    background: var(--bg); padding: 48px 40px;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    height: 100%;
+  }
+  .exp-card:hover {
+    border-bottom-color: var(--blue);
+    box-shadow: 0 8px 32px rgba(5,28,44,0.08);
+  }
+  .exp-card-num {
+    font-family: "DM Mono", monospace; font-size: 10px;
+    letter-spacing: 0.18em; color: var(--blue); margin-bottom: 20px;
+  }
+  .exp-card-title {
+    font-family: "Cormorant Garamond", serif; font-size: 28px;
+    font-weight: 600; color: var(--navy); margin-bottom: 16px; line-height: 1.1;
+  }
+  .exp-card-desc {
+    font-size: 14px; font-weight: 300; line-height: 1.8;
+    color: var(--mid); margin-bottom: 28px;
+  }
+  .exp-card-link {
+    font-family: "DM Mono", monospace; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue);
+  }
+  @media (max-width: 1000px) {
+    .exp-card-grid { grid-template-columns: 1fr !important; }
+  }
+
 </style>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -598,6 +629,23 @@ document.querySelectorAll('.nt-filter').forEach(btn => {
     });
   });
 });
+
+
+// Load shared nav
+fetch('/nav.html')
+  .then(r => r.text())
+  .then(navHtml => {
+    const placeholder = document.getElementById('nav-placeholder');
+    if (placeholder) placeholder.outerHTML = navHtml;
+  });
+
+// Load shared footer
+fetch('/footer.html')
+  .then(r => r.text())
+  .then(footerHtml => {
+    const placeholder = document.getElementById('footer-placeholder');
+    if (placeholder) placeholder.outerHTML = footerHtml;
+  });
 
 </script>
 <!-- End Google Tag Manager -->
@@ -631,143 +679,52 @@ document.querySelectorAll('.nt-filter').forEach(btn => {
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTZJQLZT"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<!-- NAV -->
-<nav>
-  <a href="/index.html" class="nav-name">Chase Bourdelaise</a>
-  <ul class="nav-links">
-    <li><a href="/#services">Services</a></li>
-    <li><a href="/case-studies/">Experience</a></li>
-    <li><a href="/tools.html">Tools</a></li>
-    <li><a href="/insights/">Insights</a></li>
-    <li><a href="/brokers.html">For Brokers</a></li>
-    <li>
-      <a href="https://www.linkedin.com/in/tenantadvisor/" target="_blank" class="nav-linkedin">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        LinkedIn
-      </a>
-    </li>
-  </ul>
-  <a href="/contact.html" class="nav-cta">Work With Me</a>
-  <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-<div class="nav-mobile-menu" id="mobileMenu">
-  <a href="/index.html#services" onclick="toggleMenu()">Services</a>
-  <a href="/case-studies/index.html" onclick="toggleMenu()">Experience</a>
-  <a href="/tools.html" onclick="toggleMenu()">Tools</a>
-  <a href="/insights/index.html" onclick="toggleMenu()">Insights</a>
-  <a href="/brokers.html" onclick="toggleMenu()">For Brokers</a>
-  <a href="/contact.html" onclick="toggleMenu()">Work With Me</a>
-</div>
+<div id="nav-placeholder"></div>
 
 <div class="inner-hero">
   <div class="container">
-    <a href="/case-studies/" class="back-link">Experience</a>
-    <span class="label inner-label">Representative Clients</span>
-    <h1>Organizations I have<br/>advised and represented.</h1>
-    <p class="inner-desc">A selection of clients across office, industrial, life sciences, healthcare, logistics, and financial services — locally, nationally, and globally.</p>
+    <a href="/index.html" class="back-link">Home</a>
+    <span class="label inner-label">Experience</span>
+    <h1>The work speaks<br/>for itself.</h1>
+    <p class="inner-desc">A record of engagements across portfolio strategy, tenant representation, M&amp;A integration, distressed asset negotiation, headquarters relocation, and disposition.</p>
   </div>
 </div>
 
-<div style="padding: 80px 0; background: var(--bg);">
+<section style="padding: 80px 0; background: var(--off);">
   <div class="container">
-    
-    <p style="font-size:14px; font-weight:300; color:var(--light); margin-bottom:40px; font-family:'DM Mono',monospace; letter-spacing:0.1em; text-transform:uppercase;">Office · Industrial · Life Sciences · Healthcare · Logistics · Financial Services · Technology</p>
+    <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;">
 
-    <!-- Tier 1 — Major portfolio clients -->
-    <div style="margin-bottom: 4px;">
-      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--light); margin-bottom:16px;">Portfolio Management &amp; Multi-Market Programs</div>
-      <div class="client-grid client-grid-lg">
-        <div class="client-name">Astellas Pharma</div>
-        <div class="client-name">Crown Castle</div>
-        <div class="client-name">Jack Henry &amp; Associates</div>
-        <div class="client-name">WWEX Group</div>
-        <div class="client-name">TDECU</div>
-        <div class="client-name">Learfield IMG</div>
-        <div class="client-name">ASRC Federal</div>
-        <div class="client-name">STG International</div>
-      </div>
-    </div>
+      <a href="/case-studies/case-studies.html" style="text-decoration:none; display:block;">
+        <div class="exp-card">
+          <div class="exp-card-num">01</div>
+          <div class="exp-card-title">Experience</div>
+          <p class="exp-card-desc">Long-form narratives of complex engagements — portfolio optimization, M&amp;A integration, global real estate strategy, and distressed asset negotiation.</p>
+          <div class="exp-card-link">View Case Studies →</div>
+        </div>
+      </a>
 
-    <!-- Tier 2 — HQ and major transactions -->
-    <div style="margin-bottom: 4px; margin-top: 4px;">
-      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--light); margin-bottom:16px; margin-top:32px;">Headquarters Strategy &amp; Major Transactions</div>
-      <div class="client-grid client-grid-md">
-        <div class="client-name">FHI 360</div>
-        <div class="client-name">Baylor College of Medicine</div>
-        <div class="client-name">Richardson Wealth</div>
-        <div class="client-name">Perry Homes</div>
-        <div class="client-name">Debevoise &amp; Plimpton</div>
-        <div class="client-name">DLL Financial</div>
-        <div class="client-name">Gebruder Weiss</div>
-        <div class="client-name">The PutAway</div>
-        <div class="client-name">International Dairy Foods Association</div>
-        <div class="client-name">Hormel Foods</div>
-      </div>
-    </div>
+      <a href="/case-studies/transactions.html" style="text-decoration:none; display:block;">
+        <div class="exp-card">
+          <div class="exp-card-num">02</div>
+          <div class="exp-card-title">Noteworthy Transactions</div>
+          <p class="exp-card-desc">A sampling of completed transactions across the United States and internationally — new leases, renewals, subleases, buyouts, and portfolio work.</p>
+          <div class="exp-card-link">View Transactions →</div>
+        </div>
+      </a>
 
-    <!-- Tier 3 — Advisory and consulting -->
-    <div style="margin-top: 32px;">
-      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--light); margin-bottom:16px;">Advisory &amp; Consulting Engagements</div>
-      <div class="client-grid client-grid-sm">
-        <div class="client-name">Mayo Clinic</div>
-        <div class="client-name">Wayfair</div>
-        <div class="client-name">Shire Pharmaceuticals</div>
-        <div class="client-name">MIT</div>
-        <div class="client-name">BDO</div>
-        <div class="client-name">BMO Harris</div>
-        <div class="client-name">Haynes Boone</div>
-        <div class="client-name">Mitsubishi</div>
-        <div class="client-name">Dana-Farber</div>
-        <div class="client-name">Vertex</div>
-        <div class="client-name">Boston Scientific</div>
-        <div class="client-name">EMD Serono</div>
-        <div class="client-name">Alnylam Pharmaceuticals</div>
-        <div class="client-name">Parexel</div>
-        <div class="client-name">CVS Health</div>
-        <div class="client-name">DHL</div>
-        <div class="client-name">TransUnion</div>
-        <div class="client-name">Ascension Health</div>
-        <div class="client-name">Exeter Financial</div>
-        <div class="client-name">Banker's Life</div>
-        <div class="client-name">Magnolia</div>
-        <div class="client-name">Goodwill</div>
-        <div class="client-name">Diocese of Oakland</div>
-        <div class="client-name">IESO</div>
-      </div>
-    </div>
+      <a href="/case-studies/clients.html" style="text-decoration:none; display:block;">
+        <div class="exp-card">
+          <div class="exp-card-num">03</div>
+          <div class="exp-card-title">Representative Clients</div>
+          <p class="exp-card-desc">A selection of organizations I have advised and represented across office, industrial, life sciences, healthcare, logistics, and financial services.</p>
+          <div class="exp-card-link">View Clients →</div>
+        </div>
+      </a>
 
-    <p style="margin-top:40px; font-size:12px; font-weight:300; color:var(--light);">Partial list. Many engagements remain confidential by client request.</p>
-  </div>
-</div>
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div>
-      <div class="footer-name">Chase Bourdelaise</div>
-      <div class="footer-tagline">"The strategist other brokers call when the deal matters."</div>
-    </div>
-    <ul class="footer-links">
-      <li><a href="/#services">Services</a></li>
-      <li><a href="/case-studies/">Experience</a></li>
-      <li><a href="/tools.html">Tools</a></li>
-      <li><a href="/insights/">Insights</a></li>
-      <li><a href="/brokers.html">Brokers</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li>
-        <a href="https://www.linkedin.com/in/tenantadvisor/" target="_blank" class="footer-linkedin">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          LinkedIn
-        </a>
-      </li>
-    </ul>
-    <div class="footer-right">
-      <div class="footer-copy">© 2025 Chase Bourdelaise</div>
-      <div class="footer-copy">chasebourdelaise.com</div>
     </div>
   </div>
-</footer>
+</section>
+<div id="footer-placeholder"></div>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
