@@ -870,23 +870,26 @@
       <div class="form-card">
         <h3>Broker Inquiry</h3>
         <p>Tell me about the deal or account you're working on.</p>
-        <div class="field"><label>Your Name</label><input type="text" placeholder="First and last name"/></div>
-        <div class="field"><label>Your Firm</label><input type="text" placeholder="Brokerage or firm name"/></div>
-        <div class="field"><label>Market(s)</label><input type="text" placeholder="e.g. Chicago, Houston, NYC"/></div>
-        <div class="field"><label>Deal Type</label>
-          <select>
-            <option value="">Select type</option>
-            <option>Lease Renewal</option><option>Relocation / HQ</option>
-            <option>Portfolio Consolidation</option><option>Site Selection</option>
-            <option>Industrial / Supply Chain</option><option>Life Sciences / Biotech</option>
-            <option>Owner-User / Acquisition</option><option>Disposition / Sublease</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field"><label>Brief Description</label><textarea placeholder="What's the situation? What makes it complex?"></textarea></div>
-        <button class="btn-form">Submit Inquiry</button>
-      </div>
-    </div>
+        <form action="https://formspree.io/f/mjgjvzld" method="POST" id="broker-form">
+          <input type="hidden" name="_subject" value="New broker inquiry from chasebourdelaise.com"/>
+          <div class="field"><label>Your Name</label><input type="text" name="name" placeholder="First and last name" required/></div>
+          <div class="field"><label>Your Firm</label><input type="text" name="firm" placeholder="Brokerage or firm name"/></div>
+          <div class="field"><label>Market(s)</label><input type="text" name="markets" placeholder="e.g. Chicago, Houston, NYC"/></div>
+          <div class="field"><label>Deal Type</label>
+            <select name="deal_type">
+              <option value="">Select type</option>
+              <option>Lease Renewal</option><option>Relocation / HQ</option>
+              <option>Portfolio Consolidation</option><option>Site Selection</option>
+              <option>Industrial / Supply Chain</option><option>Life Sciences / Biotech</option>
+              <option>Owner-User / Acquisition</option><option>Disposition / Sublease</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>Brief Description</label><textarea name="description" placeholder="What's the situation? What makes it complex?" style="min-height:86px;resize:vertical;"></textarea></div>
+          <button type="submit" class="btn-form">Submit Inquiry</button>
+          <p id="broker-success" style="display:none;margin-top:12px;font-size:13px;color:#1a8a5e;">Inquiry received. I'll follow up within one business day.</p>
+        </form>
+      </div></div>
   </div>
 </section>
 
@@ -934,14 +937,19 @@
       <div class="form-card">
         <h3>Send a Message</h3>
         <p>I read every inquiry personally. You'll hear back within one business day.</p>
-        <div class="field"><label>Name</label><input type="text" placeholder="Your full name"/></div>
-        <div class="field"><label>Company</label><input type="text" placeholder="Your company name"/></div>
-        <div class="field"><label>Email</label><input type="email" placeholder="your@email.com"/></div>
-        <div class="field"><label>I am a...</label>
-          <select><option value="">Select one</option><option>Tenant / Occupier</option><option>Owner-User</option><option>Broker / Partner</option><option>CFO / Finance Leader</option><option>COO / Operations Leader</option><option>Other</option></select>
-        </div>
-        <div class="field"><label>What's on your mind?</label><textarea placeholder="Tell me about your situation..."></textarea></div>
-        <button class="btn-form">Send Message</button>
+        <form action="https://formspree.io/f/mjgjvzld" method="POST" id="contact-form">
+          <input type="hidden" name="_subject" value="New inquiry from chasebourdelaise.com"/>
+          <input type="hidden" name="_replyto" value="chase.bourdelaise@gmail.com"/>
+          <div class="field"><label>Name</label><input type="text" name="name" placeholder="Your full name" required/></div>
+          <div class="field"><label>Company</label><input type="text" name="company" placeholder="Your company name"/></div>
+          <div class="field"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required/></div>
+          <div class="field"><label>I am a...</label>
+            <select name="type"><option value="">Select one</option><option>Tenant / Occupier</option><option>Owner-User</option><option>Broker / Partner</option><option>CFO / Finance Leader</option><option>COO / Operations Leader</option><option>Other</option></select>
+          </div>
+          <div class="field"><label>What's on your mind?</label><textarea name="message" placeholder="Tell me about your situation..." style="min-height:86px;resize:vertical;"></textarea></div>
+          <button type="submit" class="btn-form">Send Message</button>
+          <p id="contact-success" style="display:none;margin-top:12px;font-size:13px;color:#1a8a5e;">Message sent. I'll be in touch within one business day.</p>
+        </form>
       </div>
     </div>
   </div>
@@ -975,5 +983,72 @@
   </div>
 </footer>
 
+
+<script>
+// Contact form
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        this.reset();
+        document.getElementById('contact-success').style.display = 'block';
+        btn.textContent = 'Sent';
+      } else {
+        btn.textContent = 'Try Again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Try Again';
+      btn.disabled = false;
+    }
+  });
+}
+
+// Broker form
+const brokerForm = document.getElementById('broker-form');
+if (brokerForm) {
+  brokerForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        this.reset();
+        document.getElementById('broker-success').style.display = 'block';
+        btn.textContent = 'Sent';
+      } else {
+        btn.textContent = 'Try Again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Try Again';
+      btn.disabled = false;
+    }
+  });
+}
+
+// Beehiiv subscribe
+function submitToBeehiiv() {
+  const email = document.getElementById('bh-email').value;
+  if (!email) { alert('Please enter your email address.'); return; }
+  window.open('https://occupier.beehiiv.com/subscribe?email=' + encodeURIComponent(email), '_blank');
+}
+</script>
 </body>
 </html>
