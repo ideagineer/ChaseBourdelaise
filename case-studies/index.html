@@ -473,6 +473,35 @@
   .nav-mobile-menu a:hover { color: var(--navy); }
   @media (max-width: 1000px) { .nav-links { display: none; } .nav-hamburger { display: flex; } .nav-cta { display: none; } }
 
+
+  /* CLIENT GRID */
+  .client-grid {
+    display: grid;
+    gap: 2px;
+  }
+  .client-grid-lg { grid-template-columns: repeat(4, 1fr); }
+  .client-grid-md { grid-template-columns: repeat(5, 1fr); }
+  .client-grid-sm { grid-template-columns: repeat(6, 1fr); }
+  .client-name {
+    padding: 18px 20px;
+    background: var(--off);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.2;
+    transition: background 0.15s, color 0.15s;
+  }
+  .client-name:hover {
+    background: var(--navy);
+    color: rgba(255,255,255,0.9);
+  }
+  @media (max-width: 1000px) {
+    .client-grid-lg { grid-template-columns: repeat(2, 1fr); }
+    .client-grid-md { grid-template-columns: repeat(2, 1fr); }
+    .client-grid-sm { grid-template-columns: repeat(2, 1fr); }
+  }
+
 </style>
 </head>
 <body>
@@ -646,5 +675,84 @@ document.addEventListener('click', function(e) {
 });
 
 </script>
+
+<!-- CLIENT LOGO FARM -->
+<section style="padding: 80px 0; background: var(--bg); border-top: 1px solid var(--rule);">
+  <div class="container">
+    <div class="section-header" style="margin-bottom: 48px;">
+      <div>
+        <span class="label">Representative Clients</span>
+        <hr class="accent"/>
+        <h2 class="headline">Organizations I have<br/>advised and represented.</h2>
+      </div>
+    </div>
+    <p style="font-size:14px; font-weight:300; color:var(--light); margin-bottom:40px; font-family:'DM Mono',monospace; letter-spacing:0.1em; text-transform:uppercase;">Office · Industrial · Life Sciences · Healthcare · Logistics · Financial Services · Technology</p>
+
+    <!-- Tier 1 — Major portfolio clients -->
+    <div style="margin-bottom: 4px;">
+      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--light); margin-bottom:16px;">Portfolio Management &amp; Multi-Market Programs</div>
+      <div class="client-grid client-grid-lg">
+        <div class="client-name">Astellas Pharma</div>
+        <div class="client-name">Crown Castle</div>
+        <div class="client-name">Jack Henry &amp; Associates</div>
+        <div class="client-name">WWEX Group</div>
+        <div class="client-name">TDECU</div>
+        <div class="client-name">Learfield IMG</div>
+        <div class="client-name">ASRC Federal</div>
+        <div class="client-name">STG International</div>
+      </div>
+    </div>
+
+    <!-- Tier 2 — HQ and major transactions -->
+    <div style="margin-bottom: 4px; margin-top: 4px;">
+      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--light); margin-bottom:16px; margin-top:32px;">Headquarters Strategy &amp; Major Transactions</div>
+      <div class="client-grid client-grid-md">
+        <div class="client-name">FHI 360</div>
+        <div class="client-name">Baylor College of Medicine</div>
+        <div class="client-name">Richardson Wealth</div>
+        <div class="client-name">Perry Homes</div>
+        <div class="client-name">Debevoise &amp; Plimpton</div>
+        <div class="client-name">DLL Financial</div>
+        <div class="client-name">Gebruder Weiss</div>
+        <div class="client-name">The PutAway</div>
+        <div class="client-name">International Dairy Foods Association</div>
+        <div class="client-name">Hormel Foods</div>
+      </div>
+    </div>
+
+    <!-- Tier 3 — Advisory and consulting -->
+    <div style="margin-top: 32px;">
+      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--light); margin-bottom:16px;">Advisory &amp; Consulting Engagements</div>
+      <div class="client-grid client-grid-sm">
+        <div class="client-name">Mayo Clinic</div>
+        <div class="client-name">Wayfair</div>
+        <div class="client-name">Shire Pharmaceuticals</div>
+        <div class="client-name">MIT</div>
+        <div class="client-name">BDO</div>
+        <div class="client-name">BMO Harris</div>
+        <div class="client-name">Haynes Boone</div>
+        <div class="client-name">Mitsubishi</div>
+        <div class="client-name">Dana-Farber</div>
+        <div class="client-name">Vertex</div>
+        <div class="client-name">Boston Scientific</div>
+        <div class="client-name">EMD Serono</div>
+        <div class="client-name">Alnylam Pharmaceuticals</div>
+        <div class="client-name">Parexel</div>
+        <div class="client-name">CVS Health</div>
+        <div class="client-name">DHL</div>
+        <div class="client-name">TransUnion</div>
+        <div class="client-name">Ascension Health</div>
+        <div class="client-name">Exeter Financial</div>
+        <div class="client-name">Banker's Life</div>
+        <div class="client-name">Magnolia</div>
+        <div class="client-name">Goodwill</div>
+        <div class="client-name">Diocese of Oakland</div>
+        <div class="client-name">IESO</div>
+      </div>
+    </div>
+
+    <p style="margin-top:40px; font-size:12px; font-weight:300; color:var(--light);">Partial list. Many engagements remain confidential by client request.</p>
+  </div>
+</section>
 </body>
 </html>
