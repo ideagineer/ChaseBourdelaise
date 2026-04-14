@@ -383,6 +383,16 @@
 }
 .back-link:hover { color: var(--navy); }
 .back-link::before { content: "←"; }
+
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+  .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--navy); transition: all 0.2s; }
+  .nav-mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); z-index: 99; padding: 16px 0; flex-direction: column; }
+  .nav-mobile-menu.open { display: flex; }
+  .nav-mobile-menu a { padding: 14px 24px; font-size: 13px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.15s; }
+  .nav-mobile-menu a:last-child { border-bottom: none; }
+  .nav-mobile-menu a:hover { color: var(--navy); }
+  @media (max-width: 1000px) { .nav-links { display: none; } .nav-hamburger { display: flex; } .nav-cta { display: none; } }
+
 </style>
 </head>
 <body>
@@ -403,7 +413,18 @@
     </li>
   </ul>
   <a href="contact.html" class="nav-cta">Work With Me</a>
+  <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="nav-mobile-menu" id="mobileMenu">
+  <a href="/index.html#services" onclick="toggleMenu()">Services</a>
+  <a href="/case-studies/index.html" onclick="toggleMenu()">Case Studies</a>
+  <a href="/tools.html" onclick="toggleMenu()">Tools</a>
+  <a href="/insights/index.html" onclick="toggleMenu()">Insights</a>
+  <a href="/brokers.html" onclick="toggleMenu()">For Brokers</a>
+  <a href="/contact.html" onclick="toggleMenu()">Work With Me</a>
+</div>
 
 <div class="page-header">
   <div class="container">
@@ -571,6 +592,19 @@ function submitToBeehiiv() {
   if (!email) { alert('Please enter your email address.'); return; }
   window.open('https://occupier.beehiiv.com/subscribe?email=' + encodeURIComponent(email), '_blank');
 }
+
+
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  m.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('mobileMenu');
+  const hamburger = document.querySelector('.nav-hamburger');
+  if (menu && !menu.contains(e.target) && hamburger && !hamburger.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
 
 </script>
 </body>
