@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Experience — Chase Bourdelaise</title>
-<meta name="description" content="Case studies, transaction history, and representative clients from Chase Bourdelaise — corporate real estate strategist."/>
+<title>Case Studies — Chase Bourdelaise</title>
+<meta name="description" content="Corporate real estate case studies from Chase Bourdelaise — portfolio optimization, M&A integration, global strategy."/>
 <meta name="author" content="Chase Bourdelaise"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -602,6 +602,24 @@
     .exp-card-grid { grid-template-columns: 1fr !important; }
   }
 
+
+  body { padding-top: 64px; }
+  .inner-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--rule); background: var(--bg); }
+  .inner-hero .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+  .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light); text-decoration: none; margin-bottom: 28px; transition: color 0.15s; font-family: "DM Mono", monospace; }
+  .back-link:hover { color: var(--navy); }
+  .back-link::before { content: "←"; margin-right: 4px; }
+  .inner-hero h1 { font-family: "Cormorant Garamond", serif; font-size: clamp(34px, 5vw, 60px); font-weight: 600; line-height: 1.05; letter-spacing: -1.5px; color: var(--navy); max-width: 820px; margin-bottom: 20px; }
+  .inner-label { display: block; margin-bottom: 16px; }
+  .inner-desc { font-size: 18px; font-weight: 300; line-height: 1.8; color: var(--mid); max-width: 680px; }
+  .card-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+  .card-link { background: var(--off); padding: 36px; text-decoration: none; display: block; border-bottom: 2px solid transparent; transition: border-color 0.2s, box-shadow 0.2s; }
+  .card-link:hover { border-bottom-color: var(--blue); box-shadow: 0 4px 20px rgba(5,28,44,0.06); }
+  .card-topic { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--light); margin-bottom: 10px; display: block; }
+  .card-title { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 600; color: var(--navy); line-height: 1.25; margin-bottom: 10px; }
+  .card-desc { font-size: 13px; font-weight: 300; color: var(--mid); line-height: 1.7; margin-bottom: 14px; }
+  .card-read { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); }
+  @media (max-width: 1000px) { .inner-hero .container { padding: 0 24px; } .card-grid { grid-template-columns: 1fr; } }
 </style>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -683,74 +701,50 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div class="inner-hero">
   <div class="container">
-    <a href="/index.html" class="back-link">Home</a>
-    <span class="label inner-label">Experience</span>
-    <h1>The work speaks<br/>for itself.</h1>
-    <p class="inner-desc">A record of engagements across portfolio strategy, tenant representation, M&amp;A integration, distressed asset negotiation, headquarters relocation, and disposition.</p>
+    <a href="/case-studies/" class="back-link">Experience</a>
+    <span class="label inner-label">Case Studies</span>
+    <h1>Deals that required<br/>more than a broker.</h1>
+    <p class="inner-desc">A selection of engagements across portfolio strategy, tenant representation, M&amp;A integration, distressed asset negotiation, headquarters relocation, and disposition. Client names withheld by agreement.</p>
   </div>
 </div>
-
-<section style="padding: 80px 0; background: var(--off);">
-  <div class="container">
-    <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;">
-
-      <a href="/case-studies/case-studies.html" style="text-decoration:none; display:block;">
-        <div class="exp-card">
-          <div class="exp-card-num">01</div>
-          <div class="exp-card-title">Experience</div>
-          <p class="exp-card-desc">Long-form narratives of complex engagements — portfolio optimization, M&amp;A integration, global real estate strategy, and distressed asset negotiation.</p>
-          <div class="exp-card-link">View Case Studies →</div>
-        </div>
+<section style="padding: 72px 0; background: var(--off);">
+  <div style="max-width:1160px; margin:0 auto; padding:0 64px;">
+    <div class="card-grid">
+      <a href="/case-studies/crown-castle.html" class="card-link">
+        <span class="card-topic">Portfolio Optimization · EBITDA Strategy</span>
+        <div class="card-title">Crown Castle — $75M in Real Estate Savings Across 100+ Locations</div>
+        <p class="card-desc">A data-driven portfolio optimization strategy that improved oversight, rationalized the footprint, and unlocked disposition opportunities across a 2.5M SF national portfolio.</p>
+        <span class="card-read">Read Case Study →</span>
       </a>
-
-      <a href="/case-studies/transactions.html" style="text-decoration:none; display:block;">
-        <div class="exp-card">
-          <div class="exp-card-num">02</div>
-          <div class="exp-card-title">Noteworthy Transactions</div>
-          <p class="exp-card-desc">A sampling of completed transactions across the United States and internationally — new leases, renewals, subleases, buyouts, and portfolio work.</p>
-          <div class="exp-card-link">View Transactions →</div>
-        </div>
+      <a href="/case-studies/worldwide-express.html" class="card-link">
+        <span class="card-topic">M&amp;A Integration · HQ Relocation</span>
+        <div class="card-title">Worldwide Express — $5M Annual EBITDA Improvement</div>
+        <p class="card-desc">Post-merger real estate integration for a major logistics company — consolidating 40+ locations, relocating global headquarters, and structuring lease economics around EBITDA sensitivity.</p>
+        <span class="card-read">Read Case Study →</span>
       </a>
-
-      <a href="/case-studies/clients.html" style="text-decoration:none; display:block;">
-        <div class="exp-card">
-          <div class="exp-card-num">03</div>
-          <div class="exp-card-title">Representative Clients</div>
-          <p class="exp-card-desc">A selection of organizations I have advised and represented across office, industrial, life sciences, healthcare, logistics, and financial services.</p>
-          <div class="exp-card-link">View Clients →</div>
-        </div>
+      <a href="/case-studies/astellas.html" class="card-link">
+        <span class="card-topic">Life Sciences · Global Portfolio</span>
+        <div class="card-title">Confidential Global Client — $500M in Savings Across a 5.8M SF Portfolio</div>
+        <p class="card-desc">A multi-year engagement spanning 155 locations across 62 countries — from consolidation and disposition to HQ strategy — executed for a confidential global pharmaceutical client.</p>
+        <span class="card-read">Read Case Study →</span>
       </a>
-
+      <a href="/case-studies/corporate-restructuring.html" class="card-link">
+        <span class="card-topic">Corporate Restructuring · Disposition · Multi-Market</span>
+        <div class="card-title">Confidential Client — $18.3M NPV Savings Across 17 States in 18 Months</div>
+        <p class="card-desc">An accelerated real estate disposition program executed concurrent with a corporate divestiture — 10 lease buyouts, 7 subleases, 57.4% average IRR, driven by P&amp;L-aligned scenario modeling.</p>
+        <span class="card-read">Read Case Study →</span>
+      </a>
     </div>
   </div>
 </section>
 <div id="footer-placeholder"></div>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KTZJQLZT');
-// Noteworthy transactions filter
-document.querySelectorAll('.nt-filter').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.nt-filter').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-    const filter = this.dataset.filter;
-    document.querySelectorAll('.nt-row').forEach(row => {
-      if (filter === 'all') {
-        row.classList.remove('hidden');
-      } else {
-        const badge = row.querySelector('.nt-badge');
-        if (badge && badge.classList.contains(filter)) {
-          row.classList.remove('hidden');
-        } else {
-          row.classList.add('hidden');
-        }
-      }
-    });
-  });
-});
-
+<script>
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  if (m) m.classList.toggle('open');
+}
+fetch('/nav.html').then(r=>r.text()).then(h=>{const el=document.getElementById('nav-placeholder');if(el)el.outerHTML=h;});
+fetch('/footer.html').then(r=>r.text()).then(h=>{const el=document.getElementById('footer-placeholder');if(el)el.outerHTML=h;});
 </script>
 </body>
 </html>
