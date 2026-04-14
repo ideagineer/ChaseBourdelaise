@@ -45,6 +45,23 @@ fetch('/footer.html')
     if (placeholder) placeholder.outerHTML = footerHtml;
   });
 
+
+// Load case studies preview
+fetch('/case-studies-preview.html')
+  .then(r => r.text())
+  .then(h => {
+    const el = document.getElementById('cs-preview-placeholder');
+    if (el) el.outerHTML = h;
+  });
+
+// Load insights preview
+fetch('/insights-preview.html')
+  .then(r => r.text())
+  .then(h => {
+    const el = document.getElementById('insights-preview-placeholder');
+    if (el) el.outerHTML = h;
+  });
+
 </script>
 <!-- End Google Tag Manager -->
 <!-- Google tag (gtag.js) -->
@@ -631,56 +648,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <hr class="accent"/>
         <h2 class="headline">Deals that required<br/>more than a broker.</h2>
       </div>
-      <a href="#" class="text-link">View All Work →</a>
+      <a href="/case-studies/case-studies.html" class="text-link">View All Case Studies →</a>
     </div>
 
     <!-- Featured case studies -->
-    <ul class="case-list">
-      <li class="case-item">
-        <span class="case-index">01</span>
-        <div class="case-body">
-          <div class="case-tags"><span class="tag">Portfolio Optimization</span><span class="tag">EBITDA Strategy</span><span class="tag">National</span></div>
-          <h3>Crown Castle — $75M in Real Estate Savings Across 100+ Locations</h3>
-          <p>Crown Castle had experienced extreme growth and needed to streamline operations across a complex, geographically dispersed portfolio. I designed and executed a data-driven optimization strategy that improved oversight, rationalized the footprint, and unlocked disposition opportunities the organization didn't know it had.</p>
-          <div class="outcomes">
-            <div class="outcome">$75M in documented real estate savings</div>
-            <div class="outcome">Portfolio-wide facilities management and ESG reporting integrated</div>
-            <div class="outcome">Strategic dispositions and subleases executed across the portfolio</div>
-          </div>
-        </div>
-        <div class="case-meta"><div class="case-market">National · 100+ Locations</div><div class="case-sf">2.5M SF</div></div>
-      </li>
-
-      <li class="case-item">
-        <span class="case-index">02</span>
-        <div class="case-body">
-          <div class="case-tags"><span class="tag">M&amp;A Integration</span><span class="tag">Portfolio Consolidation</span><span class="tag">HQ Relocation</span></div>
-          <h3>Worldwide Express — $5M Annual EBITDA Improvement Through Portfolio Strategy</h3>
-          <p>WWEX needed to integrate GlobalTranz following a major merger, consolidate duplicate locations, and relocate global headquarters — with all lease economics structured around EBITDA sensitivity and real estate used as a cultural catalyst for the combined workforce.</p>
-          <div class="outcomes">
-            <div class="outcome">$5M per year in EBITDA savings generated</div>
-            <div class="outcome">Global HQ relocated; two regional HQs established</div>
-            <div class="outcome">40+ locations right-sized, subleased, or consolidated</div>
-          </div>
-        </div>
-        <div class="case-meta"><div class="case-market">National · Dallas HQ</div><div class="case-sf">585K SF · 91 Locations</div></div>
-      </li>
-
-      <li class="case-item">
-        <span class="case-index">03</span>
-        <div class="case-body">
-          <div class="case-tags"><span class="tag">Life Sciences</span><span class="tag">Global Portfolio</span><span class="tag">HQ Advisory</span></div>
-          <h3>Astellas — $500M in Savings Across a 5.8M SF Global Portfolio</h3>
-          <p>A series of engagements spanning Astellas's 155-location, 62-country portfolio — from consolidation and disposition to HQ strategy — executed across multiple years including peak-COVID conditions.</p>
-          <div class="outcomes">
-            <div class="outcome">$500M in cumulative real estate savings achieved</div>
-            <div class="outcome">Portfolio advisory across 62 countries and 155 locations</div>
-            <div class="outcome">HQ, workplace, and transaction management delivered in parallel</div>
-          </div>
-        </div>
-        <div class="case-meta"><div class="case-market">Global · 62 Countries</div><div class="case-sf">5.8M SF · 155 Locations</div></div>
-      </li>
-    </ul>
+    <div id="cs-preview-placeholder"></div>
 
     <!-- Short-form transaction ledger -->
     <div class="ledger-header">
@@ -969,17 +941,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <hr class="accent"/>
         <h2 class="headline">Published analysis.<br/>Real deals. No fluff.</h2>
       </div>
-      <a href="#" class="text-link">All Articles →</a>
+      <a href="/insights/" class="text-link">All Articles →</a>
     </div>
-    <ul class="article-list">
-      <li class="article-row"><span class="article-topic">Disposition Strategy</span><span class="article-title">Tenant Buyout vs Subleasing Strategies — P&amp;L, Balance Sheet, and EBITDA Implications</span><span class="article-date">Feb 2024</span></li>
-      <li class="article-row"><span class="article-topic">CMBS &amp; Landlord Default</span><span class="article-title">Bracing for Impact: A Tenant's Guide to Landlord Default</span><span class="article-date">Jun 2023</span></li>
-      <li class="article-row"><span class="article-topic">Lease Economics</span><span class="article-title">Office Lease Buyouts, Subleasing, Restructures, and Termination Options</span><span class="article-date">Dec 2020</span></li>
-      <li class="article-row"><span class="article-topic">Deal Analytics</span><span class="article-title">Simplifying the Importance of Net Present Value in Commercial Real Estate</span><span class="article-date">Jan 2020</span></li>
-      <li class="article-row"><span class="article-topic">Workplace Strategy</span><span class="article-title">Considerations in a COVID-World as a Tenant</span><span class="article-date">Apr 2020</span></li>
-    </ul>
+    <div id="insights-preview-placeholder"></div>
     <div style="margin-top:32px;">
-      <a href="#" class="btn btn-outline">View All Articles</a>
+      <a href="/insights/" class="btn btn-outline">View All Articles</a>
     </div>
   </div>
 </section>
