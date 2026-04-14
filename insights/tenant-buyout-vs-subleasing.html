@@ -586,11 +586,7 @@
   <p>I work with tenants, owner-occupiers, and broker partners across every market. If this article raised a question specific to your portfolio or deal, reach out directly.</p>
   <a href="/contact.html" class="btn btn-outline" style="border-color:rgba(255,255,255,0.3);color:#fff;">Start a Conversation</a>
 </div>
-      <div class="author-card">
-  <div class="author-name">Chase Bourdelaise</div>
-  <div class="author-role">Managing Director, Consulting Services · Transwestern</div>
-  <div class="author-bio">Chase is a corporate real estate strategist focused exclusively on tenants and owner-occupiers. He leads global consulting services at Transwestern and has executed transactions across 50+ US states and 20+ countries.</div>
-</div>
+      <div class="author-card"></div>
     </div>
 
     <div class="sidebar">
@@ -720,6 +716,16 @@ document.addEventListener('click', function(e) {
     menu.classList.remove('open');
   }
 });
+
+
+// Load shared author card
+fetch('/author.html')
+  .then(r => r.text())
+  .then(html => {
+    document.querySelectorAll('.author-card').forEach(el => {
+      el.outerHTML = html;
+    });
+  });
 
 </script>
 </body>
