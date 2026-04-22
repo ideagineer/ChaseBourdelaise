@@ -1,1 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LOI & RFP Provisions Database — Chase Bourdelaise</title>
+<meta name="description" content="A searchable reference database of every key provision in a commercial real estate Letter of Intent and RFP — plain-English definitions, model tenant language, and red flags."/>
+<meta name="author" content="Chase Bourdelaise"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy:  #051C2C;
+    --blue:  #2251FF;
+    --mid:   #4A5568;
+    --light: #8A9BB0;
+    --rule:  #D8DDE5;
+    --bg:    #FFFFFF;
+    --off:   #F8F9FB;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "DM Sans", sans-serif; background: var(--bg); color: var(--navy); -webkit-font-smoothing: antialiased; padding-top: 64px; }
 
+  .label { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--light); }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+
+  /* INNER HERO */
+  .inner-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--rule); background: var(--bg); }
+  .inner-hero .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+  .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light); text-decoration: none; margin-bottom: 28px; transition: color 0.15s; font-family: "DM Mono", monospace; }
+  .back-link:hover { color: var(--navy); }
+  .back-link::before { content: "←"; margin-right: 4px; }
+  .inner-label { display: block; margin-bottom: 16px; }
+  .inner-hero h1 { font-family: "Cormorant Garamond", serif; font-size: clamp(34px, 5vw, 60px); font-weight: 600; line-height: 1.05; letter-spacing: -1.5px; color: var(--navy); max-width: 820px; margin-bottom: 20px; }
+  .inner-desc { font-size: 18px; font-weight: 300; line-height: 1.8; color: var(--mid); max-width: 680px; }
+  .inner-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--light); margin-bottom: 20px; }
+  .inner-meta .dot { color: var(--rule); }
+
+  /* PAGE SECTION */
+  .page-section { padding: 72px 0; }
+  .page-section .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+
+  /* SEARCH & FILTERS */
+  .db-controls { margin-bottom: 40px; }
+  .db-search-wrap { position: relative; margin-bottom: 20px; }
+  .db-search-wrap::before { content: ""; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238A9BB0' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; }
+  #db-search { width: 100%; padding: 13px 16px 13px 40px; font-size: 15px; font-family: "DM Sans", sans-serif; font-weight: 300; border: 1px solid var(--rule); background: var(--bg); color: var(--navy); outline: none; transition: border-color 0.15s; border-radius: 0; -webkit-appearance: none; }
+  #db-search:focus { border-color: var(--navy); }
+  #db-search::placeholder { color: var(--light); }
+
+  .cat-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cat-btn { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; border: 1px solid var(--rule); background: var(--bg); color: var(--mid); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .cat-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .cat-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  /* META ROW */
+  .db-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
+  .db-count { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--light); }
+  .db-count strong { color: var(--navy); font-weight: 400; }
+  .db-legend { display: flex; gap: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 300; color: var(--light); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-dot.good { background: #1a8a5e; }
+  .legend-dot.red { background: #dc2626; }
+
+  /* CARDS GRID */
+  #cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+
+  .prov-card { background: var(--off); padding: 28px 32px; border-bottom: 2px solid transparent; transition: border-color 0.2s, box-shadow 0.2s, background 0.15s; cursor: pointer; }
+  .prov-card:hover { background: var(--bg); box-shadow: 0 4px 20px rgba(5,28,44,0.06); position: relative; z-index: 1; }
+  .prov-card.expanded { border-bottom-color: var(--blue); background: var(--bg); box-shadow: 0 4px 20px rgba(5,28,44,0.06); position: relative; z-index: 1; }
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .card-title { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 600; color: var(--navy); line-height: 1.2; }
+  .cat-pill { font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 9px; border: 1px solid; white-space: nowrap; flex-shrink: 0; margin-top: 3px; }
+
+  .card-def { font-size: 14px; font-weight: 300; line-height: 1.75; color: var(--mid); margin-bottom: 14px; }
+
+  .expand-toggle { display: flex; align-items: center; gap: 8px; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); background: none; border: none; cursor: pointer; padding: 0; transition: opacity 0.15s; }
+  .expand-toggle:hover { opacity: 0.7; }
+  .expand-icon { font-size: 12px; transition: transform 0.2s; display: inline-block; }
+  .expanded .expand-icon { transform: rotate(180deg); }
+
+  /* CARD DETAIL */
+  .card-detail { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--rule); }
+  .card-detail.open { display: block; }
+
+  .detail-block { margin-bottom: 16px; }
+  .detail-block:last-child { margin-bottom: 0; }
+  .detail-label { font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--light); margin-bottom: 8px; }
+  .detail-text { font-size: 14px; font-weight: 300; line-height: 1.75; color: var(--mid); }
+
+  .good-lang { font-size: 13px; font-weight: 300; line-height: 1.75; color: #0f5a3a; background: #f0faf5; padding: 12px 16px; border-left: 2px solid #1a8a5e; font-style: italic; }
+  .red-lang { font-size: 13px; font-weight: 300; line-height: 1.75; color: #8b1a1a; background: #fdf2f2; padding: 12px 16px; border-left: 2px solid #dc2626; }
+
+  /* NO RESULTS */
+  #no-results { display: none; text-align: center; padding: 80px 0; }
+  #no-results p { font-family: "Cormorant Garamond", serif; font-size: 22px; font-weight: 400; color: var(--light); font-style: italic; }
+
+  /* BOTTOM CTA */
+  .tool-cta { margin-top: 64px; background: var(--navy); padding: 56px; }
+  .tool-cta h3 { font-family: "Cormorant Garamond", serif; font-size: 30px; font-weight: 600; color: #fff; margin-bottom: 10px; letter-spacing: -0.5px; }
+  .tool-cta p { font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.42); margin-bottom: 28px; line-height: 1.7; max-width: 560px; }
+  .tool-cta a { display: inline-block; padding: 13px 30px; border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: border-color 0.15s, background 0.15s; }
+  .tool-cta a:hover { border-color: #fff; background: rgba(255,255,255,0.06); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1000px) {
+    .inner-hero .container, .page-section .container { padding: 0 24px; }
+    #cards-grid { grid-template-columns: 1fr; }
+    .db-legend { display: none; }
+    .tool-cta { padding: 40px 24px; }
+  }
+</style>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KTZJQLZT');</script>
+<!-- End Google Tag Manager -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8X9J5F0ZQL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8X9J5F0ZQL');
+</script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTZJQLZT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="nav-placeholder"></div>
+
+<div class="inner-hero">
+  <div class="container">
+    <a href="/tools.html" class="back-link">Tools</a>
+    <span class="label inner-label">Reference Database</span>
+    <h1>LOI & RFP Provisions<br/>Database</h1>
+    <div class="inner-meta">
+      <span>46 Provisions</span>
+      <span class="dot">·</span>
+      <span>8 Categories</span>
+      <span class="dot">·</span>
+      <span>Tenant-Focused</span>
+    </div>
+    <p class="inner-desc">Every key provision in a commercial real estate Letter of Intent and RFP — plain-English definitions, model tenant language, and the red flags that cost clients money.</p>
+  </div>
+</div>
+
+<section class="page-section">
+  <div class="container">
+
+    <div class="db-controls">
+      <div class="db-search-wrap">
+        <input type="search" id="db-search" placeholder="Search provisions — e.g. holdover, SNDA, free rent, TIA, assignment…" autocomplete="off"/>
+      </div>
+      <div class="cat-filters" id="cat-filters"></div>
+    </div>
+
+    <div class="db-meta">
+      <div class="db-count" id="db-count"></div>
+      <div class="db-legend">
+        <div class="legend-item"><div class="legend-dot good"></div>Model language</div>
+        <div class="legend-item"><div class="legend-dot red"></div>Red flags</div>
+      </div>
+    </div>
+
+    <div id="cards-grid"></div>
+    <div id="no-results"><p>No provisions match your search.</p></div>
+
+    <div class="tool-cta">
+      <h3>Working on a lease negotiation?</h3>
+      <p>These provisions represent 18 years of transactions across every major market. If you're navigating a complex deal — renewal, relocation, or portfolio — reach out.</p>
+      <a href="/contact.html">Start a Conversation</a>
+    </div>
+
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script>
+const CAT_STYLES = {
+  "Financial":         { border: "#3B6D11", color: "#3B6D11" },
+  "Space & Occupancy": { border: "#185FA5", color: "#185FA5" },
+  "Term & Timing":     { border: "#854F0B", color: "#854F0B" },
+  "Tenant Rights":     { border: "#534AB7", color: "#534AB7" },
+  "Landlord Obligations": { border: "#0F6E56", color: "#0F6E56" },
+  "Legal":             { border: "#993C1D", color: "#993C1D" },
+  "Lease Structure":   { border: "#993556", color: "#993556" },
+  "Process":           { border: "#5F5E5A", color: "#5F5E5A" }
+};
+
+const PROVISIONS = [
+  {cat:"Financial",name:"Base Rent",short:"The fixed periodic rent payment stated in the lease, typically expressed as an annual amount per rentable square foot.",why:"The headline number in any deal, but rarely tells the full story. Always analyze alongside concessions and escalations to understand true cost.",good:"Base rent of $X.XX/RSF/yr, full-service gross, commencing on the Rent Commencement Date.",red:"Watch for base rent that excludes operating expenses — what looks cheap on a gross basis may be expensive net."},
+  {cat:"Financial",name:"Rent Commencement Date",short:"The date on which the tenant's obligation to pay rent begins — often different from the lease commencement date.",why:"Negotiating free rent before commencement gives tenants time to build out and occupy without paying for empty space. A critical lever in deal economics.",good:"Rent shall not commence until [X] months following delivery of the Premises in the required condition, regardless of when Tenant takes possession.",red:"Any language making rent commence on lease signing or on a fixed calendar date regardless of delivery condition."},
+  {cat:"Financial",name:"Rent Escalations",short:"The scheduled periodic increases to base rent over the lease term, typically annual and expressed as a fixed percentage or CPI-linked.",why:"Small annual increases compound dramatically over a 10-year lease. 3% fixed vs. CPI is a major negotiating point in inflationary environments.",good:"Base Rent shall increase by three percent (3%) per year on each anniversary of the Rent Commencement Date.",red:"Open-ended CPI escalations with no cap, or 'greater of 3% or CPI' language in high-inflation periods."},
+  {cat:"Financial",name:"Operating Expenses (CAM / NNN)",short:"The tenant's proportionate share of actual costs to operate and maintain the building — taxes, insurance, common area maintenance.",why:"In NNN or modified gross leases, OpEx can add $10–$30/SF annually to occupancy cost. Understanding the base year, cap structure, and exclusions is essential.",good:"OpEx capped at 5% annual increase on controllable expenses. Taxes and insurance excluded from cap. Base year grossed up to 95% occupancy.",red:"No cap on controllable expenses. Management fees above 3%. Capital expenditures passed through to tenants. Admin fees layered on top of management fees."},
+  {cat:"Financial",name:"Security Deposit",short:"A sum of money paid upfront by the tenant, held by the landlord as security against default or damage.",why:"Security deposits tie up working capital. For creditworthy tenants, this is a major negotiating point — many can eliminate it entirely or structure a burn-down over the lease term.",good:"Security Deposit shall be returned within 30 days of lease expiration, reduced by 50% at lease year 3 and eliminated by lease year 5, provided Tenant is not in default.",red:"Non-interest-bearing deposits held for the full term. Letter of credit requirements with no burn-down schedule. Security deposit equal to 3+ months' rent."},
+  {cat:"Financial",name:"Tenant Improvement Allowance (TIA)",short:"A landlord contribution toward the cost of constructing or improving the tenant's space, typically expressed in dollars per rentable square foot.",why:"TI allowance is often the largest cash component of a deal. How it is disbursed, what it covers, and whether offset rights exist are all critical negotiating points.",good:"Landlord shall provide a TI Allowance of $X/RSF, disbursed within 30 days of Tenant's written requisition. Tenant may offset any unpaid allowance against rent.",red:"Allowance disbursed only after full project completion and certificate of occupancy. Allowance applied first to landlord-preferred contractors. No offset remedy for non-payment."},
+  {cat:"Financial",name:"Free Rent / Rent Abatement",short:"A period at the beginning (or sometimes during) the lease term where the tenant pays no base rent, used as a landlord concession.",why:"Free rent is the most valuable cash concession. It should be negotiated in combination with TIA and escalation structure for maximum net effective rent benefit.",good:"Tenant shall not be obligated to pay Base Rent during the first [X] months of the Lease Term. Operating expense obligations commence on the Rent Commencement Date.",red:"Free rent conditioned on Tenant not being in default at the time of abatement — allows landlord to recapture abatement retroactively after the fact."},
+  {cat:"Financial",name:"Audit Rights",short:"The tenant's contractual right to review and audit the landlord's books and records to verify operating expense calculations.",why:"Studies show landlord OpEx calculations are inaccurate 30–40% of the time. Audit rights are a critical financial protection, especially in large multi-location portfolios.",good:"Tenant shall have the right, upon 30 days' notice, to audit Landlord's books and records for any calendar year within 3 years of statement delivery. Landlord shall pay audit costs if overcharge exceeds 5%.",red:"60-day window to dispute OpEx statements. No audit right in the lease. Requirement that Tenant use only Landlord-approved auditors."},
+  {cat:"Space & Occupancy",name:"Rentable Square Footage",short:"The total measured area forming the basis of rent calculations, including the tenant's usable space plus a proportionate share of common areas.",why:"A 10% load factor difference on a 50,000 SF lease at $50/RSF equals $250,000/year. Always verify RSF by independent measurement before signing.",good:"The parties agree the Premises contain approximately X,XXX rentable square feet. Either party may, within 60 days, commission an independent measurement. If variance exceeds 2%, rent shall be adjusted accordingly.",red:"'Approximately' language without a right to re-measure. RSF stated without reference to measurement standard (BOMA, ANSI, etc.)."},
+  {cat:"Space & Occupancy",name:"Usable SF vs. Rentable SF (Load Factor)",short:"Usable SF is the space a tenant physically occupies; RSF adds a proportionate share of common areas. The load factor (or core factor) is the multiplier between the two.",why:"Load factors in Class A buildings typically range from 10–20%. Higher load factors mean more rent paid for space the tenant doesn't directly use.",good:"The Load Factor applicable to the Premises shall not exceed 15%. Any change in building configuration that increases the Load Factor shall require Tenant's written consent.",red:"Load factors above 20%, or language that allows the landlord to adjust the load factor unilaterally as the building's occupancy profile changes."},
+  {cat:"Space & Occupancy",name:"Permitted Use",short:"The contractual definition of what the tenant may use the premises for — affects operations, subletting, and assignment rights.",why:"A narrowly-defined permitted use restricts future flexibility. As businesses evolve, tenants need broad use clauses that accommodate operational and strategic changes.",good:"Tenant shall have the right to use the Premises for general office use and any other lawful purpose.",red:"'Permitted use limited to [specific business name] only' — any business change, M&A activity, or operational pivot could trigger a landlord default claim."},
+  {cat:"Space & Occupancy",name:"Exclusive Use Rights",short:"A restriction preventing the landlord from leasing space in the same property to a direct competitor of the tenant.",why:"Critical for retail, professional services, and any tenant whose business model depends on non-competition within a building or center.",good:"Landlord shall not lease any other space in the Building to a tenant whose primary use is [X]. Remedy: rent reduced by 50% for any period of breach by Landlord.",red:"Exclusives with limited remedies, or exclusives that do not bind successor landlords or existing tenants who later expand their operations."},
+  {cat:"Space & Occupancy",name:"Co-Tenancy",short:"A provision tying the tenant's rent obligations to the occupancy status of key anchor tenants in the building or center.",why:"Most relevant for retail, but applicable in office where major anchors drive amenity quality and building perception. Protects tenants when occupancy declines.",good:"If [Anchor Tenant] ceases operations, Tenant may, upon 30 days' notice, pay reduced rent of $X/RSF or terminate the Lease at its election.",red:"Co-tenancy protections requiring Tenant to wait 12+ months before exercising remedies. Protections that only apply to the first year of the lease."},
+  {cat:"Space & Occupancy",name:"Holdover",short:"The terms governing what happens if a tenant remains in possession after the lease expires without a new agreement in place.",why:"Holdover rent at 150–200% of contract rent is standard landlord language. Even one month of holdover at these rates creates significant unbudgeted cost.",good:"If Tenant holds over with Landlord's written consent, tenancy shall be month-to-month at 110% of then-current Base Rent. Tenant shall not be liable for consequential or indirect damages.",red:"'Tenant at sufferance' language enabling landlord to terminate at will with no notice. Holdover at 200% of rent with landlord's right to sue for consequential damages including a lost lease with a new tenant."},
+  {cat:"Space & Occupancy",name:"Parking",short:"The quantity, type (reserved vs. unreserved), location, and cost of parking spaces available to the tenant and its employees.",why:"In suburban markets, parking ratios are a deal prerequisite. In urban markets, parking costs can add $3,000–$6,000 per employee per year to occupancy cost.",good:"Tenant shall have the right to [X] unreserved parking spaces per 1,000 RSF at no additional charge. Tenant shall also have [X] reserved spaces adjacent to the building entrance at a monthly rate not to exceed $X/space.",red:"Parking ratio not specified in the lease. Landlord's right to change parking rates annually. No guarantee that parking spaces are available at lease commencement."},
+  {cat:"Space & Occupancy",name:"Signage Rights",short:"The tenant's rights to display its name and branding on building exterior, monument signs, lobby directories, and suite entrance.",why:"For high-profile tenants, building and monument signage is a real branding asset. Rights should be clearly defined and not contingent on minimum occupancy.",good:"Landlord shall provide Tenant with: (i) suite entry signage; (ii) lobby directory listing; (iii) first right of refusal on building monument signage; (iv) building exterior signage on [floor], at Landlord's cost. Signage rights survive assignment to Tenant's affiliates.",red:"Signage rights that terminate if Tenant occupies less than a certain percentage of the building. Landlord's right to approve all signage with no standard of reasonableness stated."},
+  {cat:"Term & Timing",name:"Lease Term",short:"The duration of the lease — typically expressed in years and months, defining when the tenant's occupancy obligations begin and end.",why:"Longer terms offer more landlord concessions; shorter terms offer flexibility. Most corporate tenants negotiate 5–10 year initial terms with multiple renewal options.",good:"The initial Lease Term shall be [X] years commencing on the Rent Commencement Date and expiring [X] years thereafter.",red:"Terms measured from lease signing rather than occupancy. Ambiguous commencement date language that could accelerate rent obligations before the space is usable."},
+  {cat:"Term & Timing",name:"Renewal / Extension Options",short:"The tenant's contractual right to extend the lease for an additional period, typically at a pre-agreed or fair market value rent.",why:"Options have real economic value — they provide certainty and leverage without obligation. Structure, notice periods, and FMV determination mechanics all matter.",good:"Tenant shall have [X] options to extend the Lease Term for [X] years each, exercisable by written notice at least 12 months prior to expiration, at the greater of then-current Base Rent or 95% of Fair Market Rent as determined by binding arbitration if parties cannot agree.",red:"Options exercisable only if Tenant has never been in default, even a cured one. Options at 'Landlord's then-current asking rent' with no binding arbitration backstop."},
+  {cat:"Term & Timing",name:"Term Commencement Date",short:"The date the lease legally begins — may differ from the date the tenant takes possession or the date rent commences.",why:"Three separate dates (lease commencement, possession, rent commencement) are common in well-negotiated leases. Conflating them is costly to tenants.",good:"The Lease Term shall commence on the later of (i) the Estimated Commencement Date or (ii) the date Landlord delivers the Premises in the Required Condition.",red:"Lease commencement defined as a fixed calendar date regardless of whether the space is ready or the buildout is complete."},
+  {cat:"Term & Timing",name:"Early Termination Option",short:"A tenant's right to terminate the lease before the end of the initial term, typically subject to a termination fee and notice requirements.",why:"Business conditions change. An early termination option with a reasonable fee is far better than negotiating an exit from an unexpired lease in a distressed market.",good:"Tenant may terminate this Lease effective at the end of Lease Year [X] by providing not less than [12] months' prior written notice and paying a fee equal to [X] months' unamortized TIA and brokerage commissions.",red:"Termination fees set at 100% of remaining base rent. No termination right at all in the lease."},
+  {cat:"Term & Timing",name:"Delivery of Premises / Possession",short:"The date and conditions under which the landlord must deliver the premises to the tenant for construction and occupancy.",why:"Delayed delivery is one of the most common lease disputes. Specific delivery conditions, hard deadline dates, and penalty mechanisms prevent expensive surprises.",good:"Landlord shall deliver the Premises on or before [Date] in broom-clean condition, free of all other occupants, with all building systems in good working order. For each day of delay beyond [Date], Tenant shall receive two (2) days of additional free rent.",red:"Delivery 'substantially complete' with no definition of substantial completion. No penalty for late delivery. Landlord's right to extend delivery indefinitely due to force majeure with no hard stop date."},
+  {cat:"Term & Timing",name:"Permit Contingency",short:"A tenant's right to terminate the lease if it is unable to obtain all necessary governmental permits and approvals for its intended use.",why:"Without a permit contingency, a tenant can be locked into rent obligations for space it legally cannot operate in — a particularly costly issue for regulated industries.",good:"This Lease is contingent upon Tenant obtaining all required permits within [180] days of full lease execution. If Tenant cannot obtain permits through diligent efforts, it may terminate with no further obligation.",red:"No permit contingency in the lease. Permit contingency that expires before the tenant could realistically obtain all required permits and approvals."},
+  {cat:"Tenant Rights",name:"Assignment & Subletting",short:"The tenant's ability to transfer its lease rights (assignment) or re-lease a portion to another party (sublease) — subject to landlord consent requirements.",why:"Assignment and subletting rights are critical for M&A, corporate restructurings, workforce reductions, and strategic pivots. Over-restriction destroys long-term flexibility.",good:"Landlord's consent to assignment or subletting shall not be unreasonably withheld, conditioned, or delayed. No consent required for: (i) affiliates, (ii) successors by merger, acquisition, or reorganization, (iii) entities acquiring substantially all of Tenant's assets. Tenant retains 50% of any sublease profit.",red:"Landlord's right to recapture space upon sublease request. Requirement for Tenant to share 100% of sublease profits. No carve-out for corporate affiliate transfers."},
+  {cat:"Tenant Rights",name:"Right of First Refusal (ROFR)",short:"The tenant's contractual right to lease additional space on the same terms offered to a third party before the landlord accepts that offer.",why:"ROFRs protect growing companies from losing access to adjacent or contiguous space. Structure and binding nature on successor landlords are key.",good:"Landlord shall notify Tenant in writing of any bona fide third-party offer to lease [adjacent space]. Tenant shall have 10 business days to match such offer. ROFR runs with the lease and binds all successors.",red:"ROFR that expires if Tenant is in any default, even a cured one. ROFR that does not bind successor landlords after a sale of the building."},
+  {cat:"Tenant Rights",name:"Expansion Option",short:"The tenant's pre-negotiated right to lease additional space in the building at a predetermined or fair market rent.",why:"Unlike a ROFR, an expansion option gives the tenant the right to lease space regardless of whether it's been offered to a third party — more control, more value.",good:"Tenant shall have the option to expand into Suite [X], consisting of approximately X,XXX RSF, by providing [12] months' written notice, at Fair Market Rent determined by mutual agreement or binding arbitration.",red:"Expansion options that expire by a specific lease year regardless of business growth timing or building vacancy."},
+  {cat:"Tenant Rights",name:"Contraction Option",short:"The tenant's right to give back a portion of the leased premises during the lease term, typically at a predetermined size and upon payment of a fee.",why:"As workforce strategies evolve and hybrid work grows, the ability to right-size a lease mid-term without breaking it is increasingly valuable in long-term deals.",good:"Tenant shall have the one-time right to surrender approximately [X] RSF on [Floor X], effective at the end of Lease Year [X], upon [12] months' written notice and payment of a contraction fee equal to [X] months' unamortized TIA.",red:"No contraction right in the lease, or contraction tied to payment of 100% of remaining rent on the surrendered portion."},
+  {cat:"Tenant Rights",name:"SNDA (Subordination, Non-Disturbance & Attornment)",short:"A tri-party agreement where the tenant's lease is subordinate to the lender's mortgage, but the lender agrees not to disturb Tenant's possession so long as Tenant is not in default.",why:"Without an SNDA, a tenant's lease can be terminated in a foreclosure even if they are current on rent. Critical for any lease with meaningful TI investment or a long term.",good:"Landlord shall deliver a fully executed SNDA from all current lenders and ground lessors, in a form reasonably acceptable to Tenant, as a condition precedent to Lease execution.",red:"No SNDA delivery requirement. Landlord representations that no current financing exists, without any obligation to obtain SNDA on future financing."},
+  {cat:"Landlord Obligations",name:"Base Building Condition",short:"The specific condition in which the landlord must deliver the premises to the tenant, including systems, compliance, and existing improvements.",why:"Disputes over delivery condition are among the most common and costly lease conflicts. Precise delivery specifications prevent them.",good:"Premises shall be delivered: (i) with all building systems in good working order; (ii) compliant with all applicable laws including ADA; (iii) free of hazardous materials; (iv) vacant and broom-clean. Landlord warrants HVAC systems for 1 year from Tenant's opening.",red:"'As-is, where-is' delivery with no representation on system condition. No warranty on HVAC or any other building systems."},
+  {cat:"Landlord Obligations",name:"Repairs & Maintenance",short:"The contractual division of responsibility between landlord and tenant for maintaining and repairing the building and premises.",why:"Tenants should not bear the cost of structural, capital, or common area repairs. Clear delineation prevents costly surprise charges mid-lease.",good:"Landlord shall maintain, repair, and replace the roof, structure, foundation, exterior walls, building systems (HVAC, plumbing, electrical, elevators), parking areas, and common areas. Tenant is responsible only for interior non-structural repairs.",red:"Tenant required to maintain HVAC systems serving only its premises. Tenant responsible for capital repairs triggered by 'above-standard' use with no definition of that term."},
+  {cat:"Landlord Obligations",name:"Building Services & Utilities",short:"The specific services — HVAC, electricity, janitorial, security, water — that the landlord is obligated to provide, and the hours of such service.",why:"Service deficiencies impact employee productivity and business operations. Strong service standards with abatement remedies protect tenants from landlord underperformance.",good:"Landlord shall provide HVAC 7am–7pm Monday–Friday and 8am–1pm Saturday. After-hours HVAC available at cost not to exceed $X/hour. Landlord shall provide 100-amp electrical service and building-standard janitorial 5 days/week.",red:"HVAC hours defined as 'normal business hours' without specificity. After-hours HVAC billed at landlord's unilateral discretion. No janitorial specification in the lease."},
+  {cat:"Landlord Obligations",name:"Service Interruption & Abatement",short:"The tenant's right to rent abatement when the landlord fails to provide required services or access for an extended period.",why:"If HVAC fails, access is blocked, or essential services go down, the tenant is paying for space it cannot use. Abatement rights are the primary remedy.",good:"If any essential service or access is interrupted for more than 2 business days due to Landlord's failure, all Base Rent and Additional Rent shall abate from the date of interruption until fully restored. If interruption exceeds 30 days, Tenant may terminate.",red:"No abatement right in the lease. Abatement only if the interruption was caused 'solely' by Landlord's negligence, placing the burden of proof on Tenant."},
+  {cat:"Landlord Obligations",name:"Hazardous Materials / Environmental",short:"The allocation of responsibility between landlord and tenant for hazardous materials existing in or brought to the premises.",why:"Environmental liability can be catastrophic. Tenants should be responsible only for what they bring in — not pre-existing conditions or materials in other tenant spaces.",good:"Landlord shall indemnify, defend, and hold Tenant harmless from all claims arising from hazardous materials in the Premises or Building not introduced by Tenant. Landlord shall disclose all known environmental conditions and provide all existing environmental reports prior to execution.",red:"Lease holding Tenant responsible for hazardous materials 'found during the term' without limiting to materials Tenant introduced. No prior environmental disclosure from Landlord."},
+  {cat:"Legal",name:"Default & Cure Periods",short:"The notice and opportunity-to-cure periods that must expire before a landlord can declare the tenant in default and exercise remedies.",why:"Adequate cure periods are essential — accounting delays, disputes, and operational issues can create temporary non-compliance that shouldn't trigger lease termination.",good:"Landlord shall provide 10 business days' written notice and cure period for monetary defaults. For non-monetary defaults, 30 days' written notice — extended by such additional time as is reasonably necessary if Tenant commences cure within the 30-day period and diligently pursues completion.",red:"5-day cure periods for monetary defaults. No cure period for 'repeated' defaults. Default triggered by minor, immaterial breaches."},
+  {cat:"Legal",name:"Landlord Default",short:"A provision (often omitted from landlord forms) establishing what happens when the landlord fails to meet its obligations under the lease.",why:"Most landlord lease forms contain detailed tenant default provisions but omit landlord default entirely. Always negotiate mutual default language with equivalent remedies.",good:"If Landlord is in default beyond the applicable notice and cure period, Tenant may: (i) terminate the Lease, (ii) seek specific performance, or (iii) perform Landlord's obligation and offset the cost plus interest against rent.",red:"Lease that contains only tenant default provisions with no landlord default language. Language purporting to limit Landlord's liability to Tenant's actual damages only."},
+  {cat:"Legal",name:"Indemnification / Hold Harmless",short:"The mutual or one-sided obligation of one party to protect and defend the other from certain claims, losses, and liabilities.",why:"Landlord forms often require tenants to indemnify broadly. Tenants should negotiate mutual indemnification tied specifically to each party's own negligence.",good:"Each party shall indemnify, defend, and hold harmless the other from claims arising from that party's own negligence or willful misconduct. Neither party shall be liable to the other for consequential, indirect, or punitive damages.",red:"Tenant indemnifying Landlord for any claims arising 'in or about the Premises,' regardless of fault or cause. No cap on Tenant's indemnification obligation."},
+  {cat:"Legal",name:"Insurance Requirements",short:"The types and minimum amounts of insurance each party must maintain, and the requirement to name the other party as an additional insured.",why:"Inadequate insurance leaves both parties exposed. Standard provisions protect against property damage, personal injury liability, and business interruption loss.",good:"Tenant shall maintain: (i) CGL at $2M per occurrence/$5M aggregate; (ii) property insurance on Tenant's personal property at replacement cost; (iii) workers' compensation as required by law. Landlord shall maintain property insurance on the Building at full replacement cost. Mutual waiver of subrogation required.",red:"Waiver of subrogation not included — allows one party's insurer to sue the other. Landlord's insurance costs passed through as uncontrolled, uncapped operating expenses."},
+  {cat:"Legal",name:"Casualty & Restoration",short:"The process and timeline for repairing the premises following fire, flood, or other damage, and each party's rights to terminate if damage is severe.",why:"Tenants need clear timelines, rent abatement during repair, and termination rights if restoration drags on or the building cannot be restored to its prior condition.",good:"All rent shall abate from the date of casualty. If damage exceeds 40% of the Building, or if Landlord cannot restore within 180 days, Tenant may terminate. Landlord must provide a written restoration estimate within 30 days of casualty.",red:"No rent abatement during restoration period. Landlord's right to restore 'within a reasonable time' with no defined timeline. No tenant termination right regardless of damage severity or duration."},
+  {cat:"Lease Structure",name:"Full Service / Gross Lease",short:"A lease where the base rent includes virtually all operating expenses — taxes, insurance, utilities, janitorial, and maintenance. The landlord bears OpEx risk.",why:"Most common in Class A office. Tenants know their total cost upfront, but must still audit base year grossing-up assumptions and understand what is and isn't included.",good:"Tenant's annual rent of $X/RSF shall be inclusive of all operating expenses, real estate taxes, insurance, utilities, and janitorial services. A base year of [Year] shall be established, grossed up to 95% occupancy.",red:"'Full service' label accompanied by a long exclusions list that removes most building services from landlord responsibility."},
+  {cat:"Lease Structure",name:"NNN / Triple Net Lease",short:"A lease where the tenant pays base rent plus its proportionate share of all property operating expenses — taxes, insurance, and maintenance.",why:"NNN is most common in industrial and retail. Tenants must budget for and audit OpEx, which can be highly variable year to year depending on the building and market.",good:"Tenant shall pay its proportionate share of Operating Expenses based on RSF of Premises divided by total RSF of Building. Controllable OpEx increases capped at 5% annually. Tenant has full audit rights.",red:"No cap on operating expenses. Landlord-controlled management fees included in OpEx without a ceiling. Capital expenditures amortized and passed through to tenants."},
+  {cat:"Lease Structure",name:"Modified Gross / Modified Net",short:"A hybrid lease structure where some expenses are included in base rent and others are paid separately by the tenant, per the specific lease terms.",why:"Modified gross leases require careful itemization of what is and isn't included — assumptions differ widely between landlords and markets.",good:"Base Rent shall be full-service gross inclusive of all operating expenses except electricity. Tenant shall pay for its electricity directly to the utility provider per a separate submeter.",red:"'Modified gross' label without a specific schedule of inclusions and exclusions. Landlord's ability to reclassify expenses between gross and pass-through categories over the lease term."},
+  {cat:"Lease Structure",name:"Net Effective Rent (NER)",short:"The true economic cost of a lease after accounting for all concessions — free rent, TI amortization, and escalations — expressed as a constant annual per-SF rate.",why:"NER is the only apples-to-apples comparison between competing proposals. A higher face rent with generous free rent and TIA may have a lower NER than a lower face rent with no concessions.",good:"Always calculate NER when comparing proposals. NER = (Total rent payments over term less present value of TIA) / Lease term in months. Use consistent discount rates across all proposals.",red:"Comparing face rents across competing proposals without normalizing for concession structures — this is how tenants make expensive mistakes."},
+  {cat:"Lease Structure",name:"Prohibited Clauses (Tenant Watch List)",short:"Lease provisions that are highly unfavorable to tenants and should be removed or significantly modified during negotiation.",why:"Landlord forms routinely include provisions that are either standard landlord practice or simply overlooked by unsophisticated tenants. Knowing what to strike is essential.",good:"Push to remove or modify: percentage rent, mandatory sales reporting, financial statement delivery, radius restrictions, relocation rights, attorney-in-fact language, rent acceleration upon default.",red:"Any of the following in a final LOI or lease: relocation right without meaningful notice, compensation, and consent. Percentage rent. Tenant waiver of jury trial. Operating covenant requirements."},
+  {cat:"Process",name:"Request for Proposal (RFP)",short:"A formal document sent to building owners or their agents soliciting lease proposals that address the tenant's specific space and deal requirements.",why:"A well-structured RFP controls the narrative of a transaction, forces landlords to compete on comparable terms, and surfaces deal-killer issues early — before time is wasted.",good:"RFP should specify: confidentiality requirements, base building specs in a yes/no format, all key economic and legal terms requested, a firm submission deadline, and the evaluation criteria.",red:"Sending informal emails instead of a structured RFP. Failing to require all respondents to address every material term — allowing landlords to submit cherry-picked, incomparable proposals."},
+  {cat:"Process",name:"Letter of Intent (LOI)",short:"A non-binding summary of the key business terms negotiated between landlord and tenant that forms the basis for drafting the formal lease.",why:"The LOI sets the negotiating context for the lease. Every issue not resolved in the LOI becomes a leverage point for landlords during lease drafting. Resolve everything.",good:"LOI should address all key provisions including: parties, premises, term, rent, escalations, TIA, free rent, permitted use, parking, signage, assignment, SNDA, ROFR, renewal options, early termination, holdover, exclusivity, and brokerage.",red:"LOI that leaves material terms 'TBD' or 'to be negotiated in the lease.' Every TBD in a final LOI is a provision the tenant will almost certainly lose."},
+  {cat:"Process",name:"Exclusivity Period",short:"A provision in the LOI where both parties agree to negotiate exclusively with each other for a defined period.",why:"Prevents the landlord from continuing to market to competing tenants while you are investing time and money in due diligence and lease negotiation.",good:"Upon execution of this LOI, Landlord agrees to negotiate exclusively with Tenant for [90] days. During this period, Landlord shall not solicit, accept, or negotiate offers from other prospective tenants for the Premises.",red:"No exclusivity provision in the LOI. Short exclusivity period (30 days) that is insufficient for thorough lease negotiation and legal review."},
+  {cat:"Process",name:"Nonbinding Nature of LOI",short:"The standard disclaimer that an LOI does not create a binding contract — only a fully executed lease binds the parties.",why:"Both parties should understand the LOI is a roadmap, not a contract. This protects the tenant's ability to walk away if lease negotiations deteriorate.",good:"This Letter of Intent is not a binding contract, a lease, or an offer to lease. The parties shall become bound only if and when a written lease is fully negotiated, approved, and executed by both parties.",red:"LOI language creating 'good faith' obligations to continue negotiating, or language that purports to make specific economic terms binding before lease execution."},
+  {cat:"Process",name:"Brokerage / Commission",short:"The identification of the brokers representing each party and the agreement on who pays the commission and when.",why:"Commission disputes are common and can delay or kill transactions. Clear LOI language identifying brokers and the paying party prevents expensive misunderstandings.",good:"Landlord shall pay a commission to [Tenant's Broker] and [Landlord's Broker] per the terms of a separate commission agreement executed by the parties. No other brokers are entitled to compensation in connection with this transaction.",red:"Commission language that creates ambiguity about which party bears the payment obligation. Omission of broker names from the LOI."}
+];
+
+const ALL_CATS = ["All", ...Object.keys(CAT_STYLES)];
+let activeCat = "All";
+let searchTerm = "";
+let expanded = new Set();
+
+function catPillStyle(cat) {
+  const s = CAT_STYLES[cat];
+  return s ? `border-color:${s.border};color:${s.color}` : "";
+}
+
+function renderFilters() {
+  document.getElementById('cat-filters').innerHTML = ALL_CATS.map(c =>
+    `<button class="cat-btn${activeCat === c ? ' active' : ''}" data-cat="${c}">${c}</button>`
+  ).join('');
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => { activeCat = btn.dataset.cat; renderAll(); });
+  });
+}
+
+function renderCards() {
+  const term = searchTerm.toLowerCase();
+  const filtered = PROVISIONS.filter(p => {
+    const catMatch = activeCat === "All" || p.cat === activeCat;
+    const textMatch = !term || [p.name, p.short, p.why, p.good, p.red, p.cat]
+      .some(s => s.toLowerCase().includes(term));
+    return catMatch && textMatch;
+  });
+
+  document.getElementById('db-count').innerHTML =
+    `Showing <strong>${filtered.length}</strong> of <strong>${PROVISIONS.length}</strong> provisions`;
+
+  const grid = document.getElementById('cards-grid');
+  const nr = document.getElementById('no-results');
+
+  if (!filtered.length) { grid.innerHTML = ''; nr.style.display = 'block'; return; }
+  nr.style.display = 'none';
+
+  grid.innerHTML = filtered.map(p => {
+    const isOpen = expanded.has(p.name);
+    return `<div class="prov-card${isOpen ? ' expanded' : ''}" data-name="${p.name}">
+      <div class="card-top">
+        <div class="card-title">${p.name}</div>
+        <span class="cat-pill" style="${catPillStyle(p.cat)}">${p.cat}</span>
+      </div>
+      <p class="card-def">${p.short}</p>
+      <button class="expand-toggle" aria-expanded="${isOpen}">
+        <span>${isOpen ? 'Close' : 'Why it matters'}</span>
+        <span class="expand-icon">&#x2335;</span>
+      </button>
+      <div class="card-detail${isOpen ? ' open' : ''}">
+        <div class="detail-block">
+          <div class="detail-label">Why it matters</div>
+          <p class="detail-text">${p.why}</p>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">Model tenant language</div>
+          <div class="good-lang">${p.good}</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-label">Red flags to watch</div>
+          <div class="red-lang">${p.red}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('.expand-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.prov-card');
+      const name = card.dataset.name;
+      if (expanded.has(name)) expanded.delete(name);
+      else expanded.add(name);
+      renderCards();
+    });
+  });
+}
+
+function renderAll() { renderFilters(); renderCards(); }
+
+document.getElementById('db-search').addEventListener('input', function() {
+  searchTerm = this.value;
+  renderAll();
+});
+
+renderAll();
+
+// Shared nav + footer
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  if (m) m.classList.toggle('open');
+}
+fetch('/nav.html').then(r => r.text()).then(h => {
+  const p = document.getElementById('nav-placeholder');
+  if (p) p.outerHTML = h;
+});
+fetch('/footer.html').then(r => r.text()).then(h => {
+  const p = document.getElementById('footer-placeholder');
+  if (p) p.outerHTML = h;
+});
+</script>
+</body>
+</html>
