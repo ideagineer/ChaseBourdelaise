@@ -4,6 +4,11 @@ nav a, nav a:visited { text-decoration: none !important; }
 .nav-links li { list-style: none; }
 .nav-links a { font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); text-decoration: none !important; transition: color 0.15s; }
 .nav-links a:hover { color: var(--navy); }
+@media (max-width: 1000px) {
+  .nav-links { display: none !important; }
+  .nav-cta { display: none !important; }
+  .nav-hamburger { display: flex !important; }
+}
 </style>
 <!-- NAV -->
 <nav>
@@ -26,9 +31,17 @@ nav a, nav a:visited { text-decoration: none !important; }
   </button>
 </nav>
 <div class="nav-mobile-menu" id="mobileMenu">
-  <a href="/index.html#services" onclick="toggleMenu()">Services</a>
-  <a href="/case-studies/index.html" onclick="toggleMenu()">Experience</a>
+  <a href="/#services" onclick="toggleMenu()">Services</a>
+  <a href="/case-studies/" onclick="toggleMenu()">Experience</a>
   <a href="/tools.html" onclick="toggleMenu()">Tools</a>
-  <a href="/insights/index.html" onclick="toggleMenu()">Insights</a>
+  <a href="/insights/" onclick="toggleMenu()">Insights</a>
   <a href="/contact.html" onclick="toggleMenu()">Work With Me</a>
 </div>
+<script>
+function toggleMenu(){const m=document.getElementById('mobileMenu');if(m)m.classList.toggle('open');}
+document.addEventListener('click',function(e){
+  const menu=document.getElementById('mobileMenu');
+  const btn=document.querySelector('.nav-hamburger');
+  if(menu&&btn&&!menu.contains(e.target)&&!btn.contains(e.target))menu.classList.remove('open');
+});
+</script>
