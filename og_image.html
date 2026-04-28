@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: #051C2C;
+    font-family: Georgia, 'Times New Roman', serif;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .left {
+    flex: 1;
+    padding: 72px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .top { }
+
+  .label {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .label::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: #2251FF;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-size: 52px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+
+  .tagline {
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 400;
+    color: rgba(255,255,255,0.42);
+    line-height: 1.6;
+    max-width: 440px;
+    padding-left: 16px;
+    border-left: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .bottom {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .name {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.88);
+    letter-spacing: -0.3px;
+  }
+  .title {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+    margin-top: 4px;
+  }
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+  .url {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.22);
+  }
+
+  .right {
+    width: 280px;
+    padding: 72px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .stat {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding-bottom: 28px;
+  }
+  .stat:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .stat-n {
+    font-size: 36px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .stat-n sup {
+    font-size: 18px;
+    color: #2251FF;
+    vertical-align: super;
+  }
+  .stat-l {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+    margin-top: 6px;
+  }
+
+  .cta {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 9px 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+  }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="top">
+      <div class="label">Tenant Advisory &amp; Portfolio Strategy</div>
+      <h1>Corporate real estate<br/>strategy that changes<br/>how your deal ends.</h1>
+      <p class="tagline">"The strategist other brokers call when the deal matters."</p>
+    </div>
+    <div class="bottom">
+      <div>
+        <div class="name">Chase Bourdelaise</div>
+        <div class="title">Managing Director · Transwestern</div>
+      </div>
+      <div class="dot"></div>
+      <div class="url">chasebourdelaise.com</div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="stat">
+      <div class="stat-n">18<sup>+</sup></div>
+      <div class="stat-l">Years in CRE</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">10M<sup>+</sup></div>
+      <div class="stat-l">Sq Ft Transacted</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">150<sup>+</sup></div>
+      <div class="stat-l">Markets Executed</div>
+    </div>
+    <div class="cta">Work With Me →</div>
+  </div>
+</body>
+</html>
