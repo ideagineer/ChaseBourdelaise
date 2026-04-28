@@ -853,7 +853,7 @@ function genReport() {
   for(let p=1;p<=tp;p++){doc.setPage(p);const ph=doc.internal.pageSize.getHeight();line(M,ph-36,W-M,ph-36);txt('Chase Bourdelaise · Tenant Advisory & Portfolio Strategy · Transwestern',M,ph-22,8,'#8A9BB0');txt('chase.bourdelaise@transwestern.com · (202) 591-1926 · chasebourdelaise.com',M,ph-11,8,'#8A9BB0');txt(`Page ${p} of ${tp}`,W-M,ph-22,8,'#8A9BB0',false,'right');doc.setFontSize(8);doc.setTextColor('#2251FF');doc.text('CONFIDENTIAL',W-M,ph-11,{align:'right'});}
   doc.save(`Space-Program-${(v('companyName')||'Report').replace(/\s+/g,'-').replace(/[^a-zA-Z0-9-]/g,'')}.pdf`);
   // Notify (replace YOUR_FORM_ID with your Formspree endpoint)
-  try{const fd=new FormData();fd.append('_subject',`New Space Assessment: ${v('companyName')}`);fd.append('Company',v('companyName'));fd.append('Contact',v('contactName'));fd.append('Email',email);fd.append('Market',v('targetMarket')||v('currentMarket'));fd.append('Est_RSF',rentable.toLocaleString());fd.append('Notes',v('additionalNotes'));fetch('https://formspree.io/f/YOUR_FORM_ID',{method:'POST',body:fd});}catch(e){}
+  try{const fd=new FormData();fd.append('_subject',`New Space Assessment: ${v('companyName')}`);fd.append('Company',v('companyName'));fd.append('Contact',v('contactName'));fd.append('Email',email);fd.append('Market',v('targetMarket')||v('currentMarket'));fd.append('Est_RSF',rentable.toLocaleString());fd.append('Notes',v('additionalNotes'));fetch('https://formspree.io/f/xjgjnrae',{method:'POST',body:fd});}catch(e){}
   setTimeout(()=>{document.getElementById('formShell').style.display='none';document.getElementById('successWrap').classList.add('show');window.scrollTo({top:0,behavior:'smooth'});},700);
 }
 
