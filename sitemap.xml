@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Root pages -->
   <url><loc>https://www.chasebourdelaise.com/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
   <url><loc>https://www.chasebourdelaise.com/tools.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/brokers.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-
-  <!-- Insights -->
+  <url><loc>https://www.chasebourdelaise.com/contact.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/brokers.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.chasebourdelaise.com/insights/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.chasebourdelaise.com/insights/landlord-ownership-mentality.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/insights/cre-terminology-guide.html</loc><changefreq>yearly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/insights/cre-terminology-guide.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.chasebourdelaise.com/insights/tenant-buyout-vs-subleasing.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.chasebourdelaise.com/insights/landlord-default-guide.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.chasebourdelaise.com/insights/npv-commercial-real-estate.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
@@ -18,32 +14,27 @@
   <url><loc>https://www.chasebourdelaise.com/insights/considerations-covid-world-tenant.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.chasebourdelaise.com/insights/great-pause-observations.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.chasebourdelaise.com/insights/contact-center-covid-remote.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/insights/real-estate-scenario-planning.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
-
-  <!-- Case Studies -->
+  <url><loc>https://www.chasebourdelaise.com/insights/real-estate-scenario-planning.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.chasebourdelaise.com/case-studies/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/case-studies.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/clients.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/transactions.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/astellas.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/casa-padel.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/createme.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/corporate-restructuring.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/crown-castle.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/diagnostic-imaging.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/empire-moulding.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/gebruder-weiss.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/hormel.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/hq-relocation-houston.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/lyte.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/standard-bots.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/subjectwell.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/tradecraft.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/tranzonic.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/worldwide-express.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.chasebourdelaise.com/case-studies/zimperium.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-
-  <!-- Tools -->
+  <url><loc>https://www.chasebourdelaise.com/case-studies/case-studies.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/clients.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/transactions.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/worldwide-express.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/corporate-restructuring.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/astellas.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/casa-padel.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/createme.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/crown-castle.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/diagnostic-imaging.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/empire-moulding.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/gebruder-weiss.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/hormel.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/hq-relocation-houston.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/lyte.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/standard-bots.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/subjectwell.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/tradecraft.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/tranzonic.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.chasebourdelaise.com/case-studies/zimperium.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.chasebourdelaise.com/tools/loi-provisions.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
-
 </urlset>
