@@ -227,8 +227,8 @@ def process_file(relpath, html):
 
 
 def main():
-    src_dir = "/home/claude/site"
-    out_dir = "/home/claude/site_out"
+    src_dir = os.getcwd()
+    out_dir = os.path.join(os.getcwd(), "site_out")
 
     processed = skipped = errors = 0
 
