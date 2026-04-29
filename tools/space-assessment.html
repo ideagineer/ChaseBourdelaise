@@ -181,7 +181,7 @@
 .comp-seg.ws{background:var(--blue);}
 .comp-seg.rm{background:#1a8a5e;}
 .comp-seg.am{background:#b45309;}
-.comp-seg.empty{background:var(--rule);flex:1;}
+.comp-seg.empty{background:var(--rule);flex:1;}.comp-seg.am{background:#b45309;}
 
 /* Breakdown list */
 .breakdown{display:flex;flex-direction:column;gap:0;}
@@ -191,7 +191,7 @@
 .bk-dot{width:8px;height:8px;flex-shrink:0;}
 .bk-dot.ws{background:var(--blue);}
 .bk-dot.rm{background:#1a8a5e;}
-.bk-dot.am{background:#b45309);}
+.bk-dot.am{background:#b45309;}
 .bk-dot.circ{background:var(--rule);border:1px solid var(--light);}
 .bk-val{font-family:"DM Mono",monospace;font-size:11px;color:var(--navy);letter-spacing:.05em;}
 .bk-total{display:flex;justify-content:space-between;align-items:center;padding:12px 0 0;margin-top:4px;font-weight:500;}
@@ -245,11 +245,11 @@
 .layout-card:hover{border-color:var(--navy);}
 .layout-card.sel{border-color:var(--blue);background:#f0f4ff;}
 .layout-card.sel::after{content:"✓";position:absolute;top:14px;right:14px;width:20px;height:20px;background:var(--blue);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
-.layout-icon{display:flex;gap:3px;align-items:flex-end;margin-bottom:14px;height:28px;}
-.layout-icon .box{background:var(--rule);border-radius:1px;flex-shrink:0;}
-.layout-name{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:4px;}
-.layout-desc{font-size:12px;font-weight:300;color:var(--light);line-height:1.5;}
-.layout-sf{font-family:"DM Mono",monospace;font-size:10px;color:var(--blue);margin-top:8px;letter-spacing:.05em;}
+.layout-icon{display:flex;gap:3px;align-items:flex-end;margin-bottom:14px;height:28px;pointer-events:none;}
+.layout-icon .box{background:var(--rule);border-radius:1px;flex-shrink:0;pointer-events:none;}
+.layout-name{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:4px;pointer-events:none;}
+.layout-desc{font-size:12px;font-weight:300;color:var(--light);line-height:1.5;pointer-events:none;}
+.layout-sf{font-family:"DM Mono",monospace;font-size:10px;color:var(--blue);margin-top:8px;letter-spacing:.05em;pointer-events:none;}
 
 /* ── STEPPER CARDS (rooms) ─────────────────────────── */
 .stepper-list{display:flex;flex-direction:column;gap:3px;}
@@ -409,9 +409,9 @@
           <div id="daysLabel" class="day-count-sub" style="margin-top:4px;color:var(--mid);font-size:13px;">—</div>
         </div>
         <div class="days-ctrl">
-          <button class="day-btn" onclick="stepDays(-1)">−</button>
+          <button type="button" class="day-btn" onclick="stepDays(-1)">−</button>
           <div class="day-count" id="daysVal">3</div>
-          <button class="day-btn" onclick="stepDays(1)">+</button>
+          <button type="button" class="day-btn" onclick="stepDays(1)">+</button>
         </div>
       </div>
       <div style="text-align:right;margin-top:-12px;margin-bottom:20px;font-family:'DM Mono',monospace;font-size:10px;color:var(--light);">1 = mostly remote &nbsp;·&nbsp; 5 = fully in-office</div>
@@ -700,9 +700,9 @@ function buildRooms() {
         <div class="sc-meta">${r.sf} SF &nbsp;·&nbsp; ${r.meta}</div>
       </div>
       <div class="sc-ctrl">
-        <button class="sc-btn minus" onclick="stepRoom('${r.id}',-1)">−</button>
+        <button type="button" class="sc-btn minus" onclick="stepRoom('${r.id}',-1)">−</button>
         <div class="sc-val" id="sv_${r.id}">0</div>
-        <button class="sc-btn plus"  onclick="stepRoom('${r.id}', 1)">+</button>
+        <button type="button" class="sc-btn plus"  onclick="stepRoom('${r.id}', 1)">+</button>
       </div>
     </div>`).join('');
 }
@@ -720,7 +720,7 @@ function stepRoom(id, delta) {
 function buildAmen() {
   Object.entries(AMEN).forEach(([cid, items]) => {
     document.getElementById(cid).innerHTML = items.map(it => `
-      <label class="amen-item" onclick="toggleAmen(this)">
+      <label class="amen-item" onclick="toggleAmen(event,this)">
         <input type="checkbox" id="${it.id}">
         <div class="amen-check"></div>
         <div>
@@ -731,9 +731,10 @@ function buildAmen() {
   });
 }
 
-function toggleAmen(el) {
+function toggleAmen(ev,el) {
+  ev.preventDefault();
   el.classList.toggle('sel');
-  el.querySelector('input').checked = !el.querySelector('input').checked;
+  el.querySelector('input').checked = el.classList.contains('sel');
   recalc();
 }
 
@@ -751,6 +752,10 @@ function stepDays(d) {
   document.getElementById('daysVal').textContent = daysInOffice;
   const labels = {1:'Rarely in',2:'Couple days/wk',3:'Standard hybrid',4:'Mostly in-office',5:'Fully in-office'};
   document.getElementById('daysLabel').textContent = labels[daysInOffice] || '';
+  // Update button disabled states
+  const btns = document.querySelectorAll('.day-btn');
+  if (btns[0]) btns[0].disabled = daysInOffice <= 1;
+  if (btns[1]) btns[1].disabled = daysInOffice >= 5;
   recalc();
 }
 
@@ -768,9 +773,10 @@ function recalc() {
 
   // Workspace SF
   let wsSF = 0;
-  if (layoutSF > 0 && desks > 0) {
+  const effLayoutSF = layoutSF > 0 ? layoutSF : 0; // 0 until layout card selected
+  if (desks > 0) {
     const openDesks = Math.max(0, desks - priv);
-    wsSF = Math.round(priv * 140 + openDesks * layoutSF);
+    wsSF = Math.round(priv * 140 + openDesks * effLayoutSF);
   }
 
   // Meeting SF
@@ -797,8 +803,9 @@ function recalc() {
   document.getElementById('sb-rsf').textContent = rentable > 0 ? rentable.toLocaleString() : '—';
 
   if (rentable > 0) {
-    const lo = Math.round(rentable * 0.92 / 100) * 100;
-    const hi = Math.round(rentable * 1.08 / 100) * 100;
+    const roundTo = rentable > 5000 ? 100 : 50;
+    const lo = Math.round(rentable * 0.92 / roundTo) * roundTo;
+    const hi = Math.round(rentable * 1.08 / roundTo) * roundTo;
     document.getElementById('sb-range').textContent = `${lo.toLocaleString()} – ${hi.toLocaleString()} RSF range`;
     if (desks > 0) {
       const ppp = Math.round(rentable / desks);
@@ -820,11 +827,11 @@ function recalc() {
   // Composition bar
   if (prog > 0) {
     const bar = document.getElementById('compBar');
-    bar.innerHTML = `
-      <div class="comp-seg ws" style="flex:${wsSF}"></div>
-      <div class="comp-seg rm" style="flex:${rmSF}"></div>
-      <div class="comp-seg am" style="background:#b45309;flex:${amSF}"></div>
-    `;
+    bar.innerHTML =
+      `<div class="comp-seg ws" style="flex:${wsSF}"></div>` +
+      `<div class="comp-seg rm" style="flex:${rmSF}"></div>` +
+      `<div class="comp-seg am" style="flex:${amSF}"></div>` +
+      (prog < 1 ? `<div class="comp-seg empty" style="flex:1"></div>` : '');
   }
 
   // Report preview
@@ -934,6 +941,12 @@ function genReport() {
 // ── INIT ─────────────────────────────────────────────
 buildRooms(); buildAmen();
 stepDays(0); // init label
+
+// Auto-select "Mixed" layout as default so workspace SF starts calculating
+(function() {
+  const defaultCard = document.querySelector('.layout-card[data-sf="95"]');
+  if (defaultCard) selectLayout(defaultCard);
+})();
 
 function toggleMenu(){const m=document.getElementById('mobileMenu');if(m)m.classList.toggle('open');}
 fetch('/nav.html').then(r=>r.text()).then(h=>{const el=document.getElementById('nav-placeholder');if(el)el.outerHTML=h;});
