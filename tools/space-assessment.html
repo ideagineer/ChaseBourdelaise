@@ -480,7 +480,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
       <p class="fs-sub">Click a layout to select it — this sets the square footage per workstation used in your space program calculation.</p>
 
       <div class="layout-grid">
-        <div class="lc" id="lc_trad" data-sf="140" onclick="selectLayout('lc_trad',140)">
+        <div class="lc" id="lc_trad" data-sf="140" onclick="selectLayout(this)">
           <div class="lc-header">
             <div class="lc-icon">
               <span style="width:19px;height:19px;"></span>
@@ -494,7 +494,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
           <div class="lc-desc">Mostly private enclosed offices. Status and privacy are priorities.</div>
           <div class="lc-sf">~140 SF / person</div>
         </div>
-        <div class="lc sel" id="lc_mixed" data-sf="95" onclick="selectLayout('lc_mixed',95)">
+        <div class="lc sel" id="lc_mixed" data-sf="95" onclick="selectLayout(this)">
           <div class="lc-header">
             <div class="lc-icon">
               <span style="width:16px;height:18px;"></span>
@@ -508,7 +508,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
           <div class="lc-desc">Leadership in offices, teams in open plan. Most common.</div>
           <div class="lc-sf">~95 SF / person</div>
         </div>
-        <div class="lc" id="lc_open" data-sf="55" onclick="selectLayout('lc_open',55)">
+        <div class="lc" id="lc_open" data-sf="55" onclick="selectLayout(this)">
           <div class="lc-header">
             <div class="lc-icon">
               <span style="width:10px;height:12px;opacity:.3;"></span>
@@ -524,7 +524,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
           <div class="lc-desc">Modern, collaborative. Minimal enclosed offices.</div>
           <div class="lc-sf">~55 SF / person</div>
         </div>
-        <div class="lc" id="lc_hot" data-sf="40" onclick="selectLayout('lc_hot',40)">
+        <div class="lc" id="lc_hot" data-sf="40" onclick="selectLayout(this)">
           <div class="lc-header">
             <div class="lc-icon">
               <span style="width:10px;height:10px;opacity:.2;"></span>
@@ -806,14 +806,24 @@ function stepDays(d) {
   recalc();
 }
 
+/* ─── ROOM STEP (via data-attributes) ───────────────── */
+function stepRoomBtn(btn) {
+  var id    = btn.getAttribute('data-id');
+  var delta = parseInt(btn.getAttribute('data-d')) || 1;
+  var vEl   = document.getElementById('sv_' + id);
+  if (!vEl) return;
+  var v = Math.max(0, (parseInt(vEl.textContent) || 0) + delta);
+  vEl.textContent = v;
+  document.getElementById('rc_' + id).className = 'room-card' + (v > 0 ? ' has-val' : '');
+  recalc();
+}
+
 /* ─── LAYOUT SELECT ──────────────────────────────────── */
-function selectLayout(cardId, sf) {
-  var cards = ['lc_trad','lc_mixed','lc_open','lc_hot'];
-  for (var i=0; i<cards.length; i++) {
-    document.getElementById(cards[i]).classList.remove('sel');
-  }
-  document.getElementById(cardId).classList.add('sel');
-  layoutSF = sf;
+function selectLayout(el) {
+  var all = document.querySelectorAll('.lc');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('sel');
+  el.classList.add('sel');
+  layoutSF = parseFloat(el.getAttribute('data-sf')) || 95;
   recalc();
 }
 
@@ -828,13 +838,8 @@ function stepRoom(id, delta) {
 }
 
 /* ─── AMENITY TOGGLE ─────────────────────────────────── */
-function toggleAmen(id) {
-  var el = document.getElementById('ai_' + id);
-  if (el.classList.contains('sel')) {
-    el.classList.remove('sel');
-  } else {
-    el.classList.add('sel');
-  }
+function toggleAmen(el) {
+  el.classList.toggle('sel');
   recalc();
 }
 
@@ -1002,9 +1007,9 @@ function buildRooms() {
         '</div>' +
       '</div>' +
       '<div class="step-ctrl">' +
-        '<button type="button" class="step-btn step-minus" onclick="stepRoom('' + r.id + '',-1)">−</button>' +
+        '<button type="button" class="step-btn step-minus" data-id="' + r.id + '" data-d="-1" onclick="stepRoomBtn(this)">&#8722;</button>' +
         '<div class="step-val" id="sv_' + r.id + '">0</div>' +
-        '<button type="button" class="step-btn step-plus" onclick="stepRoom('' + r.id + '',1)">+</button>' +
+        '<button type="button" class="step-btn step-plus" data-id="' + r.id + '" data-d="1" onclick="stepRoomBtn(this)">&#43;</button>' +
       '</div>' +
     '</div>';
   }
@@ -1019,7 +1024,7 @@ function buildAmen() {
     html += '<div class="amen-group"><div class="amen-group-title">' + grp.title + '</div><div class="amen-list">';
     for (var ai=0; ai<grp.items.length; ai++) {
       var it = grp.items[ai];
-      html += '<div class="amen-item" id="ai_' + it.id + '" data-id="' + it.id + '" onclick="toggleAmen('' + it.id + '')">' +
+      html += '<div class="amen-item" id="ai_' + it.id + '" data-id="' + it.id + '" onclick="toggleAmen(this)">' +
         '<div class="amen-chk"></div>' +
         '<div>' +
           '<div class="amen-name">' + it.n + '</div>' +
@@ -1127,14 +1132,14 @@ function genReport() {
     y+=14;sHead('INDUSTRY BENCHMARK COMPARISON');
     dRow(currentInd.label+' benchmark',currentInd.rsfPerSeat+' RSF/seat');
     if(desks>0) dRow('Your program',Math.round(rentable/desks)+' RSF/seat',true);
-    dRow('Note','Benchmarks sourced from architect's generic space program for 100–200 seat tenants');
+    dRow('Note','Benchmarks sourced from architect generic space program for 100-200 seat tenants');
   }
 
   /* Disclaimer */
   if(y>660){doc.addPage();y=48;} y+=14;
   rect(M,y,CW,48,'#F8F9FB'); hline(M,y,M+2,y+48,'#2251FF');
   doc.setFontSize(8);doc.setTextColor('#8A9BB0');doc.setFont('helvetica','italic');
-  doc.text(doc.splitTextToSize('This space program is preliminary based solely on inputs provided. Actual RSF will vary based on building efficiency, floor plate geometry, and specific space plan. Numbers should be verified through an architect's test-fit. Budget guidance is kept strictly confidential.',CW-24),M+12,y+12);
+  doc.text(doc.splitTextToSize('This space program is preliminary. Actual RSF will vary based on building efficiency, floor plate, and space plan. Verify through an architect test-fit. Budget guidance is kept strictly confidential.',CW-24),M+12,y+12);
   y+=56;
 
   /* Footer on every page */
