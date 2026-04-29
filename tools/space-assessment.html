@@ -18,859 +18,922 @@
 <meta property="og:url" content="https://www.chasebourdelaise.com/tools/space-assessment.html"/>
 <meta property="og:type" content="website"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Office Space Assessment — Chase Bourdelaise"/>
-<meta name="twitter:description" content="Find out exactly how much office space your organization needs. 10 minutes. Architect-ready output."/>
-<meta name="twitter:image" content="https://www.chasebourdelaise.com/images/og_image.png"/>
 <link rel="canonical" href="https://www.chasebourdelaise.com/tools/space-assessment.html"/>
 <meta name="robots" content="index, follow"/>
 <meta name="theme-color" content="#051C2C"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","name":"Chase Bourdelaise","jobTitle":"Managing Director","worksFor":{"@type":"Organization","name":"Transwestern"},"url":"https://www.chasebourdelaise.com","sameAs":["https://www.linkedin.com/in/tenantadvisor/"],"telephone":"+12025911926","email":"chase.bourdelaise@transwestern.com"},{"@type":"WebApplication","name":"Office Space Assessment Tool","url":"https://www.chasebourdelaise.com/tools/space-assessment.html","description":"Interactive office space needs assessment producing an architect-ready space program and RSF estimate.","applicationCategory":"BusinessApplication","author":{"@type":"Person","name":"Chase Bourdelaise"}}]}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-/* ── SITE CSS ──────────────────────────────────────── */
-:root{--navy:#051C2C;--blue:#2251FF;--mid:#4A5568;--light:#8A9BB0;--rule:#D8DDE5;--bg:#FFFFFF;--off:#F8F9FB;}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--navy);-webkit-font-smoothing:antialiased;padding-top:64px;}
-.label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--light);}
-.container{max-width:1160px;margin:0 auto;padding:0 64px;}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 64px;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);}
-.nav-name{font-family:"Cormorant Garamond",serif;font-size:18px;font-weight:600;color:var(--navy);text-decoration:none;letter-spacing:-.3px;}
-.nav-links{display:flex;gap:32px;list-style:none;align-items:center;}
-.nav-links a{font-size:12px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .15s;}
-.nav-links a:hover{color:var(--navy);}
-.nav-linkedin{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .15s;}
-.nav-linkedin:hover{color:var(--blue);}
-.nav-linkedin svg{width:14px;height:14px;fill:currentColor;}
-.nav-cta{font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--navy);padding:9px 22px;text-decoration:none;transition:background .15s;}
-.nav-cta:hover{background:var(--blue);}
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
-.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--navy);transition:all .2s;}
-.nav-mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);z-index:99;padding:16px 0;flex-direction:column;}
-.nav-mobile-menu.open{display:flex;}
-.nav-mobile-menu a{padding:14px 24px;font-size:13px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--rule);transition:color .15s;}
-.nav-mobile-menu a:last-child{border-bottom:none;}
-.nav-mobile-menu a:hover{color:var(--navy);}
-footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,255,255,.05);}
-.footer-inner{display:flex;justify-content:space-between;align-items:center;}
-.footer-name{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;color:rgba(255,255,255,.85);}
-.footer-tagline{font-family:"Cormorant Garamond",serif;font-size:13px;font-style:italic;color:rgba(255,255,255,.24);margin-top:4px;}
-.footer-links{display:flex;gap:28px;list-style:none;align-items:center;}
-.footer-links a{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);text-decoration:none;transition:color .15s;}
-.footer-links a:hover{color:rgba(255,255,255,.75);}
-.footer-linkedin{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);text-decoration:none;transition:color .15s;}
-.footer-linkedin:hover{color:rgba(255,255,255,.75);}
-.footer-linkedin svg{width:13px;height:13px;fill:currentColor;}
-.footer-copy{font-size:11px;color:rgba(255,255,255,.2);font-weight:300;text-align:right;margin-top:3px;}
-.footer-right{text-align:right;}
-.back-link{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--light);text-decoration:none;margin-bottom:28px;transition:color .15s;font-family:"DM Mono",monospace;}
-.back-link:hover{color:var(--navy);}
-.back-link::before{content:"←";margin-right:4px;}
-@media(max-width:1000px){nav{padding:0 24px;}.nav-links{display:none;}.nav-hamburger{display:flex;}.nav-cta{display:none;}footer{padding:40px 24px;}.footer-inner{flex-direction:column;gap:28px;text-align:center;}.footer-right{text-align:center;}.container{padding:0 24px;}}
 
-/* ── TOOL LANDING HERO ─────────────────────────────── */
+  :root {
+    --navy:  #051C2C;
+    --blue:  #2251FF;
+    --mid:   #4A5568;
+    --light: #8A9BB0;
+    --rule:  #D8DDE5;
+    --bg:    #FFFFFF;
+    --off:   #F8F9FB;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "DM Sans", sans-serif; background: var(--bg); color: var(--navy); -webkit-font-smoothing: antialiased; }
+
+  .display { font-family: "Cormorant Garamond", serif; font-size: clamp(38px, 5vw, 68px); font-weight: 600; line-height: 1.05; letter-spacing: -1.5px; color: var(--navy); }
+  .headline { font-family: "Cormorant Garamond", serif; font-size: clamp(32px, 3.5vw, 48px); font-weight: 600; line-height: 1.1; letter-spacing: -1px; color: var(--navy); }
+  .headline.light { color: #fff; }
+  .label { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--light); }
+  .body-text { font-size: 16px; font-weight: 300; line-height: 1.85; color: var(--mid); }
+
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+  hr.rule { height: 1px; background: var(--rule); border: none; }
+  hr.accent { background: var(--blue); height: 1px; width: 40px; border: none; margin-bottom: 28px; }
+  section { padding: 96px 0; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 64px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 64px; background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule);
+  }
+  .nav-name { font-family: "Cormorant Garamond", serif; font-size: 18px; font-weight: 600; color: var(--navy); text-decoration: none; letter-spacing: -0.3px; }
+  .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+  .nav-links a { font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--navy); }
+  .nav-linkedin { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.15s; }
+  .nav-linkedin:hover { color: var(--blue); }
+  .nav-linkedin svg { width: 14px; height: 14px; fill: currentColor; }
+  .nav-cta { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: var(--navy); padding: 9px 22px; text-decoration: none; transition: background 0.15s; }
+  .nav-cta:hover { background: var(--blue); }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+  .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--navy); transition: all 0.2s; }
+  .nav-mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); z-index: 99; padding: 16px 0; flex-direction: column; }
+  .nav-mobile-menu.open { display: flex; }
+  .nav-mobile-menu a { padding: 14px 24px; font-size: 13px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.15s; }
+  .nav-mobile-menu a:last-child { border-bottom: none; }
+  .nav-mobile-menu a:hover { color: var(--navy); }
+  @media (max-width: 1000px) { .nav-links { display: none; } .nav-hamburger { display: flex; } .nav-cta { display: none; } }
+
+  /* TOOLS */
+  .tools-layout { display: grid; grid-template-columns: 280px 1fr; gap: 96px; align-items: start; }
+  .tools-intro p { margin-top: 20px; }
+  .tools-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .tool-row { border: 1px solid var(--rule); padding: 26px 30px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
+  .tool-row h3 { font-family: "Cormorant Garamond", serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 5px; }
+  .tool-row p { font-size: 13px; font-weight: 300; line-height: 1.75; color: var(--mid); }
+  .tool-badge { font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 9px; border: 1px solid; white-space: nowrap; flex-shrink: 0; }
+  .badge-client { border-color: var(--blue); color: var(--blue); }
+  .badge-internal { border-color: var(--rule); color: var(--light); }
+  .badge-broker { border-color: var(--navy); color: var(--navy); }
+  .badge-lead { border-color: #1a8a5e; color: #1a8a5e; }
+
+  /* FOOTER */
+  footer { background: var(--navy); padding: 48px 64px; border-top: 1px solid rgba(255,255,255,0.05); }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; }
+  .footer-name { font-family: "Cormorant Garamond", serif; font-size: 17px; font-weight: 600; color: rgba(255,255,255,0.85); }
+  .footer-tagline { font-family: "Cormorant Garamond", serif; font-size: 13px; font-style: italic; color: rgba(255,255,255,0.24); margin-top: 4px; }
+  .footer-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.15s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.75); }
+  .footer-linkedin { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.15s; }
+  .footer-linkedin:hover { color: rgba(255,255,255,0.75); }
+  .footer-linkedin svg { width: 13px; height: 13px; fill: currentColor; }
+  .footer-copy { font-size: 11px; color: rgba(255,255,255,0.2); font-weight: 300; text-align: right; margin-top: 3px; }
+  .footer-right { text-align: right; }
+
+  body { padding-top: 64px; }
+  .inner-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--rule); background: var(--bg); }
+  .inner-hero .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+  .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light); text-decoration: none; margin-bottom: 28px; transition: color 0.15s; font-family: "DM Mono", monospace; }
+  .back-link:hover { color: var(--navy); }
+  .back-link::before { content: "←"; margin-right: 4px; }
+  .inner-hero h1 { font-family: "Cormorant Garamond", serif; font-size: clamp(34px, 5vw, 60px); font-weight: 600; line-height: 1.05; letter-spacing: -1.5px; color: var(--navy); max-width: 820px; margin-bottom: 20px; }
+  .inner-label { display: block; margin-bottom: 16px; }
+  .inner-desc { font-size: 18px; font-weight: 300; line-height: 1.8; color: var(--mid); max-width: 680px; }
+
+  .exp-card {
+    background: var(--bg); padding: 48px 40px;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    height: 100%;
+  }
+  .exp-card:hover {
+    border-bottom-color: var(--blue);
+    box-shadow: 0 8px 32px rgba(5,28,44,0.08);
+  }
+
+  body { padding-top: 64px; }
+  .inner-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--rule); background: var(--bg); }
+  .inner-hero .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+  .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light); text-decoration: none; margin-bottom: 28px; transition: color 0.15s; font-family: "DM Mono", monospace; }
+  .back-link:hover { color: var(--navy); }
+  .back-link::before { content: "←"; margin-right: 4px; }
+  .inner-hero h1 { font-family: "Cormorant Garamond", serif; font-size: clamp(34px, 5vw, 60px); font-weight: 600; line-height: 1.05; letter-spacing: -1.5px; color: var(--navy); max-width: 820px; margin-bottom: 20px; }
+  .inner-label { display: block; margin-bottom: 16px; }
+  .inner-desc { font-size: 18px; font-weight: 300; line-height: 1.8; color: var(--mid); max-width: 680px; }
+  .page-section { padding: 72px 0; }
+  .page-section .container { max-width: 1160px; margin: 0 auto; padding: 0 64px; }
+  @media (max-width: 1000px) { .inner-hero .container, .page-section .container { padding: 0 24px; } }
+
+/* ═══════════════════════════════════════════════════════
+   TOOL-SPECIFIC STYLES
+═══════════════════════════════════════════════════════ */
+
+/* ── HERO (unchanged) ─────────────────────────────── */
 .tool-hero{background:var(--navy);padding:80px 0 0;}
 .tool-hero-inner{max-width:1160px;margin:0 auto;padding:0 64px;}
 .tool-hero-top{display:grid;grid-template-columns:1fr 380px;gap:64px;align-items:start;padding-bottom:64px;}
-.tool-hero-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:20px;display:flex;align-items:center;gap:14px;}
-.tool-hero-label::before{content:"";display:block;width:32px;height:1px;background:var(--blue);}
+.hero-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:20px;display:flex;align-items:center;gap:14px;}
+.hero-label::before{content:"";display:block;width:32px;height:1px;background:var(--blue);}
 .tool-hero h1{font-family:"Cormorant Garamond",serif;font-size:clamp(36px,4.5vw,60px);font-weight:600;line-height:1.05;letter-spacing:-1.5px;color:#fff;margin-bottom:24px;}
-.tool-hero h1 em{font-style:italic;color:rgba(255,255,255,.55);}
-.tool-hero-desc{font-size:15px;font-weight:300;line-height:1.9;color:rgba(255,255,255,.45);max-width:520px;margin-bottom:36px;}
-.tool-hero-cta{display:inline-flex;align-items:center;gap:12px;background:var(--blue);color:#fff;padding:15px 32px;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;font-family:"DM Sans",sans-serif;transition:background .15s;}
-.tool-hero-cta:hover{background:#1a3fd4;}
-.tool-hero-cta svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
-
-/* Output card */
+.tool-hero h1 em{font-style:italic;color:rgba(255,255,255,.5);}
+.hero-desc{font-size:15px;font-weight:300;line-height:1.9;color:rgba(255,255,255,.42);max-width:520px;margin-bottom:36px;}
+.hero-cta{display:inline-flex;align-items:center;gap:12px;background:var(--blue);color:#fff;padding:15px 32px;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border:none;font-family:"DM Sans",sans-serif;transition:background .15s;text-decoration:none;}
+.hero-cta:hover{background:#1a3fd4;}
+.hero-cta svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
 .output-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:32px;}
 .output-card-title{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px;}
-.output-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.output-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);}
 .output-item:last-child{border-bottom:none;}
-.output-icon{width:6px;height:6px;background:var(--blue);flex-shrink:0;margin-top:6px;}
-.output-text{font-size:13px;font-weight:300;color:rgba(255,255,255,.6);line-height:1.6;}
+.output-dot{width:5px;height:5px;background:var(--blue);flex-shrink:0;margin-top:7px;}
+.output-text{font-size:13px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.6;}
 .output-text strong{color:rgba(255,255,255,.85);font-weight:400;}
-
-/* Stats strip */
-.tool-stats{border-top:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:repeat(4,1fr);}
-.tool-stat{padding:28px 0;border-right:1px solid rgba(255,255,255,.07);text-align:center;}
+.tool-stats{border-top:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:repeat(2,1fr);max-width:400px;}
+.tool-stat{padding:26px 0;border-right:1px solid rgba(255,255,255,.07);text-align:center;}
 .tool-stat:last-child{border-right:none;}
-.tool-stat-n{font-family:"Cormorant Garamond",serif;font-size:32px;font-weight:600;color:#fff;letter-spacing:-1px;line-height:1;}
-.tool-stat-l{font-size:11px;font-weight:300;color:rgba(255,255,255,.3);margin-top:5px;letter-spacing:.02em;}
+.tool-stat-n{font-family:"Cormorant Garamond",serif;font-size:30px;font-weight:600;color:#fff;letter-spacing:-1px;line-height:1;}
+.tool-stat-l{font-size:11px;font-weight:300;color:rgba(255,255,255,.3);margin-top:4px;}
 
-/* ── PROGRESS + RSF BAR ─────────────────────────────── */
-.prog-bar-outer{position:sticky;top:64px;z-index:50;background:var(--bg);border-bottom:1px solid var(--rule);}
-.prog-bar-inner{max-width:1160px;margin:0 auto;padding:0 64px;display:flex;align-items:stretch;gap:0;}
-.prog-step{flex:1;padding:14px 0 12px;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--light);border-bottom:2px solid transparent;text-align:center;line-height:1.4;transition:all .2s;user-select:none;}
-.prog-step.active{color:var(--navy);border-bottom-color:var(--blue);}
-.prog-step.done{color:var(--blue);border-bottom-color:var(--rule);}
-.prog-rsf{display:flex;align-items:center;gap:8px;padding:0 0 0 24px;border-left:1px solid var(--rule);flex-shrink:0;margin-left:auto;}
-.prog-rsf-label{font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--light);}
-.prog-rsf-num{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600;color:var(--blue);letter-spacing:-0.5px;line-height:1;min-width:80px;text-align:right;}
+/* ── TOOL LAYOUT: form + sticky sidebar ────────────── */
+.tool-wrap{display:grid;grid-template-columns:1fr 340px;max-width:1160px;margin:0 auto;min-height:80vh;}
+.tool-form{padding:56px 64px 160px;border-right:1px solid var(--rule);}
+.tool-sidebar{position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;padding:36px 32px;display:flex;flex-direction:column;gap:0;}
 
-/* ── FORM SHELL ─────────────────────────────────────── */
-.form-shell{max-width:900px;margin:0 auto;padding:0 64px 120px;}
-.t-sec{display:none;padding-top:56px;animation:tIn .3s ease forwards;}
-.t-sec.active{display:block;}
-@keyframes tIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.t-eye{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
-.t-eye::after{content:"";flex:1;height:1px;background:var(--rule);}
-.t-sec h2{font-family:"Cormorant Garamond",serif;font-size:clamp(22px,2.8vw,32px);font-weight:600;letter-spacing:-.5px;color:var(--navy);margin-bottom:6px;line-height:1.1;}
-.t-sub{font-size:14px;font-weight:300;line-height:1.75;color:var(--mid);margin-bottom:32px;max-width:560px;}
+/* ── STICKY RSF PANEL ──────────────────────────────── */
+.rsf-panel{text-align:center;padding-bottom:28px;border-bottom:1px solid var(--rule);margin-bottom:24px;}
+.rsf-panel-label{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--light);margin-bottom:10px;}
+.rsf-big{font-family:"Cormorant Garamond",serif;font-size:52px;font-weight:600;color:var(--navy);letter-spacing:-2px;line-height:1;transition:all .3s;}
+.rsf-unit{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--light);margin-top:4px;}
+.rsf-range{font-size:12px;font-weight:300;color:var(--light);margin-top:6px;}
 
-/* Fields */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;}
-.fg3{grid-template-columns:1fr 1fr 1fr;}
+/* Composition bar */
+.comp-bar{display:flex;height:6px;border-radius:0;overflow:hidden;margin:20px 0 16px;gap:1px;}
+.comp-seg{height:100%;transition:flex .4s ease;}
+.comp-seg.ws{background:var(--blue);}
+.comp-seg.rm{background:#1a8a5e;}
+.comp-seg.am{background:#b45309;}
+.comp-seg.empty{background:var(--rule);flex:1;}
+
+/* Breakdown list */
+.breakdown{display:flex;flex-direction:column;gap:0;}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule);font-size:13px;}
+.bk-row:last-child{border-bottom:none;}
+.bk-label{display:flex;align-items:center;gap:8px;color:var(--mid);font-weight:300;}
+.bk-dot{width:8px;height:8px;flex-shrink:0;}
+.bk-dot.ws{background:var(--blue);}
+.bk-dot.rm{background:#1a8a5e;}
+.bk-dot.am{background:#b45309);}
+.bk-dot.circ{background:var(--rule);border:1px solid var(--light);}
+.bk-val{font-family:"DM Mono",monospace;font-size:11px;color:var(--navy);letter-spacing:.05em;}
+.bk-total{display:flex;justify-content:space-between;align-items:center;padding:12px 0 0;margin-top:4px;font-weight:500;}
+.bk-total .bk-label{color:var(--navy);font-weight:500;}
+.bk-total .bk-val{font-size:13px;color:var(--navy);}
+
+/* CTA in sidebar */
+.sidebar-cta{margin-top:auto;padding-top:24px;}
+.sidebar-cta p{font-size:12px;font-weight:300;color:var(--light);line-height:1.6;margin-bottom:14px;}
+
+/* ── FORM SECTIONS ─────────────────────────────────── */
+.fs{margin-bottom:56px;}
+.fs-head{display:flex;align-items:baseline;gap:16px;margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid var(--navy);}
+.fs-num{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);}
+.fs-title{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:600;color:var(--navy);letter-spacing:-.5px;line-height:1.1;}
+.fs-sub{font-size:14px;font-weight:300;color:var(--mid);line-height:1.7;margin-bottom:24px;max-width:480px;}
+
+/* ── FIELD INPUTS ──────────────────────────────────── */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;}
 .ff{grid-column:1/-1;}
-.f{margin-bottom:16px;}
-.f label{display:block;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--light);margin-bottom:5px;}
-.f input,.f select,.f textarea{width:100%;border:1px solid var(--rule);background:var(--bg);color:var(--navy);padding:10px 12px;font-size:14px;font-family:"DM Sans",sans-serif;outline:none;transition:border-color .15s;border-radius:0;-webkit-appearance:none;min-height:44px;}
-.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--navy);}
-.f input::placeholder,.f textarea::placeholder{color:var(--light);}
-.f textarea{resize:vertical;min-height:80px;}
-.f select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A9BB0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-.fhint{font-size:11px;font-weight:300;color:var(--light);margin-top:3px;line-height:1.5;}
-.tdiv{height:1px;background:var(--rule);margin:28px 0;}
-.mlabel{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--light);margin-bottom:10px;display:block;}
+.field{margin-bottom:4px;}
+.field label{display:block;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--light);margin-bottom:6px;}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--rule);background:var(--bg);color:var(--navy);padding:13px 16px;font-size:16px;font-family:"DM Sans",sans-serif;outline:none;transition:border-color .15s;border-radius:0;-webkit-appearance:none;min-height:50px;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--navy);}
+.field input::placeholder,.field textarea::placeholder{color:var(--light);}
+.field textarea{resize:vertical;min-height:88px;font-size:15px;}
+.field select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A9BB0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+.field-hint{font-size:12px;font-weight:300;color:var(--light);margin-top:5px;line-height:1.5;}
 
-/* Sub-section heads inside form */
-.sub-head{font-family:"Cormorant Garamond",serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:14px;padding-top:4px;}
+/* ── BIG NUMBER INPUTS (headcount) ─────────────────── */
+.big-num-group{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:20px;min-width:0;}
+.big-num{border:1px solid var(--rule);padding:20px;text-align:center;transition:border-color .2s;}
+.big-num:focus-within{border-color:var(--navy);}
+.big-num label{display:block;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--light);margin-bottom:8px;}
+.big-num input{width:100%;border:none;outline:none;font-family:"Cormorant Garamond",serif;font-size:40px;font-weight:600;color:var(--navy);letter-spacing:-1px;text-align:center;background:transparent;padding:0;}
+.big-num input::placeholder{color:var(--rule);}
 
-/* Dept table */
-.dt{width:100%;border-collapse:collapse;font-size:13px;}
-.dt th{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--light);padding:9px 10px;background:var(--off);border-bottom:1px solid var(--rule);text-align:left;white-space:nowrap;}
-.dt td{padding:6px 10px;border-bottom:1px solid var(--rule);vertical-align:middle;}
-.dt td:first-child{font-weight:400;color:var(--navy);}
-.dt input[type=text],.dt input[type=number]{width:100%;border:1px solid var(--rule);padding:5px 8px;font-size:13px;font-family:"DM Sans",sans-serif;outline:none;background:var(--bg);color:var(--navy);border-radius:0;transition:border-color .15s;min-height:36px;}
-.dt input[type=number]{text-align:center;max-width:64px;}
-.dt input:focus{border-color:var(--navy);}
-.dt .cc{font-family:"DM Mono",monospace;font-size:11px;color:var(--blue);text-align:center;font-weight:500;}
-.dt tbody tr:last-child td{border-bottom:none;}
-.dt tfoot td{background:var(--navy);color:#fff;padding:9px 10px;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;}
-.dt tfoot .cs{font-size:12px;text-align:center;}
-.add-row{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);background:none;border:none;cursor:pointer;padding:8px 0;transition:color .15s;}
-.add-row:hover{color:var(--navy);}
+/* ── DAYS STEPPER ──────────────────────────────────── */
+.days-stepper{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--rule);padding:20px 24px;margin-bottom:20px;}
+.days-stepper-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--light);}
+.days-ctrl{display:flex;align-items:center;gap:0;}
+.day-btn{width:48px;height:48px;border:1px solid var(--rule);background:var(--bg);cursor:pointer;font-size:22px;font-weight:300;color:var(--mid);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-family:"DM Sans",sans-serif;}
+.day-btn:hover{border-color:var(--navy);color:var(--navy);}
+.day-btn:disabled{opacity:.3;cursor:not-allowed;}
+.day-count{min-width:72px;text-align:center;font-family:"Cormorant Garamond",serif;font-size:32px;font-weight:600;color:var(--navy);letter-spacing:-1px;line-height:1;padding:0 8px;}
+.day-count-sub{font-size:11px;font-weight:300;color:var(--light);text-align:center;margin-top:2px;}
 
-/* Room cards */
-.rcg{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:20px;}
-.rc{border:1px solid var(--rule);padding:14px 16px;display:grid;grid-template-columns:1fr 64px 64px;align-items:center;gap:8px;background:var(--bg);transition:border-color .15s;}
-.rc:hover{border-color:var(--navy);}
-.rc-name{font-size:13px;font-weight:400;color:var(--navy);}
-.rc-note{font-size:11px;color:var(--light);margin-top:1px;}
-.rc-lbl{font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--light);margin-bottom:2px;}
-.rc input[type=number]{width:100%;border:1px solid var(--rule);padding:5px 6px;font-size:13px;text-align:center;font-family:"DM Sans",sans-serif;outline:none;background:var(--bg);color:var(--navy);border-radius:0;transition:border-color .15s;min-height:36px;}
-.rc input:focus{border-color:var(--navy);}
+/* ── LAYOUT SELECTOR CARDS ─────────────────────────── */
+.layout-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:24px;}
+.layout-card{border:1px solid var(--rule);padding:22px 20px;cursor:pointer;transition:all .2s;position:relative;}
+.layout-card:hover{border-color:var(--navy);}
+.layout-card.sel{border-color:var(--blue);background:#f0f4ff;}
+.layout-card.sel::after{content:"✓";position:absolute;top:14px;right:14px;width:20px;height:20px;background:var(--blue);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+.layout-icon{display:flex;gap:3px;align-items:flex-end;margin-bottom:14px;height:28px;}
+.layout-icon .box{background:var(--rule);border-radius:1px;flex-shrink:0;}
+.layout-name{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+.layout-desc{font-size:12px;font-weight:300;color:var(--light);line-height:1.5;}
+.layout-sf{font-family:"DM Mono",monospace;font-size:10px;color:var(--blue);margin-top:8px;letter-spacing:.05em;}
 
-/* Checklist */
-.ckg{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
-.ck{display:flex;align-items:center;gap:11px;border:1px solid var(--rule);padding:12px 13px;cursor:pointer;transition:all .15s;user-select:none;min-height:52px;}
-.ck:hover{border-color:var(--navy);}
-.ck.sel{border-color:var(--blue);background:#f0f4ff;}
-.ck input{display:none;}
-.ck-box{width:15px;height:15px;border:1px solid var(--rule);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
-.ck.sel .ck-box{background:var(--blue);border-color:var(--blue);}
-.ck.sel .ck-box::after{content:"";display:block;width:7px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px);}
-.ck-label{font-size:13px;color:var(--navy);}
-.ck-sub{font-size:11px;color:var(--light);margin-top:1px;}
+/* ── STEPPER CARDS (rooms) ─────────────────────────── */
+.stepper-list{display:flex;flex-direction:column;gap:3px;}
+.stepper-card{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--rule);padding:16px 20px;gap:16px;transition:border-color .15s;}
+.stepper-card:hover{border-color:var(--mid);}
+.stepper-card.active{border-color:var(--blue);background:#f8f9ff;}
+.sc-info{flex:1;min-width:0;}
+.sc-name{font-size:15px;font-weight:400;color:var(--navy);margin-bottom:2px;}
+.sc-meta{font-family:"DM Mono",monospace;font-size:10px;color:var(--light);letter-spacing:.05em;}
+.sc-ctrl{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.sc-btn{width:44px;height:44px;border:1px solid var(--rule);background:var(--bg);cursor:pointer;font-size:20px;font-weight:300;color:var(--mid);display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:"DM Sans",sans-serif;user-select:none;-webkit-user-select:none;}
+.sc-btn:hover{border-color:var(--navy);color:var(--navy);}
+.sc-btn:active{background:var(--off);}
+.sc-btn.minus{border-right:none;}
+.sc-btn.plus{border-left:none;}
+.sc-val{width:52px;height:44px;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:var(--navy);line-height:1;}
 
-/* Priority chips */
-.chips{display:flex;gap:2px;flex-wrap:wrap;}
-.chip{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--rule);cursor:pointer;transition:all .15s;user-select:none;color:var(--light);background:var(--bg);min-height:36px;display:flex;align-items:center;}
+/* ── AMENITY CHECKS (large, single column) ────────── */
+.amen-section{margin-bottom:28px;}
+.amen-section-title{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--navy);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+.amen-list{display:flex;flex-direction:column;gap:3px;}
+.amen-item{display:flex;align-items:center;gap:14px;border:1px solid var(--rule);padding:14px 16px;cursor:pointer;transition:all .15s;user-select:none;min-height:56px;}
+.amen-item:hover{border-color:var(--navy);}
+.amen-item.sel{border-color:var(--blue);background:#f0f4ff;}
+.amen-item input{display:none;}
+.amen-check{width:20px;height:20px;border:1.5px solid var(--rule);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.amen-item.sel .amen-check{background:var(--blue);border-color:var(--blue);}
+.amen-item.sel .amen-check::after{content:"";display:block;width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px);}
+.amen-name{font-size:15px;font-weight:400;color:var(--navy);}
+.amen-sub{font-size:12px;font-weight:300;color:var(--light);margin-top:1px;}
+
+/* ── PRIORITY CHIPS ─────────────────────────────────── */
+.chips{display:flex;gap:4px;flex-wrap:wrap;}
+.chip{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:9px 14px;border:1px solid var(--rule);cursor:pointer;transition:all .15s;user-select:none;color:var(--light);background:var(--bg);}
 .chip:hover{border-color:var(--navy);color:var(--navy);}
 .chip.sel{background:var(--navy);color:#fff;border-color:var(--navy);}
 
-/* Buttons */
-.btn-row{display:flex;gap:12px;justify-content:space-between;margin-top:40px;}
-.tb{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:13px 28px;border:none;cursor:pointer;transition:all .15s;min-height:48px;}
-.tb-p{background:var(--navy);color:#fff;}
-.tb-p:hover{background:var(--blue);}
-.tb-o{background:transparent;color:var(--navy);border:1px solid var(--rule);}
-.tb-o:hover{border-color:var(--navy);}
-.tb-g{background:var(--blue);color:#fff;font-size:13px;padding:14px 32px;flex:1;}
-.tb-g:hover{background:#1a3fd4;}
-.tb-g:disabled{background:var(--light);cursor:not-allowed;}
+/* ── REPORT GATE ────────────────────────────────────── */
+.report-preview{background:var(--navy);padding:28px 32px;margin-bottom:4px;}
+.rp-label{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:6px;}
+.rp-rsf{font-family:"Cormorant Garamond",serif;font-size:40px;font-weight:600;color:#fff;letter-spacing:-1.5px;line-height:1;}
+.rp-sub{font-size:12px;font-weight:300;color:rgba(255,255,255,.3);margin-top:4px;}
+.email-gate{border:1px solid var(--rule);padding:32px;}
+.email-gate h3{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:var(--navy);margin-bottom:6px;}
+.email-gate > p{font-size:13px;font-weight:300;color:var(--mid);margin-bottom:24px;line-height:1.7;}
+.submit-btn{width:100%;padding:16px;background:var(--blue);color:#fff;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;font-family:"DM Sans",sans-serif;transition:background .15s;margin-top:4px;min-height:52px;}
+.submit-btn:hover{background:#1a3fd4;}
+.submit-btn:disabled{background:var(--light);cursor:not-allowed;}
+.fine{font-size:11px;font-weight:300;color:var(--light);text-align:center;margin-top:10px;line-height:1.5;}
 
-/* RSF preview */
-.rsf-block{background:var(--navy);padding:28px 32px;margin:18px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;}
-.rsf-lbl{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:6px;}
-.rsf-num{font-family:"Cormorant Garamond",serif;font-size:44px;font-weight:600;color:#fff;line-height:1;letter-spacing:-2px;}
-.rsf-sub{font-size:11px;font-weight:300;color:rgba(255,255,255,.3);margin-top:4px;}
-.rsf-r{text-align:right;flex-shrink:0;}
-.rsf-ri{font-size:12px;font-weight:300;color:rgba(255,255,255,.35);padding:2px 0;}
-.sum-card{border:1px solid var(--rule);margin-bottom:2px;}
-.sum-head{background:var(--off);padding:10px 16px;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--light);display:flex;justify-content:space-between;}
-.sum-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:9px 16px;border-top:1px solid var(--rule);font-size:13px;align-items:center;}
-.sum-row:first-of-type{border-top:none;}
-.sum-l{color:var(--mid);font-weight:300;}
-.sum-v{color:var(--navy);text-align:right;}
-
-/* Email gate */
-.email-gate{background:var(--off);border:1px solid var(--rule);padding:30px;margin-top:24px;}
-.email-gate h3{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600;color:var(--navy);margin-bottom:5px;}
-.email-gate>p{font-size:13px;font-weight:300;color:var(--mid);margin-bottom:20px;line-height:1.7;}
-
-/* Success */
-.suc{display:none;text-align:center;padding:72px 40px;max-width:640px;margin:0 auto;}
-.suc.show{display:block;}
-.suc-icon{width:56px;height:56px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+/* ── SUCCESS ────────────────────────────────────────── */
+.suc-wrap{display:none;text-align:center;padding:80px 40px;max-width:600px;margin:0 auto;}
+.suc-wrap.show{display:block;}
+.suc-icon{width:56px;height:56px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;}
 .suc-icon svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;}
-.suc h2{font-family:"Cormorant Garamond",serif;font-size:32px;font-weight:600;color:var(--navy);margin-bottom:12px;}
-.suc p{font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;}
-.suc a.tb-p{display:inline-block;margin-top:22px;text-decoration:none;}
+.suc-wrap h2{font-family:"Cormorant Garamond",serif;font-size:32px;font-weight:600;color:var(--navy);margin-bottom:12px;}
+.suc-wrap p{font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;}
 
-/* ── MOBILE ─────────────────────────────────────────── */
-@media(max-width:820px){
+/* ── DIVIDER ────────────────────────────────────────── */
+.tdiv{height:1px;background:var(--rule);margin:28px 0;}
+
+/* ── MOBILE ──────────────────────────────────────────── */
+@media(max-width:900px){
   .tool-hero-inner{padding:0 24px;}
-  .tool-hero-top{grid-template-columns:1fr;gap:36px;}
+  .tool-hero-top{grid-template-columns:1fr;}
   .output-card{display:none;}
   .tool-stats{grid-template-columns:1fr 1fr;}
-  .tool-stat{padding:20px 0;}
-  .prog-bar-inner{padding:0 16px;overflow-x:auto;}
-  .prog-step{font-size:8px;padding:10px 0 8px;min-width:52px;}
-  .prog-rsf{padding-left:12px;}
-  .prog-rsf-label{display:none;}
-  .prog-rsf-num{font-size:16px;min-width:60px;}
-  .form-shell{padding:0 20px 80px;}
-  .fg,.fg3{grid-template-columns:1fr;}
+  .tool-wrap{grid-template-columns:1fr;} /* stack */
+  .tool-form{padding:36px 24px 80px;border-right:none;}
+  .tool-sidebar{position:static;height:auto;border-top:3px solid var(--blue);padding:24px;background:var(--off);}
+  .rsf-panel{padding-bottom:16px;margin-bottom:16px;}
+  .rsf-big{font-size:42px;}
+  .sidebar-cta{display:none;}
+  .big-num-group{grid-template-columns:1fr 1fr 1fr;}
+  .layout-grid{grid-template-columns:1fr;}
+  .fg{grid-template-columns:1fr;}
   .ff{grid-column:1;}
-  .rcg{grid-template-columns:1fr;}
-  .rc{grid-template-columns:1fr 58px 58px;padding:10px 12px;gap:6px;}
-  .ckg{grid-template-columns:1fr;}
-  .rsf-block{flex-direction:column;gap:12px;padding:20px;}
-  .rsf-r{text-align:left;}
-  .rsf-num{font-size:36px;}
-  .btn-row{flex-direction:column-reverse;}
-  .tb,.tb-g{width:100%;text-align:center;}
-  .tool-hero{padding:60px 0 0;}
-  .tool-hero h1{font-size:clamp(30px,8vw,44px);}
+  .chips{gap:3px;}
 }
 @media(max-width:480px){
-  .tool-stats{grid-template-columns:1fr 1fr;}
-  .dt th,.dt td{padding:5px 6px;font-size:12px;}
-  .dt input[type=number]{max-width:52px;}
+  .tool-hero h1{font-size:clamp(28px,9vw,40px);}
+  .big-num input{font-size:32px;}
+  .rsf-big{font-size:36px;}
+  .sc-name{font-size:14px;}
+  .amen-name{font-size:14px;}
 }
 </style>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTZJQLZT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
 <div id="nav-placeholder"></div>
 
-<!-- ═══════════════════════════════════════════════════
-     LANDING HERO — sells the tool before they start
-════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
 <div class="tool-hero">
   <div class="tool-hero-inner">
     <div class="tool-hero-top">
-      <!-- Left: headline + CTA -->
       <div>
-        <a href="/tools.html" class="back-link" style="color:rgba(255,255,255,.3);">Tools</a>
-        <div class="tool-hero-label">Space Programming · Free Assessment</div>
+        <a href="/tools.html" class="back-link" style="color:rgba(255,255,255,.28);">Tools</a>
+        <div class="hero-label">Space Programming · Free Assessment</div>
         <h1>Find out exactly how much space your organization <em>really</em> needs.</h1>
-        <p class="tool-hero-desc">Most companies are leasing 20–40% more space than they use — or running out of room before their lease expires. Five sections, ten minutes, and you'll have an architect-ready space program with an estimated RSF range calibrated from 18 years of enterprise transactions.</p>
-        <button class="tool-hero-cta" onclick="scrollToTool()">
+        <p class="hero-desc">Most companies are leasing 20–40% more space than they use — or running out of room before their lease expires. Scroll through four quick sections and you'll have an architect-ready space program with a live RSF estimate, calibrated from 18 years of enterprise transactions.</p>
+        <a href="#tool-start" class="hero-cta">
           Begin Assessment
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </button>
+        </a>
       </div>
-      <!-- Right: output preview card -->
       <div class="output-card">
         <div class="output-card-title">What you receive</div>
-        <div class="output-item"><div class="output-icon"></div><div class="output-text"><strong>Estimated RSF range</strong> — a defensible number to take to market</div></div>
-        <div class="output-item"><div class="output-icon"></div><div class="output-text"><strong>Seat-by-seat space program</strong> — desk types, quantities, SF per category</div></div>
-        <div class="output-item"><div class="output-icon"></div><div class="output-text"><strong>Meeting room program</strong> — rooms sized and counted by type</div></div>
-        <div class="output-item"><div class="output-icon"></div><div class="output-text"><strong>Building search criteria</strong> — class, market, transit, parking requirements</div></div>
-        <div class="output-item"><div class="output-icon"></div><div class="output-text"><strong>PDF report</strong> — formatted to share with your broker, architect, or board</div></div>
-        <div class="output-item"><div class="output-icon"></div><div class="output-text"><strong>A call with Chase</strong> — to review the numbers and discuss next steps</div></div>
+        <div class="output-item"><div class="output-dot"></div><div class="output-text"><strong>Estimated RSF range</strong> — a defensible number to take to market</div></div>
+        <div class="output-item"><div class="output-dot"></div><div class="output-text"><strong>Full space program</strong> — workspaces, rooms, and amenities by category</div></div>
+        <div class="output-item"><div class="output-dot"></div><div class="output-text"><strong>Building search criteria</strong> — class, market, transit, and parking requirements</div></div>
+        <div class="output-item"><div class="output-dot"></div><div class="output-text"><strong>PDF report</strong> — formatted to share with your team, architect, or board</div></div>
+        <div class="output-item"><div class="output-dot"></div><div class="output-text"><strong>A call with Chase</strong> — to review the numbers and next steps</div></div>
       </div>
     </div>
-    <!-- Stats strip -->
     <div class="tool-stats">
-      <div class="tool-stat"><div class="tool-stat-n">5</div><div class="tool-stat-l">Sections</div></div>
-      <div class="tool-stat"><div class="tool-stat-n">10<span style="font-size:18px;font-family:'DM Mono',monospace;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.4);"> min</span></div><div class="tool-stat-l">Average completion time</div></div>
-      <div class="tool-stat"><div class="tool-stat-n">18<span style="font-size:18px;font-family:'DM Mono',monospace;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.4);"> yrs</span></div><div class="tool-stat-l">Of transaction data baked in</div></div>
-      <div class="tool-stat"><div class="tool-stat-n">$10B<span style="font-size:18px;font-family:'DM Mono',monospace;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.4);">+</span></div><div class="tool-stat-l">In transactions represented</div></div>
+      <div class="tool-stat"><div class="tool-stat-n">4</div><div class="tool-stat-l">Sections to complete</div></div>
+      <div class="tool-stat"><div class="tool-stat-n">10<span style="font-size:16px;font-family:'DM Mono',monospace;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.35);"> min</span></div><div class="tool-stat-l">Average completion time</div></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════
-     STICKY PROGRESS + LIVE RSF COUNTER
-════════════════════════════════════════════════════ -->
-<div class="prog-bar-outer" id="progBar">
-  <div class="prog-bar-inner">
-    <div class="prog-step active" data-step="0">01 Your People</div>
-    <div class="prog-step" data-step="1">02 Workspaces</div>
-    <div class="prog-step" data-step="2">03 Amenities</div>
-    <div class="prog-step" data-step="3">04 Location</div>
-    <div class="prog-step" data-step="4">05 Your Details</div>
-    <div class="prog-rsf">
-      <div class="prog-rsf-label">Est. RSF</div>
-      <div class="prog-rsf-num" id="liveRSF">—</div>
-    </div>
-  </div>
-</div>
+<!-- ═══════════════════════════════════════
+     TOOL: FORM (left) + SIDEBAR (right)
+═══════════════════════════════════════ -->
+<div id="tool-start" style="scroll-margin-top:64px;"></div>
+<div class="tool-wrap" id="toolWrap">
 
-<!-- ═══════════════════════════════════════════════════
-     FORM SHELL
-════════════════════════════════════════════════════ -->
-<div id="formShell">
-<div class="form-shell">
+  <!-- ── LEFT: SCROLLABLE FORM ──────────────────────── -->
+  <div class="tool-form" id="formArea">
 
-  <!-- ── SEC 1: YOUR PEOPLE ─────────────────────────── -->
-  <div class="t-sec active" id="s0">
-    <div class="t-eye">Section 01</div>
-    <h2>Your People &amp; How They Work</h2>
-    <p class="t-sub">Headcount and hybrid policy drive every number in your space program. Add all departments — this is the most important section.</p>
+    <!-- ── 01 YOUR TEAM ──────────────────────────────── -->
+    <div class="fs" id="s1">
+      <div class="fs-head"><span class="fs-num">01</span><span class="fs-title">Your Team</span></div>
+      <p class="fs-sub">How many people are you planning for, and how often do they come in? This drives everything else.</p>
 
-    <div class="fg">
-      <div class="f">
-        <label>Hybrid Work Policy</label>
-        <select id="hybridPolicy" onchange="recalcLive()">
-          <option value="">Select…</option>
-          <option>Fully in-office (5 days)</option>
-          <option>4 days in-office</option>
-          <option>3 days in-office (standard hybrid)</option>
-          <option>2 days in-office</option>
-          <option>Fully flexible / no mandate</option>
-          <option>Varies by department</option>
-        </select>
+      <div class="big-num-group">
+        <div class="big-num">
+          <label>People today</label>
+          <input type="number" id="hcNow" min="0" placeholder="—" oninput="recalc()">
+        </div>
+        <div class="big-num">
+          <label>In 3 years</label>
+          <input type="number" id="hcYr3" min="0" placeholder="—" oninput="recalc()">
+        </div>
+        <div class="big-num">
+          <label>In 5 years</label>
+          <input type="number" id="hcYr5" min="0" placeholder="—" oninput="recalc()">
+        </div>
       </div>
-      <div class="f">
-        <label>Avg Days In-Office Per Week</label>
-        <input type="number" id="avgDays" min="1" max="5" step="0.5" placeholder="3" oninput="recalcLive()">
-        <p class="fhint">Used to calculate your desk-sharing ratio</p>
+
+      <div class="days-stepper">
+        <div>
+          <div class="days-stepper-label">Avg days in office per week</div>
+          <div id="daysLabel" class="day-count-sub" style="margin-top:4px;color:var(--mid);font-size:13px;">—</div>
+        </div>
+        <div class="days-ctrl">
+          <button class="day-btn" onclick="stepDays(-1)">−</button>
+          <div class="day-count" id="daysVal">3</div>
+          <button class="day-btn" onclick="stepDays(1)">+</button>
+        </div>
       </div>
-      <div class="f">
-        <label>Hot-Desking / Hoteling?</label>
-        <select id="hoteling" onchange="recalcLive()">
-          <option value="">Select…</option>
-          <option>No — fully assigned seating</option>
-          <option>Yes — fully hoteling</option>
-          <option>Partially — some depts hoteling</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Peak Day Concern?</label>
-        <select id="peakDay">
-          <option value="">Select…</option>
-          <option>Yes — Tue/Wed/Thu always at capacity</option>
-          <option>Somewhat — occasional peaks</option>
-          <option>No — fairly even utilization</option>
-        </select>
-      </div>
-    </div>
+      <div style="text-align:right;margin-top:-12px;margin-bottom:20px;font-family:'DM Mono',monospace;font-size:10px;color:var(--light);">1 = mostly remote &nbsp;·&nbsp; 5 = fully in-office</div>
 
-    <div class="tdiv"></div>
-    <span class="mlabel">Department Roster — add every team</span>
-    <div style="overflow-x:auto;margin-bottom:8px;">
-      <table class="dt" id="deptTable">
-        <thead><tr>
-          <th>Department</th>
-          <th>Current HC</th>
-          <th>3-Year HC</th>
-          <th>5-Year HC</th>
-          <th>Days/Wk</th>
-          <th>Est. Desks (Yr3)</th>
-        </tr></thead>
-        <tbody id="deptBody">
-          <tr><td><input type="text" placeholder="Operations"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="1" max="5" step="0.5" placeholder="3" oninput="calcD(this)"></td><td class="cc">—</td></tr>
-          <tr><td><input type="text" placeholder="Sales"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="1" max="5" step="0.5" placeholder="3" oninput="calcD(this)"></td><td class="cc">—</td></tr>
-          <tr><td><input type="text" placeholder="Finance"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="1" max="5" step="0.5" placeholder="3" oninput="calcD(this)"></td><td class="cc">—</td></tr>
-          <tr><td><input type="text" placeholder="Marketing"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="1" max="5" step="0.5" placeholder="3" oninput="calcD(this)"></td><td class="cc">—</td></tr>
-          <tr><td><input type="text" placeholder="Technology / IT"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="1" max="5" step="0.5" placeholder="3" oninput="calcD(this)"></td><td class="cc">—</td></tr>
-        </tbody>
-        <tfoot><tr><td>TOTAL</td><td class="cs" id="tCur">—</td><td class="cs" id="tYr3">—</td><td class="cs" id="tYr5">—</td><td></td><td class="cs" id="tDesks">—</td></tr></tfoot>
-      </table>
-    </div>
-    <button class="add-row" onclick="addRow()">+ Add Department</button>
-    <div class="f" style="margin-top:22px;">
-      <label>Planned hiring surges, acquisitions, or reductions in the next 5 years?</label>
-      <textarea id="growthNotes" placeholder="Describe anything unusual that affects headcount trajectory…"></textarea>
-    </div>
-    <div class="btn-row"><span></span><button class="tb tb-p" onclick="nextSec()">Next: Workspaces →</button></div>
-  </div>
-
-  <!-- ── SEC 2: WORKSPACES + MEETINGS ──────────────── -->
-  <div class="t-sec" id="s1">
-    <div class="t-eye">Section 02</div>
-    <h2>Workspaces &amp; Meeting Rooms</h2>
-    <p class="t-sub">Enter quantities for Year 3. Leave blank for types you don't need. These numbers — combined with your headcount — produce your core space program.</p>
-
-    <div class="sub-head">Individual Workspaces</div>
-    <div class="rcg" id="wsGrid"></div>
-
-    <div class="fg" style="margin-bottom:8px;">
-      <div class="f">
-        <label>Who qualifies for a private office?</label>
-        <select id="officePolicy">
-          <option value="">Select…</option>
-          <option>C-Suite only</option><option>VP and above</option><option>Director and above</option>
-          <option>Manager and above</option><option>No private offices</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Overall layout preference</label>
-        <select id="openPlan">
-          <option value="">Select…</option>
-          <option>Traditional — mostly private offices</option>
-          <option>Mixed — balance of offices and open plan</option>
-          <option>Modern open — minimal enclosed offices</option>
-          <option>Fully open — no private offices at all</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="tdiv"></div>
-    <div class="sub-head">Meeting &amp; Collaborative Rooms</div>
-    <p style="font-size:13px;font-weight:300;color:var(--mid);margin-bottom:16px;line-height:1.7;">Benchmark: 1 conference seat per 3–4 employees. Meeting rooms are typically the largest single driver of rentable square footage.</p>
-    <div class="rcg" id="rmGrid"></div>
-
-    <div class="fg">
-      <div class="f">
-        <label>Primary video conferencing platform</label>
-        <select id="vcPlatform">
-          <option value="">Select…</option>
-          <option>Zoom</option><option>Microsoft Teams</option><option>Google Meet</option>
-          <option>Cisco WebEx</option><option>No preference</option><option>Multiple / varies</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Operable partitions needed?</label>
-        <select id="operable">
-          <option value="">Select…</option>
-          <option>Yes — rooms need to combine / divide</option><option>No</option>
-        </select>
-      </div>
-      <div class="f ff">
-        <label>Conference room pain points or special requirements</label>
-        <textarea id="confNotes" placeholder="e.g. Always overbooked, need a dedicated client boardroom, all rooms VC-ready…"></textarea>
-      </div>
-    </div>
-    <div class="btn-row"><button class="tb tb-o" onclick="prevSec()">← Back</button><button class="tb tb-p" onclick="nextSec()">Next: Amenities →</button></div>
-  </div>
-
-  <!-- ── SEC 3: AMENITIES ──────────────────────────── -->
-  <div class="t-sec" id="s2">
-    <div class="t-eye">Section 03</div>
-    <h2>Amenities &amp; Support Spaces</h2>
-    <p class="t-sub">Check everything that applies. Support spaces typically account for 20–30% of your total square footage and are the most frequently underestimated category.</p>
-
-    <span class="mlabel">Reception &amp; Arrival</span>
-    <div class="ckg" id="ck_r"></div>
-    <div class="tdiv"></div>
-    <span class="mlabel">Kitchen &amp; Café</span>
-    <div class="ckg" id="ck_c"></div>
-    <div class="tdiv"></div>
-    <span class="mlabel">Storage &amp; Operations</span>
-    <div class="ckg" id="ck_s"></div>
-    <div class="tdiv"></div>
-    <span class="mlabel">Wellness &amp; Culture</span>
-    <div class="ckg" id="ck_w"></div>
-    <div class="tdiv"></div>
-    <span class="mlabel">Specialty Spaces</span>
-    <div class="ckg" id="ck_sp"></div>
-    <div class="f" style="margin-top:22px;"><label>Other requirements not listed</label><textarea id="amenityNotes" placeholder="Any unique space needs…"></textarea></div>
-    <div class="btn-row"><button class="tb tb-o" onclick="prevSec()">← Back</button><button class="tb tb-p" onclick="nextSec()">Next: Location →</button></div>
-  </div>
-
-  <!-- ── SEC 4: LOCATION ───────────────────────────── -->
-  <div class="t-sec" id="s3">
-    <div class="t-eye">Section 04</div>
-    <h2>Building &amp; Location Preferences</h2>
-    <p class="t-sub">This guides the market search and shortlist. The more specific you are, the faster we can eliminate bad fits before you ever tour a building.</p>
-
-    <div class="fg">
-      <div class="f"><label>Target Market / City *</label><input type="text" id="targetMarket" placeholder="Washington, DC"></div>
-      <div class="f"><label>Preferred Submarket(s)</label><input type="text" id="submarket" placeholder="e.g. East End, Bethesda, Rosslyn"></div>
-      <div class="f">
-        <label>Building Class</label>
-        <select id="bldgClass"><option value="">Select…</option><option>Class A — Trophy</option><option>Class A — Standard</option><option>Class A- / B+ acceptable</option><option>Class B fine</option><option>No preference — cost drives</option></select>
-      </div>
-      <div class="f">
-        <label>Transit Access</label>
-        <select id="transit"><option value="">Select…</option><option>Required — within ¼ mile Metro</option><option>Preferred</option><option>Nice to have</option><option>Not important — drive-in workforce</option></select>
-      </div>
-      <div class="f"><label>Parking Needed</label><input type="text" id="parking" placeholder="e.g. 10 reserved + 20 unreserved"></div>
-      <div class="f">
-        <label>Floor Preference</label>
-        <select id="floorPref"><option value="">Select…</option><option>Upper floors — views important</option><option>Lower floors — client access</option><option>Full floor preferred</option><option>No preference</option></select>
-      </div>
-    </div>
-
-    <div class="tdiv"></div>
-    <span class="mlabel" style="margin-bottom:12px;">What matters most? (select all that apply)</span>
-    <div class="chips" id="priorityChips">
-      <div class="chip" onclick="toggleChip(this)">Cost / Rent</div>
-      <div class="chip" onclick="toggleChip(this)">Location</div>
-      <div class="chip" onclick="toggleChip(this)">Brand Image</div>
-      <div class="chip" onclick="toggleChip(this)">Natural Light</div>
-      <div class="chip" onclick="toggleChip(this)">Building Amenities</div>
-      <div class="chip" onclick="toggleChip(this)">Flexibility / Options</div>
-      <div class="chip" onclick="toggleChip(this)">Parking</div>
-      <div class="chip" onclick="toggleChip(this)">Sustainability / LEED</div>
-      <div class="chip" onclick="toggleChip(this)">Transit Access</div>
-      <div class="chip" onclick="toggleChip(this)">Talent Attraction</div>
-      <div class="chip" onclick="toggleChip(this)">Client Proximity</div>
-      <div class="chip" onclick="toggleChip(this)">Outdoor Space</div>
-    </div>
-    <div class="fg" style="margin-top:20px;">
-      <div class="f"><label>Buildings or submarkets to avoid?</label><textarea id="avoidList" placeholder="Any exclusion list…"></textarea></div>
-      <div class="f"><label>Other location must-haves?</label><textarea id="locationNotes" placeholder="e.g. Within 1 mile of client X, specific building…"></textarea></div>
-    </div>
-    <div class="btn-row"><button class="tb tb-o" onclick="prevSec()">← Back</button><button class="tb tb-p" onclick="nextSec()">Almost done →</button></div>
-  </div>
-
-  <!-- ── SEC 5: COMPANY INFO + REPORT ─────────────── -->
-  <div class="t-sec" id="s4">
-    <div class="t-eye">Section 05</div>
-    <h2>Your Details &amp; Space Program</h2>
-    <p class="t-sub">Here's your space program based on everything you've entered. Tell us a bit about your organization and enter your email to download the full PDF.</p>
-
-    <!-- Live RSF preview -->
-    <div id="reportPreview"></div>
-
-    <div class="tdiv"></div>
-    <div class="email-gate">
-      <h3>Complete Your Report</h3>
-      <p>A few quick details — and your PDF generates instantly. Chase will follow up within one business day to walk through the numbers.</p>
       <div class="fg">
-        <div class="f"><label>Company / Organization Name *</label><input type="text" id="companyName" placeholder="Acme Corp"></div>
-        <div class="f"><label>Industry</label>
-          <select id="industry"><option value="">Select…</option><option>Technology / Software</option><option>Finance / Investment</option><option>Legal / Professional Services</option><option>Healthcare</option><option>Marketing / Media / Creative</option><option>Government / Nonprofit</option><option>Real Estate</option><option>Consulting</option><option>Other</option></select>
+        <div class="field">
+          <label>Hoteling / hot-desking?</label>
+          <select id="hoteling" onchange="recalc()">
+            <option value="assigned">No — fully assigned seating</option>
+            <option value="partial">Partially — some teams hoteling</option>
+            <option value="full">Yes — fully hoteling</option>
+          </select>
         </div>
-        <div class="f"><label>Your Name *</label><input type="text" id="contactName" placeholder="Jane Smith"></div>
-        <div class="f"><label>Your Title</label><input type="text" id="contactTitle" placeholder="CFO / Head of Real Estate"></div>
-        <div class="f"><label>Your Email *</label><input type="email" id="reportEmail" placeholder="jane@acme.com"></div>
-        <div class="f"><label>Phone</label><input type="tel" id="contactPhone" placeholder="(202) 555-0100"></div>
-        <div class="f"><label>Current Lease Expiration</label><input type="text" id="leaseExp" placeholder="MM/YYYY"></div>
-        <div class="f"><label>Target Occupancy Date</label><input type="text" id="moveIn" placeholder="Q3 2026"></div>
-        <div class="f"><label>Preferred Lease Term</label>
-          <select id="leaseTerm"><option value="">Select…</option><option>3 years</option><option>5 years</option><option>7 years</option><option>10 years</option><option>Flexible / TBD</option></select>
+        <div class="field">
+          <label>Peak day concern?</label>
+          <select id="peakDay">
+            <option value="">Select…</option>
+            <option>Yes — Tue/Wed/Thu always at capacity</option>
+            <option>Somewhat — occasional spikes</option>
+            <option>No — fairly even throughout week</option>
+          </select>
         </div>
-        <div class="f"><label>Budget Guidance <span style="font-weight:300;color:var(--light)">(optional, kept confidential)</span></label><input type="text" id="budget" placeholder="e.g. $40–55 PSF NNN"></div>
-        <div class="f ff"><label>Top pain points in your current office</label><textarea id="painPoints" placeholder="e.g. Not enough conference rooms, out of space, poor natural light…"></textarea></div>
-        <div class="f ff"><label>Anything else to share?</label><input type="text" id="additionalNotes" placeholder="Questions, context, timing…"></div>
       </div>
-      <div class="btn-row" style="margin-top:16px;">
-        <button class="tb tb-o" onclick="prevSec()">← Back</button>
-        <button class="tb tb-g" id="genBtn" onclick="genReport()">Download PDF Report →</button>
+    </div>
+
+    <div class="tdiv"></div>
+
+    <!-- ── 02 WORKSPACE SETUP ─────────────────────────── -->
+    <div class="fs" id="s2">
+      <div class="fs-head"><span class="fs-num">02</span><span class="fs-title">Workspace Setup</span></div>
+      <p class="fs-sub">What's the right environment for your culture? This determines how much space each desk needs.</p>
+
+      <div class="layout-grid" id="layoutGrid">
+        <div class="layout-card" data-sf="140" data-label="Traditional Offices" onclick="selectLayout(this)">
+          <div class="layout-icon">
+            <div class="box" style="width:22px;height:22px;"></div>
+            <div class="box" style="width:22px;height:22px;"></div>
+            <div class="box" style="width:22px;height:22px;"></div>
+            <div class="box" style="width:22px;height:14px;opacity:.4;"></div>
+          </div>
+          <div class="layout-name">Traditional Offices</div>
+          <div class="layout-desc">Mostly private enclosed offices. Status and privacy matter.</div>
+          <div class="layout-sf">~140 SF / person</div>
+        </div>
+        <div class="layout-card" data-sf="95" data-label="Mixed: Offices + Open" onclick="selectLayout(this)">
+          <div class="layout-icon">
+            <div class="box" style="width:18px;height:20px;"></div>
+            <div class="box" style="width:18px;height:20px;"></div>
+            <div class="box" style="width:10px;height:14px;opacity:.35;"></div>
+            <div class="box" style="width:10px;height:14px;opacity:.35;"></div>
+            <div class="box" style="width:10px;height:14px;opacity:.35;"></div>
+          </div>
+          <div class="layout-name">Mixed: Offices + Open</div>
+          <div class="layout-desc">A balance. Leadership in offices, teams in open plan.</div>
+          <div class="layout-sf">~95 SF / person</div>
+        </div>
+        <div class="layout-card" data-sf="55" data-label="Mostly Open Plan" onclick="selectLayout(this)">
+          <div class="layout-icon">
+            <div class="box" style="width:11px;height:14px;opacity:.35;"></div>
+            <div class="box" style="width:11px;height:14px;opacity:.35;"></div>
+            <div class="box" style="width:11px;height:14px;opacity:.35;"></div>
+            <div class="box" style="width:11px;height:14px;opacity:.35;"></div>
+            <div class="box" style="width:11px;height:14px;opacity:.35;"></div>
+            <div class="box" style="width:11px;height:14px;opacity:.35;"></div>
+          </div>
+          <div class="layout-name">Mostly Open Plan</div>
+          <div class="layout-desc">Modern, collaborative. Minimal private offices.</div>
+          <div class="layout-sf">~55 SF / person</div>
+        </div>
+        <div class="layout-card" data-sf="40" data-label="Activity-Based / Hoteling" onclick="selectLayout(this)">
+          <div class="layout-icon">
+            <div class="box" style="width:11px;height:11px;opacity:.25;"></div>
+            <div class="box" style="width:11px;height:11px;opacity:.25;"></div>
+            <div class="box" style="width:11px;height:11px;opacity:.25;"></div>
+            <div class="box" style="width:11px;height:20px;background:#2251FF;opacity:.7;"></div>
+            <div class="box" style="width:11px;height:11px;opacity:.25;"></div>
+          </div>
+          <div class="layout-name">Activity-Based / Hoteling</div>
+          <div class="layout-desc">No assigned desks. Book your seat each day.</div>
+          <div class="layout-sf">~40 SF / person</div>
+        </div>
       </div>
+
+      <div class="fg">
+        <div class="field ff">
+          <label>How many private / executive offices?</label>
+          <input type="number" id="privateOffices" min="0" placeholder="0" oninput="recalc()">
+        </div>
+      </div>
+    </div>
+
+    <div class="tdiv"></div>
+
+    <!-- ── 03 MEETING ROOMS ───────────────────────────── -->
+    <div class="fs" id="s3">
+      <div class="fs-head"><span class="fs-num">03</span><span class="fs-title">Meeting Rooms</span></div>
+      <p class="fs-sub">How many of each? Benchmark: 1 conference seat per 3–4 employees. Tap + to add rooms — they'll calculate into your total automatically.</p>
+      <div class="stepper-list" id="roomList"></div>
+    </div>
+
+    <div class="tdiv"></div>
+
+    <!-- ── 04 AMENITIES ───────────────────────────────── -->
+    <div class="fs" id="s4">
+      <div class="fs-head"><span class="fs-num">04</span><span class="fs-title">Amenities &amp; Support</span></div>
+      <p class="fs-sub">Check what you need. These are consistently underestimated — support spaces typically add 20–30% to your total SF.</p>
+
+      <div class="amen-section">
+        <div class="amen-section-title">Reception</div>
+        <div class="amen-list" id="am_rec"></div>
+      </div>
+      <div class="amen-section">
+        <div class="amen-section-title">Kitchen &amp; Café</div>
+        <div class="amen-list" id="am_caf"></div>
+      </div>
+      <div class="amen-section">
+        <div class="amen-section-title">Storage &amp; Ops</div>
+        <div class="amen-list" id="am_sto"></div>
+      </div>
+      <div class="amen-section">
+        <div class="amen-section-title">Wellness &amp; Culture</div>
+        <div class="amen-list" id="am_wel"></div>
+      </div>
+      <div class="amen-section">
+        <div class="amen-section-title">Specialty</div>
+        <div class="amen-list" id="am_spe"></div>
+      </div>
+    </div>
+
+
+    <div class="tdiv"></div>
+
+
+    <!-- ── GET YOUR REPORT ────────────────────────────── -->
+    <div class="fs" id="s6">
+      <div class="fs-head"><span class="fs-num">05</span><span class="fs-title">Get Your Report</span></div>
+      <p class="fs-sub">Your space program is ready. Enter your details and the full PDF downloads instantly.</p>
+
+      <div class="report-preview" id="reportPreview">
+        <div class="rp-label">Your estimated requirement</div>
+        <div class="rp-rsf" id="rp-rsf-num">—</div>
+        <div class="rp-sub" id="rp-rsf-sub">Fill in sections above to see your estimate</div>
+      </div>
+
+      <div class="email-gate">
+        <h3>Download Your Space Program PDF</h3>
+        <p>A few details — then your report generates client-side and downloads instantly. Chase will follow up within one business day.</p>
+        <div class="fg">
+          <div class="field"><label>Company name *</label><input type="text" id="companyName" placeholder="Acme Corp"></div>
+          <div class="field"><label>Industry</label>
+            <select id="industry"><option value="">Select…</option><option>Technology / Software</option><option>Finance / Investment</option><option>Legal / Professional Services</option><option>Healthcare</option><option>Marketing / Creative</option><option>Government / Nonprofit</option><option>Real Estate</option><option>Consulting</option><option>Other</option></select>
+          </div>
+          <div class="field"><label>Your name *</label><input type="text" id="contactName" placeholder="Jane Smith"></div>
+          <div class="field"><label>Your title</label><input type="text" id="contactTitle" placeholder="CFO / Head of Real Estate"></div>
+          <div class="field"><label>Email address *</label><input type="email" id="reportEmail" placeholder="jane@acme.com"></div>
+          <div class="field"><label>Phone</label><input type="tel" id="contactPhone" placeholder="(202) 555-0100"></div>
+          <div class="field ff"><label>Anything else to share?</label><input type="text" id="addlNotes" placeholder="Questions, context, timing, or other notes…"></div>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="genReport()">Download PDF Report →</button>
+        <p class="fine">Your information is never sold or shared. Chase will reach out personally to discuss the findings.</p>
+      </div>
+    </div>
+
+  </div><!-- /tool-form -->
+
+  <!-- ── RIGHT: STICKY SIDEBAR ───────────────────────── -->
+  <div class="tool-sidebar">
+    <div class="rsf-panel">
+      <div class="rsf-panel-label">Your space estimate</div>
+      <div class="rsf-big" id="sb-rsf">—</div>
+      <div class="rsf-unit">Rentable Square Feet</div>
+      <div class="rsf-range" id="sb-range"></div>
+      <div class="comp-bar" id="compBar">
+        <div class="comp-seg empty" style="flex:1;"></div>
+      </div>
+    </div>
+    <div class="breakdown" id="breakdown">
+      <div class="bk-row">
+        <div class="bk-label"><div class="bk-dot ws"></div> Workspaces</div>
+        <div class="bk-val" id="bk-ws">—</div>
+      </div>
+      <div class="bk-row">
+        <div class="bk-label"><div class="bk-dot rm"></div> Meeting Rooms</div>
+        <div class="bk-val" id="bk-rm">—</div>
+      </div>
+      <div class="bk-row">
+        <div class="bk-label"><div class="bk-dot am" style="background:#b45309;"></div> Amenities</div>
+        <div class="bk-val" id="bk-am">—</div>
+      </div>
+      <div class="bk-row">
+        <div class="bk-label"><div class="bk-dot circ" style="background:var(--rule);border:1px solid var(--light);"></div> Circulation (18%)</div>
+        <div class="bk-val" id="bk-circ">—</div>
+      </div>
+      <div class="bk-row">
+        <div class="bk-label"><div class="bk-dot" style="background:var(--light);"></div> Loss factor (15%)</div>
+        <div class="bk-val" id="bk-loss">—</div>
+      </div>
+      <div class="bk-total">
+        <div class="bk-label" style="color:var(--navy);font-weight:500;">Total RSF</div>
+        <div class="bk-val" id="bk-total" style="font-size:15px;color:var(--navy);">—</div>
+      </div>
+    </div>
+    <div class="sidebar-cta">
+      <p>Questions before you start? Chase is available to talk through your space needs directly.</p>
+      <a href="/contact.html" style="display:block;text-align:center;padding:11px;border:1px solid var(--rule);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);text-decoration:none;transition:all .15s;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--rule)'">Schedule a Call</a>
     </div>
   </div>
 
-</div><!-- /form-shell -->
+</div><!-- /tool-wrap -->
 
-<!-- SUCCESS -->
-<div class="suc" id="sucScreen">
+<!-- SUCCESS SCREEN -->
+<div class="suc-wrap" id="sucScreen">
   <div class="suc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
   <h2>Your report is downloading.</h2>
-  <p>Chase will be in touch within one business day to review your space program and discuss which buildings to tour first.</p>
+  <p>Chase will be in touch within one business day to walk through the space program and discuss the right buildings to prioritize.</p>
   <p style="margin-top:8px;font-size:12px;color:var(--light);">chase.bourdelaise@transwestern.com &nbsp;·&nbsp; (202) 591-1926</p>
-  <a href="/tools.html" class="tb tb-p">Back to Tools</a>
+  <a href="/tools.html" style="display:inline-block;margin-top:24px;padding:13px 28px;background:var(--navy);color:#fff;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;">Back to Tools</a>
 </div>
-
-</div><!-- /formShell -->
 
 <div id="footer-placeholder"></div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────
-const WS=[
-  {id:'ws_exec',  name:'Executive Office',          sf:180,note:'20×15 or 15×12'},
-  {id:'ws_std',   name:'Standard Private Office',   sf:120,note:'10×12'},
-  {id:'ws_sm',    name:'Small Office',              sf:100,note:'10×10'},
-  {id:'ws_lg',    name:'Large Workstation (6×6)',   sf:36, note:'Benching or panel system'},
-  {id:'ws_stdws', name:'Standard Workstation (5×5)',sf:25, note:'Open plan'},
-  {id:'ws_hot',   name:'Hoteling / Compact Seat',   sf:16, note:'Shared, non-assigned'},
-  {id:'ws_ea',    name:'EA / Support Station',      sf:40, note:'Adjacent to exec office'},
-  {id:'ws_ss',    name:'Sit-Stand Desk',            sf:25, note:'Any role — adjust height'},
+// ── ROOM DATA ──────────────────────────────────────────
+const ROOMS = [
+  {id:'rm_pod',  name:'Phone Booth / Privacy Pod',   sf:36,  meta:'1 person · soundproofed, with power'},
+  {id:'rm_foc',  name:'Focus / Huddle Room',          sf:60,  meta:'2 people · quick 1:1s, calls'},
+  {id:'rm_zoom', name:'Video / Zoom Room',            sf:80,  meta:'3 people · dedicated VC camera + display'},
+  {id:'rm_sm4',  name:'Small Conf Room (4 people)',   sf:100, meta:'4 people · tight team standup'},
+  {id:'rm_sm6',  name:'Small Conf Room (6 people)',   sf:140, meta:'6 people · most common format'},
+  {id:'rm_med8', name:'Medium Conf Room (8 people)',  sf:180, meta:'8 people · weekly team meeting'},
+  {id:'rm_med10',name:'Medium Conf Room (10 people)', sf:220, meta:'10 people · cross-team collaboration'},
+  {id:'rm_lg12', name:'Large Conf Room (12 people)',  sf:280, meta:'12 people · department meetings'},
+  {id:'rm_lg16', name:'Large Conf Room (16 people)',  sf:360, meta:'16 people · leadership offsites'},
+  {id:'rm_brd',  name:'Board Room (20 people)',       sf:500, meta:'20 people · premium finishes, VC system'},
+  {id:'rm_trn',  name:'Training Room (30–50 people)', sf:800, meta:'Flexible furniture, presentation wall'},
+  {id:'rm_evt',  name:'Event / Town Hall Space',      sf:1200,meta:'50–100+ people · moveable seating, AV'},
+  {id:'rm_clb',  name:'Open Collab Lounge',           sf:175, meta:'Informal · soft seating, writable wall'},
+  {id:'rm_lib',  name:'Library / Quiet Zone',         sf:150, meta:'No calls, heads-down focus area'},
 ];
-const RM=[
-  {id:'rm_pod',  name:'Phone Booth / Pod (1)',      sf:36},
-  {id:'rm_foc',  name:'Focus Room (2)',              sf:60},
-  {id:'rm_zoom', name:'Video / Zoom Room (3)',       sf:80},
-  {id:'rm_sm',   name:'Small Conf Room (4–6)',       sf:120},
-  {id:'rm_med',  name:'Medium Conf Room (8–10)',     sf:200},
-  {id:'rm_lg',   name:'Large Conf Room (12–16)',     sf:350},
-  {id:'rm_brd',  name:'Board Room (16–20)',          sf:500},
-  {id:'rm_trn',  name:'Training / All-Hands Room',  sf:800},
-  {id:'rm_clb',  name:'Open Collab Lounge',         sf:175},
-];
-const AMEN={
-  ck_r:[
-    {id:'a_rd',lbl:'Staffed Reception Desk',         sub:'Front-of-house greeter station'},
-    {id:'a_rv',lbl:'Visitor Seating Area',            sub:'Lobby / waiting area'},
-    {id:'a_rb',lbl:'Brand / Product Display',         sub:'First impression moment'},
-    {id:'a_rg',lbl:'Visitor Check-In / Badge System', sub:'e.g. Envoy, iLobby'},
+
+// ── AMENITY DATA ───────────────────────────────────────
+const AMEN = {
+  am_rec:[
+    {id:'ar1',n:'Staffed Reception Desk',         s:'Greeter station + visitor check-in', sf:75},
+    {id:'ar2',n:'Visitor Seating / Waiting Area',  s:'Lobby seating for guests',           sf:100},
+    {id:'ar3',n:'Brand / Product Display',         s:'First-impression moment for clients',sf:120},
   ],
-  ck_c:[
-    {id:'a_cf',lbl:'Full Kitchen',              sub:'Sink, fridge, dishwasher, microwave'},
-    {id:'a_cc',lbl:'Coffee / Espresso Machine', sub:'Bean-to-cup or drip'},
-    {id:'a_cs',lbl:'Café Seating Area',         sub:'Tables + casual seating mix'},
-    {id:'a_cb',lbl:'Bar-Height Counter',         sub:'Informal collaboration seating'},
-    {id:'a_cp',lbl:'Secondary Pantry',           sub:'Satellite kitchen on large floors'},
-    {id:'a_cv',lbl:'Vending Machines',           sub:'Snacks and beverages'},
+  am_caf:[
+    {id:'ac1',n:'Full Kitchen',                   s:'Sink, fridge, dishwasher, microwave', sf:200},
+    {id:'ac2',n:'Coffee / Espresso Machine',       s:'Bean-to-cup or commercial drip',     sf:20},
+    {id:'ac3',n:'Café Seating Area',              s:'Tables + casual seating mix',         sf:150},
+    {id:'ac4',n:'Bar-Height Counter',             s:'Informal perching + collaboration',   sf:80},
+    {id:'ac5',n:'Secondary Pantry',               s:'Satellite kitchen on large floors',   sf:80},
   ],
-  ck_s:[
-    {id:'a_sl',lbl:'Personal Lockers',         sub:'For non-assigned / hoteling staff'},
-    {id:'a_sc',lbl:'Coat Closet(s)',            sub:'Central or distributed'},
-    {id:'a_ss',lbl:'Supply / Copy Room',        sub:'Office supplies, printing, mail'},
-    {id:'a_sf',lbl:'Secure File / Records Room',sub:'Active and archive filing'},
-    {id:'a_si',lbl:'IT / Equipment Storage',    sub:'Hardware, cables, spare inventory'},
-    {id:'a_sj',lbl:'Janitorial / Cleaning Room',sub:'Often required by building code'},
+  am_sto:[
+    {id:'as1',n:'Personal Lockers',              s:'For non-assigned / hoteling staff',    sf:60},
+    {id:'as2',n:'Supply / Copy / Print Room',    s:'Office supplies, printing, shredding', sf:100},
+    {id:'as3',n:'Secure File / Records Room',    s:'Active files + archive storage',       sf:120},
+    {id:'as4',n:'IT / Equipment Storage',        s:'Hardware, cables, spare inventory',    sf:80},
   ],
-  ck_w:[
-    {id:'a_wm',lbl:"Wellness / Mothers' Room",sub:'Lock, outlet, fridge, dimmable light'},
-    {id:'a_wp',lbl:'Prayer / Reflection Room', sub:'Multi-faith, quiet, neutral'},
-    {id:'a_wg',lbl:'Fitness Center / Gym',     sub:'Cardio + weights, showers needed?'},
-    {id:'a_ws',lbl:'Showers / Locker Room',    sub:'For cyclists, gym users'},
-    {id:'a_wn',lbl:'Quiet / Rest Room',        sub:'Meditation, nap, or heads-down zone'},
+  am_wel:[
+    {id:'aw1',n:"Wellness / Mothers' Room",      s:'Lock, outlet, fridge, soft seating',  sf:85},
+    {id:'aw2',n:'Prayer / Reflection Room',      s:'Multi-faith, quiet, neutral space',    sf:85},
+    {id:'aw3',n:'Fitness Center',                s:'Cardio + weights, showers needed?',   sf:500},
+    {id:'aw4',n:'Showers / Locker Room',         s:'For cyclists, gym users',              sf:100},
+    {id:'aw5',n:'Quiet / Rest Room',             s:'Heads-down, meditation, nap zone',     sf:80},
   ],
-  ck_sp:[
-    {id:'a_sh',lbl:'Showroom / Client Experience',  sub:'Demo area, product display'},
-    {id:'a_st',lbl:'Podcast / Recording Studio',    sub:'Acoustic treatment + HVAC zoning'},
-    {id:'a_sl2',lbl:'Laboratory / Wet Lab',         sub:'Specialized plumbing + ventilation'},
-    {id:'a_sv',lbl:'Dedicated Server Room',          sub:'Raised floor, redundant cooling'},
-    {id:'a_sp',lbl:'Production / Fabrication',       sub:'Materials + equipment clearances'},
+  am_spe:[
+    {id:'ap1',n:'Showroom / Client Demo Space',  s:'Product display or live demo area',   sf:300},
+    {id:'ap2',n:'Podcast / Recording Studio',    s:'Acoustic treatment + dedicated HVAC', sf:120},
+    {id:'ap3',n:'Laboratory / Wet Lab',          s:'Specialized plumbing + ventilation',  sf:300},
+    {id:'ap4',n:'Dedicated Server Room',         s:'Raised floor, redundant cooling',     sf:150},
   ],
-};
-const ASF={
-  a_rd:75,a_rv:100,a_rb:120,a_rg:20,
-  a_cf:200,a_cc:20,a_cs:150,a_cb:80,a_cp:80,a_cv:30,
-  a_sl:60,a_sc:40,a_ss:100,a_sf:120,a_si:80,a_sj:40,
-  a_wm:85,a_wp:85,a_wg:500,a_ws:100,a_wn:80,
-  a_sh:300,a_st:120,a_sl2:300,a_sv:150,a_sp:250,
 };
 
-// ── BUILD GRIDS ───────────────────────────────────────
-function buildGrid(items,cid){
-  document.getElementById(cid).innerHTML=items.map(x=>`
-    <div class="rc">
-      <div><div class="rc-name">${x.name}</div><div class="rc-note">${x.sf} SF${x.note?' · '+x.note:''}</div></div>
-      <div><div class="rc-lbl">Yr 3 Qty</div><input type="number" min="0" id="${x.id}_yr3" placeholder="0" oninput="recalcLive()"></div>
-      <div><div class="rc-lbl">Yr 5 Qty</div><input type="number" min="0" id="${x.id}_yr5" placeholder="0"></div>
+// ── STATE ──────────────────────────────────────────────
+let daysInOffice = 3;
+let layoutSF = 0;
+
+// ── BUILD ROOMS ────────────────────────────────────────
+function buildRooms() {
+  document.getElementById('roomList').innerHTML = ROOMS.map(r => `
+    <div class="stepper-card" id="sc_${r.id}">
+      <div class="sc-info">
+        <div class="sc-name">${r.name}</div>
+        <div class="sc-meta">${r.sf} SF &nbsp;·&nbsp; ${r.meta}</div>
+      </div>
+      <div class="sc-ctrl">
+        <button class="sc-btn minus" onclick="stepRoom('${r.id}',-1)">−</button>
+        <div class="sc-val" id="sv_${r.id}">0</div>
+        <button class="sc-btn plus"  onclick="stepRoom('${r.id}', 1)">+</button>
+      </div>
     </div>`).join('');
 }
-function buildChecks(){
-  Object.entries(AMEN).forEach(([cid,items])=>{
-    document.getElementById(cid).innerHTML=items.map(it=>`
-      <label class="ck" onclick="toggleCk(this)">
+
+function stepRoom(id, delta) {
+  const el = document.getElementById('sv_' + id);
+  let v = parseInt(el.textContent) || 0;
+  v = Math.max(0, v + delta);
+  el.textContent = v;
+  document.getElementById('sc_' + id).classList.toggle('active', v > 0);
+  recalc();
+}
+
+// ── BUILD AMENITIES ────────────────────────────────────
+function buildAmen() {
+  Object.entries(AMEN).forEach(([cid, items]) => {
+    document.getElementById(cid).innerHTML = items.map(it => `
+      <label class="amen-item" onclick="toggleAmen(this)">
         <input type="checkbox" id="${it.id}">
-        <div class="ck-box"></div>
-        <div><div class="ck-label">${it.lbl}</div><div class="ck-sub">${it.sub}</div></div>
+        <div class="amen-check"></div>
+        <div>
+          <div class="amen-name">${it.n}</div>
+          <div class="amen-sub">${it.s}</div>
+        </div>
       </label>`).join('');
   });
 }
 
-// ── TOGGLES ───────────────────────────────────────────
-function toggleCk(el){el.classList.toggle('sel');el.querySelector('input').checked=!el.querySelector('input').checked;recalcLive();}
-function toggleChip(el){el.classList.toggle('sel');}
-
-// ── DEPT TABLE ────────────────────────────────────────
-function calcD(inp){
-  const row=inp.closest('tr');
-  const ns=row.querySelectorAll('input[type="number"]');
-  const hc3=parseFloat(ns[1]?.value)||0;
-  const days=parseFloat(ns[3]?.value)||3;
-  const hot=document.getElementById('hoteling')?.value;
-  const desks=hot==='No — fully assigned seating'?hc3:Math.ceil(hc3*(0.4+(days/5)*0.6));
-  const cc=row.querySelector('.cc');
-  if(cc)cc.textContent=hc3>0?desks:'—';
-  updateTotals();recalcLive();
-}
-function updateTotals(){
-  let cur=0,yr3=0,yr5=0,dk=0;
-  document.querySelectorAll('#deptBody tr').forEach(r=>{
-    const ns=r.querySelectorAll('input[type="number"]');
-    cur+=parseFloat(ns[0]?.value)||0;
-    yr3+=parseFloat(ns[1]?.value)||0;
-    yr5+=parseFloat(ns[2]?.value)||0;
-    dk+=parseInt(r.querySelector('.cc')?.textContent)||0;
-  });
-  document.getElementById('tCur').textContent=cur||'—';
-  document.getElementById('tYr3').textContent=yr3||'—';
-  document.getElementById('tYr5').textContent=yr5||'—';
-  document.getElementById('tDesks').textContent=dk||'—';
-}
-function addRow(){
-  const tb=document.getElementById('deptBody');
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input type="text" placeholder="Department"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="0" placeholder="—" oninput="calcD(this)"></td><td><input type="number" min="1" max="5" step="0.5" placeholder="3" oninput="calcD(this)"></td><td class="cc">—</td>`;
-  tb.appendChild(tr);
+function toggleAmen(el) {
+  el.classList.toggle('sel');
+  el.querySelector('input').checked = !el.querySelector('input').checked;
+  recalc();
 }
 
-// ── LIVE RSF CALC ─────────────────────────────────────
-function calcProg(){
-  let wsSF=0,rmSF=0,amSF=0;
-  WS.forEach(w=>{wsSF+=(parseInt(document.getElementById(w.id+'_yr3')?.value)||0)*w.sf;});
-  RM.forEach(r=>{rmSF+=(parseInt(document.getElementById(r.id+'_yr3')?.value)||0)*r.sf;});
-  document.querySelectorAll('.ck.sel input').forEach(cb=>{amSF+=ASF[cb.id]||0;});
-  const prog=wsSF+rmSF+amSF,usable=Math.round(prog*1.18),rentable=Math.round(usable*1.15);
-  return{wsSF,rmSF,amSF,prog,usable,rentable};
-}
-function recalcLive(){
-  const{rentable}=calcProg();
-  const el=document.getElementById('liveRSF');
-  if(el)el.textContent=rentable>0?rentable.toLocaleString()+'  RSF':'—';
-  if(document.getElementById('s4').classList.contains('active'))buildPreview();
+// ── LAYOUT SELECTOR ────────────────────────────────────
+function selectLayout(el) {
+  document.querySelectorAll('.layout-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  layoutSF = parseFloat(el.dataset.sf) || 0;
+  recalc();
 }
 
-// ── NAVIGATION ────────────────────────────────────────
-let cur=0;
-function showSec(n){
-  document.querySelectorAll('.t-sec').forEach((s,i)=>s.classList.toggle('active',i===n));
-  document.querySelectorAll('.prog-step').forEach((s,i)=>{s.classList.toggle('active',i===n);s.classList.toggle('done',i<n);});
-  if(n===4)buildPreview();
-  window.scrollTo({top:document.getElementById('progBar').offsetTop-64,behavior:'smooth'});
-  cur=n;
+// ── DAYS STEPPER ───────────────────────────────────────
+function stepDays(d) {
+  daysInOffice = Math.min(5, Math.max(1, daysInOffice + d));
+  document.getElementById('daysVal').textContent = daysInOffice;
+  const labels = {1:'Rarely in',2:'Couple days/wk',3:'Standard hybrid',4:'Mostly in-office',5:'Fully in-office'};
+  document.getElementById('daysLabel').textContent = labels[daysInOffice] || '';
+  recalc();
 }
-function nextSec(){if(!validate())return;if(cur<4)showSec(cur+1);}
-function prevSec(){if(cur>0)showSec(cur-1);}
-function scrollToTool(){document.getElementById('progBar').scrollIntoView({behavior:'smooth',block:'start'});}
-function validate(){
-  const reqs=[[] ,[] ,[] ,['targetMarket'],['companyName','contactName','reportEmail']][cur];
-  for(const id of reqs){
-    const el=document.getElementById(id);
-    if(!el||!el.value.trim()){el?.style.setProperty('border-color','#e53e3e');el?.focus();el?.addEventListener('input',()=>el.style.removeProperty('border-color'),{once:true});return false;}
+
+// ── RECALC ────────────────────────────────────────────
+function recalc() {
+  const hc3  = parseFloat(document.getElementById('hcYr3')?.value) || 0;
+  const hot  = document.getElementById('hoteling')?.value || 'assigned';
+  const priv = parseFloat(document.getElementById('privateOffices')?.value) || 0;
+
+  // Desk count
+  let deskRatio = daysInOffice / 5;
+  if (hot === 'assigned') deskRatio = 1;
+  else if (hot === 'partial') deskRatio = Math.max(0.7, deskRatio);
+  const desks = Math.ceil(hc3 * deskRatio);
+
+  // Workspace SF
+  let wsSF = 0;
+  if (layoutSF > 0 && desks > 0) {
+    const openDesks = Math.max(0, desks - priv);
+    wsSF = Math.round(priv * 140 + openDesks * layoutSF);
   }
-  return true;
+
+  // Meeting SF
+  let rmSF = 0;
+  ROOMS.forEach(r => {
+    const qty = parseInt(document.getElementById('sv_' + r.id)?.textContent) || 0;
+    rmSF += qty * r.sf;
+  });
+
+  // Amenity SF
+  let amSF = 0;
+  Object.values(AMEN).flat().forEach(it => {
+    if (document.getElementById(it.id)?.checked) amSF += it.sf;
+  });
+
+  const prog = wsSF + rmSF + amSF;
+  const usable = Math.round(prog * 1.18);
+  const rentable = Math.round(usable * 1.15);
+  const circ = usable - prog;
+  const loss = rentable - usable;
+
+  // Update sidebar
+  const fmtK = n => n >= 1000 ? (n/1000).toFixed(1).replace('.0','') + 'K' : n.toString();
+  document.getElementById('sb-rsf').textContent = rentable > 0 ? rentable.toLocaleString() : '—';
+
+  if (rentable > 0) {
+    const lo = Math.round(rentable * 0.92 / 100) * 100;
+    const hi = Math.round(rentable * 1.08 / 100) * 100;
+    document.getElementById('sb-range').textContent = `${lo.toLocaleString()} – ${hi.toLocaleString()} RSF range`;
+    if (desks > 0) {
+      const ppp = Math.round(rentable / desks);
+      document.getElementById('sb-range').textContent += `  ·  ${ppp} SF/person`;
+    }
+  } else {
+    document.getElementById('sb-range').textContent = '';
+  }
+
+  // Breakdown
+  const fmt = n => n > 0 ? n.toLocaleString() + ' SF' : '—';
+  document.getElementById('bk-ws').textContent = fmt(wsSF);
+  document.getElementById('bk-rm').textContent = fmt(rmSF);
+  document.getElementById('bk-am').textContent = fmt(amSF);
+  document.getElementById('bk-circ').textContent = fmt(circ);
+  document.getElementById('bk-loss').textContent = fmt(loss);
+  document.getElementById('bk-total').textContent = rentable > 0 ? rentable.toLocaleString() + ' RSF' : '—';
+
+  // Composition bar
+  if (prog > 0) {
+    const bar = document.getElementById('compBar');
+    bar.innerHTML = `
+      <div class="comp-seg ws" style="flex:${wsSF}"></div>
+      <div class="comp-seg rm" style="flex:${rmSF}"></div>
+      <div class="comp-seg am" style="background:#b45309;flex:${amSF}"></div>
+    `;
+  }
+
+  // Report preview
+  document.getElementById('rp-rsf-num').textContent = rentable > 0 ? rentable.toLocaleString() + ' RSF' : '—';
+  document.getElementById('rp-rsf-sub').textContent = rentable > 0
+    ? `${desks} seats · ${prog > 0 ? prog.toLocaleString() + ' USF program' : ''}`
+    : 'Fill in sections above to see your estimate';
+
+  return {wsSF, rmSF, amSF, prog, usable, rentable, desks, circ, loss, priv};
 }
 
-// ── REPORT PREVIEW ────────────────────────────────────
-function v(id){return document.getElementById(id)?.value?.trim()||'—';}
-function buildPreview(){
-  const{wsSF,rmSF,amSF,prog,usable,rentable}=calcProg();
-  const dkEl=document.getElementById('tDesks');
-  const dk=dkEl?.textContent!=='—'?parseInt(dkEl.textContent)||0:0;
-  const ppp=dk>0&&rentable>0?Math.round(rentable/dk):null;
-  document.getElementById('reportPreview').innerHTML=`
-    <div class="rsf-block">
-      <div>
-        <div class="rsf-lbl">Estimated Rentable Square Footage</div>
-        <div class="rsf-num">${rentable>0?rentable.toLocaleString():'Complete sections above'}</div>
-        <div class="rsf-sub">includes 18% circulation + 15% building loss factor</div>
-      </div>
-      <div class="rsf-r">
-        ${ppp?`<div class="rsf-ri">${ppp} RSF / person</div>`:''}
-        ${dk?`<div class="rsf-ri">${dk} seats (Year 3)</div>`:''}
-        ${prog>0?`<div class="rsf-ri">${prog.toLocaleString()} USF program</div>`:''}
-      </div>
-    </div>
-    <div class="sum-card">
-      <div class="sum-head"><span>Space Program Breakdown</span></div>
-      <div class="sum-row"><div class="sum-l">Individual Workspaces</div><div class="sum-v">${wsSF>0?wsSF.toLocaleString()+' USF':'—'}</div></div>
-      <div class="sum-row"><div class="sum-l">Collaborative &amp; Meeting Rooms</div><div class="sum-v">${rmSF>0?rmSF.toLocaleString()+' USF':'—'}</div></div>
-      <div class="sum-row"><div class="sum-l">Amenity &amp; Support</div><div class="sum-v">${amSF>0?amSF.toLocaleString()+' USF':'—'}</div></div>
-      <div class="sum-row"><div class="sum-l">Circulation (18%)</div><div class="sum-v">${prog>0?Math.round(prog*.18).toLocaleString()+' USF':'—'}</div></div>
-      <div class="sum-row"><div class="sum-l">Building Loss / Core Factor (15%)</div><div class="sum-v">${usable>0?Math.round(usable*.15).toLocaleString()+' RSF':'—'}</div></div>
-    </div>`;
-}
+// ── PDF ───────────────────────────────────────────────
+function v(id) { return document.getElementById(id)?.value?.trim() || '—'; }
 
-// ── PDF GENERATION ────────────────────────────────────
-function genReport(){
-  const email=document.getElementById('reportEmail')?.value?.trim();
-  if(!email||!email.includes('@')){document.getElementById('reportEmail').style.borderColor='#e53e3e';return;}
-  const cn=v('companyName');if(!cn||cn==='—'){document.getElementById('companyName').style.borderColor='#e53e3e';return;}
-  const nm=v('contactName');if(!nm||nm==='—'){document.getElementById('contactName').style.borderColor='#e53e3e';return;}
+function genReport() {
+  const email = document.getElementById('reportEmail')?.value?.trim();
+  const cname = document.getElementById('companyName')?.value?.trim();
+  const cntct = document.getElementById('contactName')?.value?.trim();
+  let ok = true;
+  if (!cname) { document.getElementById('companyName').style.borderColor='#e53e3e'; ok=false; }
+  if (!cntct) { document.getElementById('contactName').style.borderColor='#e53e3e'; ok=false; }
+  if (!email || !email.includes('@')) { document.getElementById('reportEmail').style.borderColor='#e53e3e'; ok=false; }
+  if (!ok) { document.getElementById('reportEmail').scrollIntoView({behavior:'smooth',block:'center'}); return; }
 
-  const btn=document.getElementById('genBtn');btn.textContent='Generating…';btn.disabled=true;
-  const{jsPDF}=window.jspdf;
-  const doc=new jsPDF({unit:'pt',format:'letter'});
-  const W=612,M=56,CW=W-M*2;let y=0;
+  const btn = document.getElementById('submitBtn'); btn.textContent='Generating…'; btn.disabled=true;
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({unit:'pt',format:'letter'});
+  const W=612,M=56,CW=W-M*2; let y=0;
   const rect=(x,ry,rw,rh,c)=>{doc.setFillColor(c);doc.rect(x,ry,rw,rh,'F');};
-  const line=(x1,y1,x2,y2,c='#D8DDE5')=>{doc.setDrawColor(c);doc.setLineWidth(0.5);doc.line(x1,y1,x2,y2);};
-  const txt=(t,x,ty,sz=10,c='#4A5568',bold=false,al='left')=>{doc.setFontSize(sz);doc.setTextColor(c);doc.setFont('helvetica',bold?'bold':'normal');doc.text(String(t||''),x,ty,al==='right'?{align:'right'}:{});};
+  const ln=(x1,y1,x2,y2,c='#D8DDE5')=>{doc.setDrawColor(c);doc.setLineWidth(0.5);doc.line(x1,y1,x2,y2);};
+  const txt=(t,x,ty,sz,c,bold,al)=>{doc.setFontSize(sz||10);doc.setTextColor(c||'#4A5568');doc.setFont('helvetica',bold?'bold':'normal');doc.text(String(t||''),x,ty,al==='right'?{align:'right'}:{});};
 
-  // Header
-  rect(0,0,W,112,'#051C2C');rect(0,112,W,3,'#2251FF');
+  // Header band
+  rect(0,0,W,112,'#051C2C'); rect(0,112,W,3,'#2251FF');
   txt('OFFICE SPACE PROGRAM',M,50,22,'#FFFFFF',true);
   txt('Preliminary Needs Assessment',M,68,12,'#AACCEE');
-  txt(`${v('companyName')} · ${v('contactName')} · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`,M,88,9,'rgba(255,255,255,0.35)');
+  txt(`${cname} · ${cntct} · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`,M,88,9,'rgba(255,255,255,0.35)');
   txt('Chase Bourdelaise',W-M,50,9,'rgba(255,255,255,0.55)',false,'right');
   txt('Tenant Advisory · Transwestern',W-M,63,8,'rgba(255,255,255,0.3)',false,'right');
   txt('chasebourdelaise.com',W-M,76,8,'rgba(255,255,255,0.3)',false,'right');
   y=130;
 
-  const{wsSF,rmSF,amSF,prog,usable,rentable}=calcProg();
-  const dkEl=document.getElementById('tDesks');const dk=dkEl?.textContent!=='—'?parseInt(dkEl.textContent)||0:0;
+  const {wsSF,rmSF,amSF,prog,usable,rentable,desks,circ,loss} = recalc();
 
-  // RSF box
+  // RSF hero box
   rect(M,y,CW,90,'#051C2C');
   txt('ESTIMATED RENTABLE SQUARE FOOTAGE',M+16,y+20,9,'rgba(255,255,255,0.35)');
   txt(rentable>0?rentable.toLocaleString():'See notes',M+16,y+58,34,'#FFFFFF',true);
-  txt('RSF · includes 18% circulation + 15% loss factor',M+16,y+76,9,'rgba(255,255,255,0.35)');
-  if(rentable>0&&dk>0){const ppp=Math.round(rentable/dk);txt(`${ppp} RSF/person · ${dk} seats (Year 3)`,W-M-16,y+54,10,'rgba(255,255,255,0.65)',false,'right');}
+  txt('includes 18% circulation + 15% building loss factor',M+16,y+76,9,'rgba(255,255,255,0.35)');
+  if(rentable>0&&desks>0) txt(`${Math.round(rentable/desks)} RSF/person · ${desks} seats (Year 3)`,W-M-16,y+54,10,'rgba(255,255,255,0.65)',false,'right');
   y+=108;
 
-  const sHead=(title,sub)=>{if(y>680){doc.addPage();y=48;}rect(M,y,CW,24,'#F8F9FB');line(M,y,M+CW,y);line(M,y+24,M+CW,y+24);txt(title.toUpperCase(),M+10,y+16,7.5,'#8A9BB0',true);if(sub)txt(sub,W-M-10,y+16,7.5,'#8A9BB0',false,'right');y+=28;};
-  const dRow=(lbl,val,alt=false)=>{if(y>700){doc.addPage();y=48;}if(alt)rect(M,y,CW,22,'#F8F9FB');txt(String(lbl),M+10,y+15,9,'#4A5568');const ln=doc.splitTextToSize(String(val||'—'),CW-160);doc.setFontSize(9);doc.setTextColor('#051C2C');doc.setFont('helvetica','normal');doc.text(ln,W-M-10,y+15,{align:'right'});y+=22;line(M,y,M+CW,y);};
+  const sHead=(title,sub)=>{if(y>680){doc.addPage();y=48;}rect(M,y,CW,24,'#F8F9FB');ln(M,y,M+CW,y);ln(M,y+24,M+CW,y+24);txt(title.toUpperCase(),M+10,y+16,7.5,'#8A9BB0',true);if(sub)txt(sub,W-M-10,y+16,7.5,'#8A9BB0',false,'right');y+=28;};
+  const dRow=(lbl,val,alt)=>{if(y>700){doc.addPage();y=48;}if(alt)rect(M,y,CW,22,'#F8F9FB');txt(String(lbl),M+10,y+15,9,'#4A5568');const lns=doc.splitTextToSize(String(val||'—'),CW-160);doc.setFontSize(9);doc.setTextColor('#051C2C');doc.setFont('helvetica','normal');doc.text(lns,W-M-10,y+15,{align:'right'});y+=22;ln(M,y,M+CW,y);};
 
-  // Space program
-  sHead('SPACE PROGRAM BREAKDOWN',prog>0?prog.toLocaleString()+' USF':undefined);
+  // Space breakdown
+  y+=14; sHead('SPACE PROGRAM',prog>0?prog.toLocaleString()+' USF program':undefined);
   dRow('Individual Workspaces',wsSF>0?wsSF.toLocaleString()+' USF':'Not entered');
-  dRow('Collaborative / Meeting Rooms',rmSF>0?rmSF.toLocaleString()+' USF':'Not entered',true);
+  dRow('Meeting & Collaborative Rooms',rmSF>0?rmSF.toLocaleString()+' USF':'Not entered',true);
   dRow('Amenity & Support',amSF>0?amSF.toLocaleString()+' USF':'Not entered');
-  dRow('Program Subtotal',prog>0?prog.toLocaleString()+' USF':'—',true);
-  dRow('Circulation (18%)',prog>0?Math.round(prog*.18).toLocaleString()+' USF':'—');
-  dRow('Usable SF',usable>0?usable.toLocaleString()+' USF':'—',true);
-  dRow('Building Loss (15%)',usable>0?Math.round(usable*.15).toLocaleString()+' RSF':'—');
-  rect(M,y,CW,26,'#051C2C');txt('ESTIMATED RENTABLE SF (RSF)',M+10,y+17,10,'#FFFFFF',true);txt(rentable>0?rentable.toLocaleString()+' RSF':'—',W-M-10,y+17,10,'#FFFFFF',true,'right');y+=34;
+  dRow('Circulation (18%)',prog>0?circ.toLocaleString()+' USF':'—',true);
+  dRow('Building Loss Factor (15%)',usable>0?loss.toLocaleString()+' RSF':'—');
+  rect(M,y,CW,26,'#051C2C'); txt('ESTIMATED RENTABLE SF',M+10,y+17,10,'#FFFFFF',true); txt(rentable>0?rentable.toLocaleString()+' RSF':'—',W-M-10,y+17,10,'#FFFFFF',true,'right'); y+=34;
 
   // Company
-  y+=14;sHead('COMPANY & PROJECT DETAILS');
-  dRow('Organization',v('companyName'));dRow('Industry',v('industry'),true);dRow('Contact',`${v('contactName')}${v('contactTitle')!=='—'?' · '+v('contactTitle'):''}`,false);dRow('Email',email,true);dRow('Current Market',document.getElementById('targetMarket')?.value||'—');dRow('Lease Expiration',v('leaseExp'),true);dRow('Target Occupancy',v('moveIn'));dRow('Lease Term',v('leaseTerm'),true);if(v('budget')!=='—')dRow('Budget Guidance',v('budget'));
+  y+=14; sHead('COMPANY & PROJECT');
+  dRow('Organization',cname); dRow('Industry',v('industry'),true); dRow('Contact',`${cntct}${v('contactTitle')!=='—'?' · '+v('contactTitle'):''}`,false);
+  dRow('Email',email,true); dRow('Target Market',v('targetMarket')||'—',false); dRow('Lease Expiration',v('leaseExp'),true);
+  dRow('Target Occupancy',v('moveIn'),false); dRow('Lease Term',v('leaseTerm'),true);
+  if(v('budget')!=='—') dRow('Budget Guidance',v('budget'),false);
 
-  // Headcount
-  y+=14;sHead('HEADCOUNT & GROWTH');
-  const rows=document.querySelectorAll('#deptBody tr');let dc=0;
-  rows.forEach(row=>{const cs=row.querySelectorAll('input');const d=cs[0]?.value?.trim();if(!d)return;dRow(d,`Now: ${cs[1]?.value||'—'} · Yr3: ${cs[2]?.value||'—'} · Yr5: ${cs[3]?.value||'—'} · Desks: ${row.querySelector('.cc')?.textContent||'—'}`,dc%2===1);dc++;});
-  if(!dc)dRow('Departments','Not entered');
-  dRow('Hybrid Policy',v('hybridPolicy'),dc%2===0);dRow('Avg Days In-Office',v('avgDays')!=='—'?v('avgDays')+' days/week':'—',dc%2===1);
+  // Team
+  y+=14; sHead('YOUR TEAM');
+  dRow('Headcount Today',v('hcNow')); dRow('Headcount — Year 3',v('hcYr3'),true); dRow('Headcount — Year 5',v('hcYr5'));
+  dRow('Days In-Office / Week',daysInOffice,true);
+  const sel=document.querySelector('.layout-card.sel');
+  if(sel) dRow('Workspace Layout',sel.dataset.label+` (${sel.dataset.sf} SF/person)`,false);
 
-  // Workspaces
-  const wsE=WS.filter(w=>parseInt(document.getElementById(w.id+'_yr3')?.value)||0>0);
-  if(wsE.length){y+=14;sHead('WORKSPACE PROGRAM');wsE.forEach((w,i)=>{const q3=document.getElementById(w.id+'_yr3')?.value||0;dRow(`${w.name} (${w.sf} SF)`,`Yr 3: ${q3} · Subtotal: ${(q3*w.sf).toLocaleString()} USF`,i%2===1);});}
-
-  // Meetings
-  const rmE=RM.filter(r=>parseInt(document.getElementById(r.id+'_yr3')?.value)||0>0);
-  if(rmE.length){y+=14;sHead('MEETING ROOM PROGRAM');rmE.forEach((r,i)=>{const q3=document.getElementById(r.id+'_yr3')?.value||0;dRow(`${r.name} (${r.sf} SF)`,`Qty: ${q3} · Subtotal: ${(q3*r.sf).toLocaleString()} USF`,i%2===1);});}
+  // Rooms
+  const rmE=ROOMS.filter(r=>parseInt(document.getElementById('sv_'+r.id)?.textContent)||0>0);
+  if(rmE.length){y+=14;sHead('MEETING ROOMS',rmSF.toLocaleString()+' USF');rmE.forEach((r,i)=>{const q=parseInt(document.getElementById('sv_'+r.id)?.textContent)||0;dRow(r.name,`${q} × ${r.sf} SF = ${(q*r.sf).toLocaleString()} USF`,i%2===1);});}
 
   // Amenities
-  const selAm=Array.from(document.querySelectorAll('.ck.sel .ck-label')).map(el=>el.textContent);
-  if(selAm.length){y+=14;sHead('SELECTED AMENITIES',amSF.toLocaleString()+' USF');for(let i=0;i<selAm.length;i+=2){dRow('',selAm.slice(i,i+2).join(' · '),i%4===2);}}
+  const selAm=Array.from(document.querySelectorAll('.amen-item.sel .amen-name')).map(e=>e.textContent);
+  if(selAm.length){y+=14;sHead('AMENITIES',amSF.toLocaleString()+' USF');for(let i=0;i<selAm.length;i+=2){dRow('',selAm.slice(i,i+2).join(' · '),i%4===2);}}
 
-  // Building
-  y+=14;sHead('BUILDING & LOCATION');
-  dRow('Target Market',document.getElementById('targetMarket')?.value||'—');
-  if(v('submarket')!=='—')dRow('Submarket(s)',v('submarket'),true);
-  dRow('Building Class',v('bldgClass'));dRow('Transit',v('transit'),true);
-  if(v('parking')!=='—')dRow('Parking',v('parking'));
-  dRow('Floor Preference',v('floorPref'),v('parking')==='—');
-  const prio=Array.from(document.querySelectorAll('#priorityChips .chip.sel')).map(el=>el.textContent).join(', ');
-  if(prio)dRow('Key Priorities',prio,true);
 
-  // Pain points
-  if(v('painPoints')!=='—'){y+=14;if(y>660){doc.addPage();y=48;}rect(M,y,CW,56,'#F8F9FB');line(M,y,M+2,y+56,'#2251FF');const pl=doc.splitTextToSize(v('painPoints'),CW-24);doc.setFontSize(8.5);doc.setTextColor('#4A5568');doc.setFont('helvetica','normal');doc.text(pl,M+12,y+14);y+=64;}
 
   // Disclaimer
-  if(y>660){doc.addPage();y=48;}y+=16;rect(M,y,CW,52,'#F8F9FB');line(M,y,M+2,y+52,'#2251FF');
-  const disc=doc.splitTextToSize('This space program is preliminary based solely on the inputs provided. Actual RSF will vary based on building efficiency, floor plate geometry, and specific space plan. All numbers should be refined through an architect\'s test-fit. Budget guidance is kept strictly confidential.',CW-24);
-  doc.setFontSize(8);doc.setTextColor('#8A9BB0');doc.setFont('helvetica','italic');doc.text(disc,M+12,y+14);y+=60;
+  if(y>660){doc.addPage();y=48;} y+=14;
+  rect(M,y,CW,48,'#F8F9FB'); ln(M,y,M+2,y+48,'#2251FF');
+  doc.setFontSize(8);doc.setTextColor('#8A9BB0');doc.setFont('helvetica','italic');
+  doc.text(doc.splitTextToSize('This space program is preliminary based solely on inputs provided. Actual RSF will vary based on building efficiency, floor plate geometry, and the specific space plan. All numbers should be verified through an architect's test-fit. Budget guidance is strictly confidential.',CW-24),M+12,y+12);
+  y+=56;
 
-  // Footer on every page
+  // Footer on all pages
   const tp=doc.getNumberOfPages();
-  for(let p=1;p<=tp;p++){doc.setPage(p);const ph=doc.internal.pageSize.getHeight();line(M,ph-36,W-M,ph-36);txt('Chase Bourdelaise · Tenant Advisory & Portfolio Strategy · Transwestern',M,ph-22,8,'#8A9BB0');txt('chase.bourdelaise@transwestern.com · (202) 591-1926 · chasebourdelaise.com',M,ph-11,8,'#8A9BB0');txt(`Page ${p} of ${tp}`,W-M,ph-22,8,'#8A9BB0',false,'right');doc.setFontSize(8);doc.setTextColor('#2251FF');doc.text('CONFIDENTIAL',W-M,ph-11,{align:'right'});}
+  for(let p=1;p<=tp;p++){doc.setPage(p);const ph=doc.internal.pageSize.getHeight();ln(M,ph-36,W-M,ph-36);txt('Chase Bourdelaise · Tenant Advisory & Portfolio Strategy · Transwestern',M,ph-22,8,'#8A9BB0');txt('chase.bourdelaise@transwestern.com · (202) 591-1926 · chasebourdelaise.com',M,ph-11,8,'#8A9BB0');txt(`Page ${p} of ${tp}`,W-M,ph-22,8,'#8A9BB0',false,'right');doc.setFontSize(8);doc.setTextColor('#2251FF');doc.text('CONFIDENTIAL',W-M,ph-11,{align:'right'});}
 
-  doc.save(`Space-Program-${(v('companyName')||'Report').replace(/\s+/g,'-').replace(/[^a-zA-Z0-9-]/g,'')}.pdf`);
+  doc.save(`Space-Program-${(cname||'Report').replace(/\s+/g,'-').replace(/[^a-zA-Z0-9-]/g,'')}.pdf`);
 
-  // Notify via Formspree
-  try{const fd=new FormData();fd.append('_subject',`New Space Assessment: ${v('companyName')}`);fd.append('Company',v('companyName'));fd.append('Contact',v('contactName'));fd.append('Email',email);fd.append('Market',document.getElementById('targetMarket')?.value||'—');fd.append('Est_RSF',rentable.toLocaleString());fd.append('Notes',v('additionalNotes'));fetch('https://formspree.io/f/YOUR_FORM_ID',{method:'POST',body:fd});}catch(e){}
+  try{const fd=new FormData();fd.append('_subject','New Space Assessment: '+cname);fd.append('Company',cname);fd.append('Contact',cntct);fd.append('Email',email);fd.append('Est_RSF',rentable.toLocaleString());fetch('https://formspree.io/f/YOUR_FORM_ID',{method:'POST',body:fd});}catch(e){}
 
-  setTimeout(()=>{document.getElementById('formShell').style.display='none';document.getElementById('sucScreen').classList.add('show');window.scrollTo({top:0,behavior:'smooth'});},700);
+  setTimeout(()=>{document.getElementById('toolWrap').style.display='none';document.getElementById('sucScreen').classList.add('show');window.scrollTo({top:0,behavior:'smooth'});},600);
 }
 
 // ── INIT ─────────────────────────────────────────────
-buildGrid(WS,'wsGrid');buildGrid(RM,'rmGrid');buildChecks();
+buildRooms(); buildAmen();
+stepDays(0); // init label
 
 function toggleMenu(){const m=document.getElementById('mobileMenu');if(m)m.classList.toggle('open');}
 fetch('/nav.html').then(r=>r.text()).then(h=>{const el=document.getElementById('nav-placeholder');if(el)el.outerHTML=h;});
