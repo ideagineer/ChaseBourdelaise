@@ -430,15 +430,15 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
       <div class="hc-row">
         <div class="hc-box">
           <label>People today</label>
-          <input type="number" id="hcNow" min="0" placeholder="—" oninput="recalc()">
+          <input type="number" id="hcNow" min="0" value="50" oninput="recalc()">
         </div>
         <div class="hc-box">
           <label>In 3 years</label>
-          <input type="number" id="hcYr3" min="0" placeholder="—" oninput="recalc(); reapplyBenchmarks()">
+          <input type="number" id="hcYr3" min="0" value="50" oninput="recalc(); reapplyBenchmarks()">
         </div>
         <div class="hc-box">
           <label>In 5 years</label>
-          <input type="number" id="hcYr5" min="0" placeholder="—" oninput="recalc()">
+          <input type="number" id="hcYr5" min="0" value="60" oninput="recalc()">
         </div>
       </div>
 
@@ -554,11 +554,11 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
       <div class="fg">
         <div class="field">
           <label># of Offices</label>
-          <input type="number" id="numOffices" min="0" placeholder="0" oninput="recalc()">
+          <input type="number" id="numOffices" min="0" placeholder="0" readonly style="background:#F8F9FB;color:#4A5568;cursor:default;" title="Auto-calculated from desk count and layout">
         </div>
         <div class="field">
           <label># of Workstations</label>
-          <input type="number" id="numWorkstations" min="0" placeholder="0" oninput="recalc()">
+          <input type="number" id="numWorkstations" min="0" placeholder="0" readonly style="background:#F8F9FB;color:#4A5568;cursor:default;" title="Auto-calculated from desk count and layout">
         </div>
       </div>
       <p style="font-size:11px;font-weight:300;color:#8A9BB0;margin-top:-2px;margin-bottom:0;">Total desks used in calculation: <strong id="totalDesksDisplay" style="color:#051C2C;">—</strong></p>
@@ -831,22 +831,11 @@ function selectLayout(el) {
   el.classList.add('sel');
   layoutSF    = parseFloat(el.getAttribute('data-sf')) || 95;
   currentLcId = el.getAttribute('id') || 'lc_mixed';
-  autoSuggestDesks();
+  /* recalc() updates office/workstation display */
   recalc();
 }
 
-/* ─── AUTO-SUGGEST OFFICES + WORKSTATIONS ────────────── */
-function autoSuggestDesks() {
-  var totalDesks = calcTotalDesks();
-  if (totalDesks <= 0) return;
-  var officePct = LAYOUT_OFFICE_PCT[currentLcId] || 0.25;
-  var offices   = Math.round(totalDesks * officePct);
-  var wss       = totalDesks - offices;
-  document.getElementById('numOffices').value      = offices;
-  document.getElementById('numWorkstations').value = wss;
-  var note = document.getElementById('wsSuggestNote');
-  if (note) note.style.display = 'block';
-}
+/* autoSuggestDesks removed — recalc() now handles this directly */
 
 /* ─── CALC TOTAL DESKS (core logic) ─────────────────── */
 function calcTotalDesks() {
@@ -966,7 +955,7 @@ function applyIndustry(key) {
   document.getElementById('indSel2').value = key;
 
   /* Auto-suggest desk split after industry loads */
-  autoSuggestDesks();
+  /* recalc() updates office/workstation display */
   recalc();
 }
 
@@ -990,19 +979,20 @@ function recalc() {
 
   updateDeskNote(hc3, assignedDesks, hotelingDesks, totalDesks);
 
-  /* Workspace SF: use manually entered office/workstation counts if present,
-     else fall back to totalDesks * layoutSF */
-  var numOffices = parseFloat(document.getElementById('numOffices').value) || 0;
-  var numWS      = parseFloat(document.getElementById('numWorkstations').value) || 0;
-  var wsSF = 0;
-  if (numOffices > 0 || numWS > 0) {
-    wsSF = Math.round(numOffices * 140 + numWS * layoutSF);
-  } else if (totalDesks > 0 && layoutSF > 0) {
-    var officePct = LAYOUT_OFFICE_PCT[currentLcId] || 0.25;
-    var impliedOffices = Math.round(totalDesks * officePct);
-    var impliedWS      = totalDesks - impliedOffices;
-    wsSF = Math.round(impliedOffices * 140 + impliedWS * layoutSF);
-  }
+  /* Workspace SF: always derived from totalDesks + layout split.
+     Office/workstation inputs are display-only and stay in sync. */
+  var officePct  = LAYOUT_OFFICE_PCT[currentLcId] || 0.25;
+  var numOffices = totalDesks > 0 ? Math.round(totalDesks * officePct) : 0;
+  var numWS      = totalDesks > 0 ? totalDesks - numOffices : 0;
+  var wsSF       = Math.round(numOffices * 140 + numWS * layoutSF);
+  /* Keep display inputs in sync */
+  var offEl = document.getElementById('numOffices');
+  var wsEl  = document.getElementById('numWorkstations');
+  if (offEl) offEl.value = numOffices || '';
+  if (wsEl)  wsEl.value  = numWS || '';
+  /* Show/hide the suggestion note */
+  var wNote = document.getElementById('wsSuggestNote');
+  if (wNote) wNote.style.display = totalDesks > 0 ? 'block' : 'none';
 
   /* Room SF */
   var rmSF = 0;
@@ -1042,20 +1032,19 @@ function recalc() {
     var rnd = rentable > 5000 ? 100 : 50;
     var lo  = Math.round(rentable * 0.92 / rnd) * rnd;
     var hi  = Math.round(rentable * 1.08 / rnd) * rnd;
-    /* RSF per PERSON — correct metric (not per desk) */
-    var rsfPerPerson = Math.round(rentable / hc3);
-    var rsfPerDesk   = totalDesks > 0 ? Math.round(wsSF / totalDesks) : 0;
-    var rangeStr = lo.toLocaleString() + ' \u2013 ' + hi.toLocaleString() + ' RSF range';
-    rangeStr += '  \u00b7  ' + rsfPerPerson + ' RSF/person';
-    if (totalDesks > 0) rangeStr += '  \u00b7  ' + totalDesks + ' desks';
+    /* RSF per SEAT — apples-to-apples with industry benchmark */
+    var rsfPerSeat = totalDesks > 0 ? Math.round(rentable / totalDesks) : Math.round(rentable / hc3);
+    var rangeStr = lo.toLocaleString() + ' – ' + hi.toLocaleString() + ' RSF range';
+    rangeStr += '  ·  ' + rsfPerSeat + ' RSF/seat';
+    if (totalDesks > 0 && hc3 > 0) rangeStr += '  ·  ' + totalDesks + ' desks / ' + hc3 + ' people';
     document.getElementById('sbRange').textContent = rangeStr;
 
-    /* Industry compare: use RSF/person vs benchmark RSF/seat */
+    /* Industry compare: RSF/seat vs RSF/seat — apples to apples */
     if (currentInd) {
-      var diff = rsfPerPerson - currentInd.rsfPerSeat;
+      var diff = rsfPerSeat - currentInd.rsfPerSeat;
       var sign = diff >= 0 ? '+' : '';
       document.getElementById('sbIndCmp').textContent =
-        'Your program: ' + rsfPerPerson + ' RSF/person (' + sign + diff + ' vs. benchmark)';
+        'Your program: ' + rsfPerSeat + ' RSF/seat (' + sign + diff + ' vs. benchmark)';
     }
   } else {
     document.getElementById('sbRange').textContent = '';
@@ -1082,7 +1071,7 @@ function recalc() {
   /* Report preview */
   document.getElementById('rpNum').textContent = rentable > 0 ? rentable.toLocaleString() + ' RSF' : '\u2014';
   document.getElementById('rpSub').textContent = rentable > 0
-    ? hc3 + ' people \u00b7 ' + totalDesks + ' desks \u00b7 ' + prog.toLocaleString() + ' USF program'
+    ? totalDesks + ' desks (' + hc3 + ' people) \u00b7 ' + prog.toLocaleString() + ' USF program'
     : 'Fill in sections above to see your estimate';
 
   return {wsSF:wsSF, rmSF:rmSF, amSF:amSF, prog:prog, usable:usable, rentable:rentable,
@@ -1154,9 +1143,21 @@ function genReport() {
   if (!ok) { document.getElementById('reportEmail').scrollIntoView({behavior:'smooth',block:'center'}); return; }
 
   var btn = document.getElementById('submitBtn');
-  btn.textContent = 'Generating...'; btn.disabled = true;
+  btn.textContent = 'Generating…'; btn.disabled = true;
 
-  var res = recalc();
+  /* Verify jsPDF is loaded */
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('PDF library not loaded yet. Please wait a moment and try again.');
+    btn.textContent = 'Download PDF Report →'; btn.disabled = false;
+    return;
+  }
+
+  var res;
+  try { res = recalc(); } catch(e) {
+    alert('Calculation error: ' + e.message);
+    btn.textContent = 'Download PDF Report →'; btn.disabled = false;
+    return;
+  }
   var wsSF=res.wsSF, rmSF=res.rmSF, amSF=res.amSF, prog=res.prog;
   var usable=res.usable, rentable=res.rentable, desks=res.desks, hc3=res.hc3;
 
@@ -1251,7 +1252,13 @@ function genReport() {
     doc.setFontSize(8);doc.setTextColor('#2251FF');doc.text('CONFIDENTIAL',W-M,ph-11,{align:'right'});
   }
 
-  doc.save('Space-Program-'+cname.replace(/[^a-zA-Z0-9]/g,'-')+'.pdf');
+  try {
+    doc.save('Space-Program-'+cname.replace(/[^a-zA-Z0-9]/g,'-')+'.pdf');
+  } catch(pdfErr) {
+    alert('PDF generation failed: ' + pdfErr.message + '\n\nPlease try again or contact chase.bourdelaise@transwestern.com directly.');
+    btn.textContent = 'Download PDF Report →'; btn.disabled = false;
+    return;
+  }
 
   try{
     var fd=new FormData();
@@ -1266,12 +1273,17 @@ function genReport() {
     document.getElementById('toolBody').style.display='none';
     document.getElementById('sucScreen').className='suc on';
     window.scrollTo({top:0,behavior:'smooth'});
-  },700);
+  },600);
+  /* Restore button in case user wants to re-download */
+  setTimeout(function(){
+    btn.textContent = 'Download PDF Report →'; btn.disabled = false;
+  },2000);
 }
 
 /* ─── INIT ───────────────────────────────────────────── */
 buildRooms();
 buildAmen();
+/* Trigger initial calculation with default headcount values */
 recalc();
 </script>
 </body>
