@@ -650,27 +650,19 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         <p>Fill in your details below — the report generates instantly in your browser and downloads as a formatted PDF.</p>
         <div class="fg">
           <div class="field"><label>Company name *</label><input type="text" id="companyName" placeholder="Acme Corp"></div>
-          <div class="field"><label>Industry</label>
-            <select id="indSel2" onchange="document.getElementById('indSel').value=this.value;applyIndustry(this.value)">
-              <option value="">Select…</option>
-              <option value="law">Law Firm</option>
-              <option value="services">Professional Services</option>
-              <option value="tech">Technology</option>
-              <option value="sales">Sales / Real Estate</option>
-              <option value="callcenter">Call Center / Operations</option>
-            </select>
-          </div>
           <div class="field"><label>Your name *</label><input type="text" id="contactName" placeholder="Jane Smith"></div>
           <div class="field"><label>Your title</label><input type="text" id="contactTitle" placeholder="CFO / Head of Real Estate"></div>
           <div class="field"><label>Email address *</label><input type="email" id="reportEmail" placeholder="jane@acme.com"></div>
           <div class="field"><label>Phone</label><input type="tel" id="contactPhone" placeholder="(202) 555-0100"></div>
-          <div class="field"><label>Target market / city</label><input type="text" id="targetMarket" placeholder="Washington, DC"></div>
-          <div class="field"><label>Current lease expiration</label><input type="text" id="leaseExp" placeholder="MM/YYYY"></div>
-          <div class="field"><label>Target occupancy date</label><input type="text" id="moveIn" placeholder="Q3 2026"></div>
-          <div class="field"><label>Budget guidance <span style="font-family:'DM Sans',sans-serif;font-size:11px;text-transform:none;letter-spacing:0;color:#8A9BB0;">(optional, confidential)</span></label><input type="text" id="budget" placeholder="e.g. $40–55 PSF NNN"></div>
-          <div class="field ff"><label>Top pain points in your current office</label><textarea id="painPoints" placeholder="Not enough meeting rooms, out of space, poor acoustics…" style="min-height:68px;"></textarea></div>
-          <div class="field ff"><label>Anything else?</label><input type="text" id="addlNotes" placeholder="Questions, context, or timing…"></div>
+          <div class="field ff"><label>Questions / Comments</label><textarea id="painPoints" placeholder="Questions, comments, or anything else you'd like to share…" style="min-height:80px;"></textarea></div>
         </div>
+        <!-- hidden fields so PDF/Formspree references don't break -->
+        <input type="hidden" id="indSel2" value="">
+        <input type="hidden" id="targetMarket" value="">
+        <input type="hidden" id="leaseExp" value="">
+        <input type="hidden" id="moveIn" value="">
+        <input type="hidden" id="budget" value="">
+        <input type="hidden" id="addlNotes" value=""></div>
         <button type="button" class="submit-btn" id="submitBtn" onclick="genReport()">Download PDF Report →</button>
         <p class="fine">Your information is never sold or shared. Chase will reach out personally.</p>
       </div>
@@ -1248,18 +1240,18 @@ function genReport() {
     rect(0,0,W,112,'#051C2C'); rect(0,112,W,3,'#2251FF');
     txt('OFFICE SPACE PROGRAM',M,50,22,'#FFFFFF',true);
     txt('Preliminary Needs Assessment',M,68,12,'#AACCEE');
-    txt(cname+' | '+cntct+' | '+new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),M,88,9,'rgba(255,255,255,0.35)');
-    txt('Chase Bourdelaise',W-M,50,9,'rgba(255,255,255,0.55)',false,'right');
-    txt('Tenant Advisory | Transwestern',W-M,63,8,'rgba(255,255,255,0.3)',false,'right');
-    txt('chasebourdelaise.com',W-M,76,8,'rgba(255,255,255,0.3)',false,'right');
+    txt(cname+' | '+cntct+' | '+new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),M,88,9,'#5C6B75');
+    txt('Chase Bourdelaise',W-M,50,9,'#8E98A0',false,'right');
+    txt('Tenant Advisory | Transwestern',W-M,63,8,'#50606B',false,'right');
+    txt('chasebourdelaise.com',W-M,76,8,'#50606B',false,'right');
     y=130;
 
     rect(M,y,CW,90,'#051C2C');
-    txt('ESTIMATED RENTABLE SQUARE FOOTAGE',M+16,y+20,9,'rgba(255,255,255,0.35)');
+    txt('ESTIMATED RENTABLE SQUARE FOOTAGE',M+16,y+20,9,'#5C6B75');
     txt(rentable>0?rentable.toLocaleString():'See notes',M+16,y+58,34,'#FFFFFF',true);
-    txt('Incl. '+circPct+'% circulation + '+lossPct+'% building loss factor',M+16,y+76,9,'rgba(255,255,255,0.35)');
-    if(rentable>0&&desks>0) txt(Math.round(rentable/desks)+' RSF/seat | '+desks+' desks (Yr 3)',W-M-16,y+50,10,'rgba(255,255,255,0.65)',false,'right');
-    if(currentInd) txt(currentInd.label+' benchmark: '+currentInd.rsfPerSeat+' RSF/seat',W-M-16,y+68,9,'rgba(255,255,255,0.4)',false,'right');
+    txt('Incl. '+circPct+'% circulation + '+lossPct+'% building loss factor',M+16,y+76,9,'#5C6B75');
+    if(rentable>0&&desks>0) txt(Math.round(rentable/desks)+' RSF/seat | '+desks+' desks (Yr 3)',W-M-16,y+50,10,'#A7AFB5',false,'right');
+    if(currentInd) txt(currentInd.label+' benchmark: '+currentInd.rsfPerSeat+' RSF/seat',W-M-16,y+68,9,'#697680',false,'right');
     y+=108;
 
     function sHead(title,sub){if(y>680){doc.addPage();y=48;}rect(M,y,CW,24,'#F8F9FB');hline(M,y,M+CW,y);hline(M,y+24,M+CW,y+24);txt(title.toUpperCase(),M+10,y+16,7.5,'#8A9BB0',true);if(sub)txt(sub,W-M-10,y+16,7.5,'#8A9BB0',false,'right');y+=28;}
