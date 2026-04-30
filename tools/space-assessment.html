@@ -365,6 +365,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
   .step-ctrl{flex-shrink:0;}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTZJQLZT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -662,7 +663,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         <input type="hidden" id="moveIn" value="">
         <input type="hidden" id="budget" value="">
         <input type="hidden" id="addlNotes" value=""></div>
-        <button type="button" class="submit-btn" id="submitBtn" onclick="genReport()">Request My Space Program →</button>
+        <button type="button" class="submit-btn" id="submitBtn" onclick="genReport()">Submit &amp; Get My Report →</button>
         <p class="fine">Your information is never sold or shared. Chase will reach out personally.</p>
       </div>
     </div>
@@ -723,9 +724,9 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 <!-- SUCCESS ───────────────────────────────────────────────── -->
 <div class="suc" id="sucScreen">
   <div class="suc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-  <h2>You're all set.</h2>
-  <p>Chase will review your program and reach out within one business day with a personalized report formatted for your architect, your CFO, or your board.</p>
-  <p style="margin-top:10px;font-size:14px;font-weight:300;color:#4A5568;">In the meantime, he is available to talk through the numbers directly.</p>
+  <h2>Your report is ready.</h2>
+  <p>Your space program PDF is downloading now. Chase will reach out within one business day to walk through the results, discuss the market, and answer any questions.</p>
+  <p style="margin-top:10px;font-size:14px;font-weight:300;color:#4A5568;">This report is the starting point — not the end of the conversation.</p>
   <p style="margin-top:8px;font-size:12px;color:#8A9BB0;">chase.bourdelaise@transwestern.com &nbsp;&middot;&nbsp; (202) 591-1926</p>
   <a href="/tools.html" style="display:inline-block;margin-top:20px;padding:12px 26px;background:#051C2C;color:#fff;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;">Back to Tools</a>
 </div>
@@ -1210,79 +1211,511 @@ function genReport() {
   if (!ok) { document.getElementById("reportEmail").scrollIntoView({behavior:"smooth",block:"center"}); return; }
 
   var btn = document.getElementById("submitBtn");
-  btn.textContent = "Submitting…"; btn.disabled = true;
+  btn.textContent = "Generating…"; btn.disabled = true;
 
-  var res;
-  try { res = recalc(); } catch(e) {
-    alert("Calculation error: "+e.message);
-    btn.textContent = "Request My Space Program →"; btn.disabled = false; return;
+  var res; try { res = recalc(); } catch(e) {
+    alert("Calculation error: "+e.message); btn.textContent="Submit & Get My Report →"; btn.disabled=false; return;
   }
   var wsSF=res.wsSF,rmSF=res.rmSF,amSF=res.amSF,prog=res.prog;
-  var usable=res.usable,rentable=res.rentable,desks=res.desks,hc3=res.hc3;
-  var numOffices=res.numOffices,numWS=res.numWS;
+  var usable=res.usable,rentable=res.rentable,desks=res.desks,hc3=res.hc3,numOffices=res.numOffices,numWS=res.numWS;
 
-  var rmLines=[];
+  /* Collect structured data */
+  var rmEntries=[];
   for (var ri=0;ri<ROOMS.length;ri++){
     var q=parseInt(document.getElementById("sv_"+ROOMS[ri].id).textContent)||0;
-    if(q>0) rmLines.push(q+"x "+ROOMS[ri].n+" ("+ROOMS[ri].sf+" SF ea = "+(q*ROOMS[ri].sf).toLocaleString()+" SF)");
+    if(q>0) rmEntries.push({name:ROOMS[ri].n, sf:ROOMS[ri].sf, qty:q, total:q*ROOMS[ri].sf});
   }
-  var amLines=[];
+  var amEntries=[];
   document.querySelectorAll(".amen-item.sel").forEach(function(el){
-    var id=el.getAttribute("data-id"); var sf=AMEN_SF[id]||0;
-    amLines.push(el.querySelector(".amen-name").textContent+" ("+sf+" SF)");
+    var id=el.getAttribute("data-id");
+    amEntries.push({name:el.querySelector(".amen-name").textContent, sf:AMEN_SF[id]||0});
   });
   var selCard=document.querySelector(".lc.sel");
   var layoutLabel=selCard?selCard.querySelector(".lc-name").textContent:"--";
-  var rsfPerSeat=desks>0?Math.round(rentable/desks):"--";
-  var deskRatio=hc3>0?(desks/hc3).toFixed(2):"--";
-  var CRLF = String.fromCharCode(13,10);
+  var rsfPerSeat=desks>0?Math.round(rentable/desks):0;
+  var contactTitle=document.getElementById("contactTitle").value.trim()||"";
+  var contactPhone=document.getElementById("contactPhone").value.trim()||"";
+  var questions=document.getElementById("painPoints").value.trim()||"";
 
-  var fd = new FormData();
-  fd.append("_subject",          "New Space Assessment: "+cname);
-  fd.append("_replyto",          email);
-  fd.append("Company",           cname);
-  fd.append("Name",              cntct);
-  fd.append("Title",             document.getElementById("contactTitle").value.trim()||"--");
-  fd.append("Email",             email);
-  fd.append("Phone",             document.getElementById("contactPhone").value.trim()||"--");
-  fd.append("Industry",          currentInd?currentInd.label:"Not selected");
-  fd.append("Questions_Comments",document.getElementById("painPoints").value.trim()||"--");
-  fd.append("RSF_Estimate",      rentable>0?rentable.toLocaleString()+" RSF":"--");
-  fd.append("RSF_Per_Seat",      rsfPerSeat+" RSF/seat");
-  fd.append("Industry_Benchmark",currentInd?currentInd.rsfPerSeat+" RSF/seat benchmark":"--");
-  fd.append("Program_Usable_SF", prog>0?prog.toLocaleString()+" USF":"--");
-  fd.append("Headcount_Today",   document.getElementById("hcNow").value||"--");
-  fd.append("Headcount_Yr3",     hc3||"--");
-  fd.append("Headcount_Yr5",     document.getElementById("hcYr5").value||"--");
-  fd.append("Days_In_Office",    daysInOffice+" days/week");
-  fd.append("Shared_Desk_Pct",   sharedPct+"% using shared seating");
-  fd.append("Total_Desks",       desks+" desks ("+deskRatio+":1 desk-to-person ratio)");
-  fd.append("Layout",            layoutLabel+" - "+layoutSF+" SF/desk");
-  fd.append("Offices",           numOffices+" private offices");
-  fd.append("Workstations",      numWS+" open workstations");
-  fd.append("Workspace_SF",      wsSF>0?wsSF.toLocaleString()+" USF":"--");
-  fd.append("Meeting_Room_SF",   rmSF>0?rmSF.toLocaleString()+" USF":"--");
-  fd.append("Meeting_Rooms",     rmLines.length?rmLines.join(CRLF):"None selected");
-  fd.append("Amenity_SF",        amSF>0?amSF.toLocaleString()+" USF":"--");
-  fd.append("Amenities",         amLines.length?amLines.join(CRLF):"None selected");
-  fd.append("Circulation_Factor",circPct+"%");
-  fd.append("Loss_Factor",       lossPct+"%");
+  /* ── JSON POST to Formspree ────────────────────────────── */
+  var payload = {
+    _subject: "New Space Assessment: " + cname,
+    _replyto: email,
+    Company: cname,
+    Name: cntct,
+    Title: contactTitle||"--",
+    Email: email,
+    Phone: contactPhone||"--",
+    Industry: currentInd?currentInd.label:"Not selected",
+    Questions_Comments: questions||"--",
+    RSF_Estimate: rentable>0?rentable.toLocaleString()+" RSF":"--",
+    RSF_Per_Seat: rsfPerSeat+" RSF/seat",
+    Industry_Benchmark: currentInd?currentInd.rsfPerSeat+" RSF/seat":"--",
+    Headcount_Today: document.getElementById("hcNow").value||"--",
+    Headcount_Yr3: String(hc3||"--"),
+    Headcount_Yr5: document.getElementById("hcYr5").value||"--",
+    Days_In_Office: daysInOffice+" days/week",
+    Shared_Desk_Pct: sharedPct+"%",
+    Total_Desks: desks+" desks ("+(hc3>0?(desks/hc3).toFixed(2):"--")+":1 ratio)",
+    Layout: layoutLabel+" - "+layoutSF+" SF/desk",
+    Offices: numOffices+" private offices",
+    Workstations: numWS+" open workstations",
+    Workspace_SF: wsSF>0?wsSF.toLocaleString()+" USF":"--",
+    Meeting_Room_SF: rmSF>0?rmSF.toLocaleString()+" USF":"--",
+    Meeting_Rooms: rmEntries.map(function(r){return r.qty+"x "+r.name+" = "+r.total.toLocaleString()+" SF";}).join("; ")||"None",
+    Amenity_SF: amSF>0?amSF.toLocaleString()+" USF":"--",
+    Amenities: amEntries.map(function(a){return a.name+" ("+a.sf+" SF)";}).join("; ")||"None",
+    Circulation_Factor: circPct+"%",
+    Loss_Factor: lossPct+"%"
+  };
 
-  fetch("https://formspree.io/f/xjgjnrae",{method:"POST",body:fd,headers:{"Accept":"application/json"}})
-    .then(function(response){
-      if(response.ok){
-        document.getElementById("toolBody").style.display="none";
-        document.getElementById("sucScreen").className="suc on";
-        window.scrollTo({top:0,behavior:"smooth"});
-      } else {
-        throw new Error("Server error "+response.status);
-      }
-    })
-    .catch(function(err){
-      alert("Submission failed: "+err.message+"\n\nPlease email Chase directly:\nchase.bourdelaise@transwestern.com");
-      btn.textContent="Request My Space Program →"; btn.disabled=false;
-    });
+  fetch("https://formspree.io/f/xjgjnrae", {
+    method: "POST",
+    headers: {"Content-Type":"application/json","Accept":"application/json"},
+    body: JSON.stringify(payload)
+  }).then(function(r){ console.log("Formspree:", r.status); })
+    .catch(function(e){ console.warn("Formspree error:", e.message); });
+
+
+  /* ── Rich PDF Report ──────────────────────────────────── */
+  if (!window.jspdf||!window.jspdf.jsPDF) {
+    alert("PDF library not loaded. Please wait and try again.");
+    btn.textContent="Submit & Get My Report →"; btn.disabled=false; return;
+  }
+  try {
+    buildPDF(cname,cntct,contactTitle,email,contactPhone,
+             hc3,desks,numOffices,numWS,wsSF,rmSF,amSF,prog,usable,rentable,
+             rsfPerSeat,rmEntries,amEntries,layoutLabel,questions);
+  } catch(pdfErr) {
+    console.error("PDF error:", pdfErr);
+    alert("PDF error: "+pdfErr.message+"\nChase has been notified and will email your report.");
+  }
+
+  document.getElementById("toolBody").style.display="none";
+  document.getElementById("sucScreen").className="suc on";
+  window.scrollTo({top:0,behavior:"smooth"});
+  btn.textContent="Submit & Get My Report →"; btn.disabled=false;
 }
+
+/* ── buildPDF: rich executive report ─────────────────── */
+function buildPDF(cname,cntct,cTitle,email,cPhone,
+                  hc3,desks,numOffices,numWS,wsSF,rmSF,amSF,prog,usable,rentable,
+                  rsfPerSeat,rmEntries,amEntries,layoutLabel,questions) {
+  var doc = new window.jspdf.jsPDF({unit:"pt",format:"letter",orientation:"portrait"});
+  var PW=612, PH=792, M=48, CW=PW-M*2;
+  var NAVY="#051C2C", BLUE="#2251FF", WHITE="#FFFFFF";
+  var MID="#4A5568", LIGHT="#8A9BB0", RULE="#D8DDE5", OFF="#F8F9FB";
+  var GREEN="#1a8a5e", AMBER="#b45309", GOLD="#C9A84C";
+  var pages=0;
+  var dateStr=new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+
+  /* helpers */
+  function r(x,y,w,h,c){doc.setFillColor(c);doc.rect(x,y,w,h,"F");}
+  function ln(x1,y1,x2,y2,c,lw){doc.setDrawColor(c||RULE);doc.setLineWidth(lw||0.5);doc.line(x1,y1,x2,y2);}
+  function t(str,x,y,sz,c,bold,al){
+    doc.setFontSize(sz||10);doc.setTextColor(c||MID);
+    doc.setFont("helvetica",bold?"bold":"normal");
+    var opts={}; if(al==="right")opts.align="right"; if(al==="center")opts.align="center";
+    doc.text(String(str||""),x,y,opts);
+  }
+  function tWrap(str,x,y,maxW,sz,c,bold){
+    doc.setFontSize(sz||9);doc.setTextColor(c||MID);doc.setFont("helvetica",bold?"bold":"normal");
+    var lines=doc.splitTextToSize(String(str||""),maxW);
+    doc.text(lines,x,y); return lines.length*(sz||9)*1.35;
+  }
+  function addPage(){
+    if(pages>0)doc.addPage();
+    pages++;
+    /* Running footer */
+    ln(M,PH-32,PW-M,PH-32,RULE);
+    t("Chase Bourdelaise  |  Tenant Advisory & Portfolio Strategy  |  Transwestern",M,PH-20,7.5,LIGHT);
+    t("Pg "+pages,PW-M,PH-20,7.5,LIGHT,false,"right");
+    t("CONFIDENTIAL",PW/2,PH-20,7.5,BLUE,false,"center");
+  }
+
+  /* ═══════════════════════════════════════
+     PAGE 1: COVER
+  ═══════════════════════════════════════ */
+  addPage();
+  /* Full navy background */
+  r(0,0,PW,PH,NAVY);
+  /* Blue accent bar */
+  r(0,PH-6,PW,6,BLUE);
+  /* Vertical blue stripe */
+  r(M-8,0,4,PH,BLUE);
+
+  /* REPORT label */
+  t("OFFICE SPACE PROGRAM REPORT",M+12,72,8.5,BLUE,true);
+
+  /* Giant RSF */
+  var rsfStr=rentable>0?rentable.toLocaleString():"TBD";
+  doc.setFontSize(72);doc.setTextColor(WHITE);doc.setFont("helvetica","bold");
+  doc.text(rsfStr,M+12,200);
+  t("Estimated Rentable Square Feet",M+12,220,11,"#8A9BB0");
+  ln(M+12,234,M+12+180,234,BLUE,2);
+
+  /* Company block */
+  doc.setFontSize(28);doc.setTextColor(WHITE);doc.setFont("helvetica","bold");
+  doc.text(cname,M+12,290);
+  t((cntct+(cTitle?" — "+cTitle:""))+" | "+email,M+12,312,10,"#8A9BB0");
+
+  /* Three key metric boxes */
+  var boxY=360, boxW=160, boxH=80, boxGap=10;
+  var boxes=[
+    {label:"DESKS (YR 3)",      val:desks>0?String(desks):"—"},
+    {label:"RSF / SEAT",         val:rsfPerSeat>0?String(rsfPerSeat):"—"},
+    {label:"INDUSTRY BENCHMARK", val:currentInd?currentInd.rsfPerSeat+" RSF/seat":"—"},
+  ];
+  for(var bi=0;bi<boxes.length;bi++){
+    var bx=M+12+bi*(boxW+boxGap);
+    r(bx,boxY,boxW,boxH,"#0A2E47");
+    ln(bx,boxY,bx+boxW,boxY,BLUE,1.5);
+    t(boxes[bi].label,bx+10,boxY+18,7,BLUE,true);
+    doc.setFontSize(22);doc.setTextColor(WHITE);doc.setFont("helvetica","bold");
+    doc.text(String(boxes[bi].val),bx+10,boxY+52);
+  }
+
+  /* Color-coded bar chart of space breakdown */
+  if(prog>0){
+    var barY=490, barH=16, barTotalW=CW-20;
+    t("SPACE PROGRAM COMPOSITION",M+12,barY-14,7.5,BLUE,true);
+    var segs=[{sf:wsSF,c:BLUE},{sf:rmSF,c:GREEN},{sf:amSF,c:AMBER}];
+    var bx2=M+12;
+    for(var si=0;si<segs.length;si++){
+      var sw=Math.round(segs[si].sf/prog*barTotalW);
+      if(sw>0){r(bx2,barY,sw,barH,segs[si].c);bx2+=sw+1;}
+    }
+    /* Legend */
+    var legY=barY+barH+18;
+    var legs=[
+      {c:BLUE,  label:"Workspaces",  sf:wsSF},
+      {c:GREEN, label:"Meeting Rooms",sf:rmSF},
+      {c:AMBER, label:"Amenities",   sf:amSF}
+    ];
+    var lx=M+12;
+    for(var li=0;li<legs.length;li++){
+      r(lx,legY,10,10,legs[li].c);
+      t(legs[li].label+": "+(legs[li].sf>0?legs[li].sf.toLocaleString()+" USF":"—"),lx+14,legY+9,8.5,WHITE);
+      lx+=barTotalW/3;
+    }
+  }
+
+  /* Prepared by block */
+  var byY=580;
+  t("PREPARED BY",M+12,byY,7.5,BLUE,true);
+  t("Chase Bourdelaise",M+12,byY+18,13,WHITE,true);
+  t("Managing Director  |  Tenant Advisory & Portfolio Strategy",M+12,byY+34,9,"#8A9BB0");
+  t("Transwestern  |  Laise Capital LLC",M+12,byY+50,9,"#8A9BB0");
+  t("chase.bourdelaise@transwestern.com  |  (202) 591-1926",M+12,byY+66,9,"#8A9BB0");
+  t("chasebourdelaise.com",M+12,byY+82,9,BLUE);
+
+  t(dateStr,PW-M,byY+66,8,"#8A9BB0",false,"right");
+  t("This report is preliminary based on inputs provided.",PW-M,byY+82,7.5,"#8A9BB0",false,"right");
+
+  /* ═══════════════════════════════════════
+     PAGE 2: SPACE PROGRAM SUMMARY
+  ═══════════════════════════════════════ */
+  addPage();
+  var y=M;
+
+  /* Page header */
+  r(0,0,PW,56,NAVY);
+  t("SPACE PROGRAM SUMMARY",M,36,13,WHITE,true);
+  t(cname+" | "+dateStr,PW-M,36,9,"#8A9BB0",false,"right");
+  y=80;
+
+  /* RSF callout */
+  r(M,y,CW,70,NAVY);
+  r(M,y,4,70,BLUE);
+  t("ESTIMATED RENTABLE SQUARE FOOTAGE",M+16,y+18,7.5,"#8A9BB0",true);
+  doc.setFontSize(36);doc.setTextColor(WHITE);doc.setFont("helvetica","bold");
+  doc.text(rentable>0?rentable.toLocaleString():"—",M+16,y+54);
+  if(rsfPerSeat>0) t(rsfPerSeat+" RSF/seat  |  "+desks+" desks  |  "+hc3+" people",PW-M-16,y+54,9,"#8A9BB0",false,"right");
+  y+=86;
+
+  /* Two column area */
+  var col1x=M, col1w=CW*0.55-8, col2x=M+CW*0.55+8, col2w=CW*0.45-8;
+
+  /* Left: space breakdown table */
+  r(col1x,y,col1w,24,NAVY);
+  t("SPACE PROGRAM BREAKDOWN",col1x+10,y+16,7.5,WHITE,true);
+  y+=28;
+  var tableRows=[
+    {lbl:"Individual Workspaces",      sf:wsSF,  pct:prog>0?Math.round(wsSF/prog*100):0, c:BLUE},
+    {lbl:"Meeting & Collaborative Rooms",sf:rmSF,pct:prog>0?Math.round(rmSF/prog*100):0, c:GREEN},
+    {lbl:"Amenity & Support",          sf:amSF,  pct:prog>0?Math.round(amSF/prog*100):0, c:AMBER},
+    {lbl:"Subtotal (Usable Program)",  sf:prog,  pct:100, c:NAVY, bold:true},
+    {lbl:"Circulation ("+circPct+"%)",  sf:usable-prog, pct:null, c:MID},
+    {lbl:"Building Loss ("+lossPct+"%)",sf:rentable-usable,pct:null, c:MID},
+    {lbl:"RENTABLE SF ESTIMATE",       sf:rentable,pct:null, c:NAVY, bold:true, highlight:true},
+  ];
+  for(var ti=0;ti<tableRows.length;ti++){
+    var tr=tableRows[ti], alt=ti%2===0;
+    var rowH=22;
+    if(tr.highlight){
+      r(col1x,y,col1w,rowH+4,NAVY);
+      t(tr.lbl,col1x+10,y+16,8.5,WHITE,true);
+      t(tr.sf>0?tr.sf.toLocaleString()+" SF":"—",col1x+col1w-10,y+16,9,WHITE,true,"right");
+      y+=rowH+8;
+    } else {
+      if(alt) r(col1x,y,col1w,rowH,OFF);
+      /* color dot */
+      r(col1x+8,y+7,8,8,tr.c);
+      t(tr.lbl,col1x+22,y+15,8.5,tr.bold?NAVY:MID,tr.bold||false);
+      t(tr.sf>0?tr.sf.toLocaleString()+" SF":"—",col1x+col1w-10,y+15,8.5,NAVY,false,"right");
+      if(tr.pct!==null) t("("+tr.pct+"%)",col1x+col1w-80,y+15,7.5,LIGHT,false,"right");
+      ln(col1x,y+rowH,col1x+col1w,y+rowH,RULE);
+      y+=rowH;
+    }
+  }
+
+  /* Left: mini bar chart */
+  y+=12;
+  t("SPACE MIX",col1x,y,7.5,BLUE,true); y+=12;
+  if(prog>0){
+    var barSegs=[{sf:wsSF,c:BLUE},{sf:rmSF,c:GREEN},{sf:amSF,c:AMBER}];
+    var bxx=col1x,barTW=col1w;
+    for(var bsi=0;bsi<barSegs.length;bsi++){
+      var bsw=Math.round(barSegs[bsi].sf/prog*barTW);
+      if(bsw>1){r(bxx,y,bsw,14,barSegs[bsi].c);bxx+=bsw+1;}
+    }
+  }
+  y+=28;
+
+  /* Reset y for right column */
+  var rightY=80+86+28;
+
+  /* Right: team metrics */
+  r(col2x,rightY,col2w,24,NAVY);
+  t("TEAM & DESK PROGRAM",col2x+10,rightY+16,7.5,WHITE,true);
+  rightY+=28;
+  var teamRows=[
+    {lbl:"People today",    val:document.getElementById("hcNow").value||"—"},
+    {lbl:"Year 3 headcount",val:String(hc3||"—")},
+    {lbl:"Year 5 headcount",val:document.getElementById("hcYr5").value||"—"},
+    {lbl:"Days in-office/wk",val:daysInOffice+" days"},
+    {lbl:"Shared seating",  val:sharedPct+"% of staff"},
+    {lbl:"Total desks (Yr3)",val:String(desks||"—")},
+    {lbl:"Desk:person ratio",val:hc3>0?(desks/hc3).toFixed(2)+":1":"—"},
+    {lbl:"Private offices",  val:String(numOffices||"—")},
+    {lbl:"Open workstations",val:String(numWS||"—")},
+    {lbl:"Layout type",     val:layoutLabel},
+    {lbl:"SF per desk",     val:layoutSF+" SF"},
+  ];
+  for(var tri=0;tri<teamRows.length;tri++){
+    var trow=teamRows[tri];
+    if(tri%2===0) r(col2x,rightY,col2w,20,OFF);
+    t(trow.lbl,col2x+8,rightY+14,8,MID);
+    t(trow.val,col2x+col2w-8,rightY+14,8,NAVY,false,"right");
+    ln(col2x,rightY+20,col2x+col2w,rightY+20,RULE);
+    rightY+=20;
+  }
+
+  /* Industry benchmark box */
+  if(currentInd){
+    rightY+=12;
+    r(col2x,rightY,col2w,90,OFF);
+    ln(col2x,rightY,col2x+3,rightY+90,BLUE,3);
+    t("INDUSTRY BENCHMARK",col2x+12,rightY+16,7.5,BLUE,true);
+    t(currentInd.label,col2x+12,rightY+32,10,NAVY,true);
+    doc.setFontSize(22);doc.setTextColor(NAVY);doc.setFont("helvetica","bold");
+    doc.text(String(currentInd.rsfPerSeat)+" RSF/seat",col2x+12,rightY+58);
+    t("Your program: "+rsfPerSeat+" RSF/seat",col2x+12,rightY+74,8,rsfPerSeat>currentInd.rsfPerSeat?AMBER:GREEN);
+    var diff=rsfPerSeat-currentInd.rsfPerSeat;
+    t((diff>=0?"+":"")+diff+" vs. benchmark",col2x+col2w-8,rightY+74,8,diff>=0?AMBER:GREEN,false,"right");
+    rightY+=102;
+  }
+
+  /* ═══════════════════════════════════════
+     PAGE 3: MEETING ROOMS + AMENITIES
+  ═══════════════════════════════════════ */
+  addPage();
+  y=M;
+  r(0,0,PW,56,NAVY);
+  t("SPACE PROGRAM DETAIL",M,36,13,WHITE,true);
+  t(cname+" | "+dateStr,PW-M,36,9,"#8A9BB0",false,"right");
+  y=78;
+
+  /* Meeting rooms table */
+  r(M,y,CW,24,NAVY);
+  t("MEETING & COLLABORATIVE ROOMS",M+10,y+16,7.5,WHITE,true);
+  t(rmSF>0?rmSF.toLocaleString()+" USF total":"",PW-M-10,y+16,8,BLUE,false,"right");
+  y+=28;
+
+  if(rmEntries.length>0){
+    /* Column headers */
+    r(M,y,CW,20,OFF);
+    ln(M,y,M+CW,y,RULE); ln(M,y+20,M+CW,y+20,RULE);
+    t("ROOM TYPE",M+10,y+14,7.5,LIGHT,true);
+    t("QTY",M+CW*0.65,y+14,7.5,LIGHT,true,"center");
+    t("UNIT SF",M+CW*0.77,y+14,7.5,LIGHT,true,"center");
+    t("TOTAL SF",PW-M-10,y+14,7.5,LIGHT,true,"right");
+    y+=24;
+    var rmTotal=0;
+    for(var rmi=0;rmi<rmEntries.length;rmi++){
+      var rm=rmEntries[rmi];
+      if(rmi%2===0) r(M,y,CW,20,OFF);
+      /* Mini bar proportional to SF */
+      var barMaxW=60, barW=rmTotal+rm.total>0?Math.round(rm.total/(rmSF||1)*barMaxW):0;
+      r(M+10,y+6,Math.max(2,barW),8,GREEN);
+      t(rm.name,M+76,y+14,8.5,NAVY);
+      t(String(rm.qty),M+CW*0.65,y+14,8.5,NAVY,false,"center");
+      t(String(rm.sf),M+CW*0.77,y+14,8.5,MID,false,"center");
+      t(rm.total.toLocaleString(),PW-M-10,y+14,8.5,NAVY,false,"right");
+      ln(M,y+20,M+CW,y+20,RULE);
+      y+=20; rmTotal+=rm.total;
+    }
+    /* Total row */
+    r(M,y,CW,22,NAVY);
+    t("TOTAL MEETING ROOM SF",M+10,y+15,8,WHITE,true);
+    t(rmSF.toLocaleString()+" SF",PW-M-10,y+15,9,WHITE,true,"right");
+    y+=30;
+  } else {
+    t("No meeting rooms specified.",M+10,y+16,9,LIGHT);
+    y+=30;
+  }
+
+  y+=8;
+
+  /* Amenities — two columns */
+  if(amEntries.length>0){
+    r(M,y,CW,24,NAVY);
+    t("AMENITY & SUPPORT SPACES",M+10,y+16,7.5,WHITE,true);
+    t(amSF>0?amSF.toLocaleString()+" USF total":"",PW-M-10,y+16,8,BLUE,false,"right");
+    y+=28;
+
+    var aCol1=M, aCol2=M+CW/2+4, aColW=CW/2-4;
+    var aLeft=[], aRight=[];
+    for(var ai2=0;ai2<amEntries.length;ai2++){
+      if(ai2%2===0) aLeft.push(amEntries[ai2]); else aRight.push(amEntries[ai2]);
+    }
+    var maxRows=Math.max(aLeft.length,aRight.length);
+    for(var ai3=0;ai3<maxRows;ai3++){
+      if(ai3%2===0){r(aCol1,y,aColW,20,OFF);r(aCol2,y,aColW,20,OFF);}
+      if(aLeft[ai3]){
+        r(aCol1+6,y+6,8,8,AMBER);
+        t(aLeft[ai3].name,aCol1+20,y+14,8,NAVY);
+        t(aLeft[ai3].sf+" SF",aCol1+aColW-6,y+14,8,MID,false,"right");
+      }
+      if(aRight[ai3]){
+        r(aCol2+6,y+6,8,8,AMBER);
+        t(aRight[ai3].name,aCol2+20,y+14,8,NAVY);
+        t(aRight[ai3].sf+" SF",aCol2+aColW-6,y+14,8,MID,false,"right");
+      }
+      ln(aCol1,y+20,aCol1+aColW,y+20,RULE);
+      ln(aCol2,y+20,aCol2+aColW,y+20,RULE);
+      y+=20;
+    }
+    r(M,y,CW,22,NAVY);
+    t("TOTAL AMENITY SF",M+10,y+15,8,WHITE,true);
+    t(amSF.toLocaleString()+" SF",PW-M-10,y+15,9,WHITE,true,"right");
+    y+=30;
+  }
+
+  /* ═══════════════════════════════════════
+     PAGE 4: STRATEGIC GUIDE
+  ═══════════════════════════════════════ */
+  addPage();
+  y=M;
+  r(0,0,PW,56,NAVY);
+  t("STRATEGIC PLANNING GUIDE",M,36,13,WHITE,true);
+  t("Questions to consider before you finalize your program",PW-M,36,9,"#8A9BB0",false,"right");
+  y=72;
+
+  function guideSection(title,items,iconC){
+    if(y>PH-120){addPage();y=72;}
+    r(M,y,CW,26,iconC||NAVY);
+    ln(M,y,M+4,y+26,BLUE,4);
+    t(title,M+14,y+18,9,WHITE,true);
+    y+=30;
+    for(var qi=0;qi<items.length;qi++){
+      if(y>PH-60){addPage();y=72;}
+      /* Bullet dot */
+      r(M+10,y+5,5,5,iconC||BLUE);
+      var lineH=tWrap(items[qi],M+22,y+13,CW-26,8.5,MID);
+      y+=Math.max(18,lineH)+4;
+      ln(M,y,M+CW,y,RULE);
+      y+=2;
+    }
+    y+=10;
+  }
+
+  guideSection("HYBRID WORK & UTILIZATION",[
+    "What is your company policy on days-in-office, and is it likely to change? Leadership appetite for enforcement affects how many desks you actually need.",
+    "Have you analyzed badge data or calendar utilization to understand your real peak occupancy days (typically Tuesday-Thursday)?",
+    "What sharing ratio (desks:people) is right for your culture? 0.7:1 is aggressive; 0.9:1 is conservative hybrid. Your number: "+(hc3>0?(desks/hc3).toFixed(2):"{see above}")+":1.",
+    "Is your hoteling/shared seating policy consistent across departments, or should certain teams (client-facing, compliance) remain fully assigned?"
+  ],BLUE);
+
+  guideSection("WORKSPACE DESIGN & CULTURE",[
+    "Does your current private-office culture create real productivity — or is it a legacy of hierarchy? How does leadership feel about moving toward open plan?",
+    "If private offices are being reduced, who loses theirs? Change management starts with this conversation, not the architect drawing.",
+    "What acoustic challenges do you have today? Open plan amplifies existing problems — budgeting for acoustic panels, phone booths, and absorptive materials is non-negotiable.",
+    "Does your space need to compete for talent? The office should be a destination, not an obligation. What makes yours worth commuting to?"
+  ],GREEN);
+
+  guideSection("GROWTH & FLEXIBILITY",[
+    "Your Year 3 headcount is "+String(hc3||"[see above]")+" and Year 5 is "+(document.getElementById("hcYr5").value||"[not entered]")+". Are these conservative or aggressive? Over-building for growth you don't achieve is expensive.",
+    "Does your lease give you expansion options or rights of first refusal on adjacent space? This is one of the most valuable — and most negotiated — lease provisions.",
+    "Are you planning any acquisitions, divestitures, or org restructures in the next 36 months that could materially change headcount?",
+    "At what headcount would you need to expand? At what headcount would you start subleasing? Know these thresholds before you sign."
+  ],AMBER);
+
+  guideSection("FOR YOUR ARCHITECT: KEY INPUTS",[
+    "Estimated program: "+String(rentable>0?rentable.toLocaleString():"[see page 2]")+" RSF | "+String(desks||"—")+" desks | "+String(numOffices||"—")+" offices + "+String(numWS||"—")+" workstations.",
+    "Layout type: "+layoutLabel+" ("+String(layoutSF)+" SF/desk). Circulation factor: "+String(circPct)+"%. Building loss factor: "+String(lossPct)+"%.",
+    "Confirm structural ceiling height, column grid, wet-wall locations, and HVAC capacity before finalizing the layout. These are frequently the binding constraints.",
+    "Request a test-fit study on your top 2-3 candidate buildings before submitting a Letter of Intent. The test-fit will validate or revise this program.",
+    "This program is preliminary. A licensed architect should verify all square footage assumptions against actual floor plates before any lease is executed."
+  ],NAVY);
+
+  /* ═══════════════════════════════════════
+     PAGE 5: NEXT STEPS
+  ═══════════════════════════════════════ */
+  addPage();
+  r(0,0,PW,PH,NAVY);
+  r(0,PH-6,PW,6,BLUE);
+  r(M-8,0,4,PH,BLUE);
+
+  t("NEXT STEPS",M+12,80,8.5,BLUE,true);
+  doc.setFontSize(28);doc.setTextColor(WHITE);doc.setFont("helvetica","bold");
+  doc.text("Where do we go from here?",M+12,116);
+
+  var steps=[
+    {n:"01",title:"Program Review Call",body:"Chase will reach out to walk through this space program, validate the assumptions, and answer your questions. This call is free — no obligation."},
+    {n:"02",title:"Market Survey",body:"Based on your program and priorities, we will identify qualified buildings in your target market and shortlist the best 5-8 options before you tour anything."},
+    {n:"03",title:"Building Tours",body:"Curated tours of shortlisted properties — usually completed in a single day. We pre-negotiate access and do the logistics so you evaluate, not coordinate."},
+    {n:"04",title:"Proposal & Negotiation",body:"Once you identify a preferred space, we issue an RFP to the landlord, evaluate competing proposals, and negotiate on your behalf — rent, TI, options, and every key term."},
+    {n:"05",title:"Letter of Intent",body:"A signed LOI locks the key business terms before attorneys engage. We have a 60+ provision LOI database and will guide you through every term."},
+    {n:"06",title:"Lease Execution",body:"We coordinate with your counsel, the landlord, and your architect through execution and delivery. Our job isn't done until you're in the space."},
+  ];
+
+  var stY=160;
+  for(var si2=0;si2<steps.length;si2++){
+    var s=steps[si2];
+    var stX=M+12+(si2%2)*(CW/2+6);
+    if(si2%2===0 && si2>0) stY+=88;
+    r(stX,stY,CW/2-6,80,"#0A2E47");
+    ln(stX,stY,stX+3,stY+80,BLUE,3);
+    t(s.n,stX+12,stY+18,8,BLUE,true);
+    t(s.title,stX+12,stY+34,10,WHITE,true);
+    tWrap(s.body,stX+12,stY+52,CW/2-26,8,LIGHT);
+  }
+  stY+=88+20;
+
+  /* About Chase */
+  t("ABOUT CHASE BOURDELAISE",M+12,stY,7.5,BLUE,true); stY+=18;
+  tWrap("Chase Bourdelaise is a Managing Director at Transwestern, specializing in tenant advisory and portfolio strategy for corporate occupiers. He has represented clients across 150+ markets, 10M+ SF, and over 18 years of complex transactions — from single-office searches to global portfolio restructurings.",M+12,stY,CW-24,9,"#8A9BB0"); stY+=60;
+
+  t("chase.bourdelaise@transwestern.com",M+12,stY,10,WHITE,true); stY+=18;
+  t("(202) 591-1926  |  chasebourdelaise.com",M+12,stY,9,"#8A9BB0"); stY+=20;
+  t("linkedin.com/in/tenantadvisor",M+12,stY,9,BLUE);
+
+  /* Save */
+  var fname="Space-Program-"+cname.replace(/[^a-zA-Z0-9]/g,"-")+".pdf";
+  doc.save(fname);
+}
+
 /* ─── INIT ───────────────────────────────────────────── */
 buildRooms();
 buildAmen();
