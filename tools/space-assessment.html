@@ -307,7 +307,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 #deskCalcNote{line-height:1.7;}
 #deskCalcNote strong{color:#051C2C;font-weight:500;}
 /* ── SUCCESS ─────────────────────────────────────────────── */
-.suc{display:none;min-height:100vh;background:#fff;padding:80px 40px 120px;}
+.suc{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:#fff;overflow-y:auto;padding:0;}
 .suc.on{display:block;}
 .suc-icon{width:52px;height:52px;background:#051C2C;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
 .suc-icon svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;}
@@ -722,7 +722,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 </div><!-- /tool-body -->
 
 <!-- SUCCESS ───────────────────────────────────────────────── -->
-<div class="suc" id="sucScreen"><div style="max-width:540px;margin:0 auto;text-align:center;">
+<div class="suc" id="sucScreen"><div style="max-width:540px;margin:0 auto;text-align:center;padding:80px 40px 120px;">
   <div class="suc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
   <h2 id="sucHeadline">Your report is on its way.</h2>
   <p>Your space program PDF has been sent to <strong id="sucEmail">[your email]</strong>. Chase will follow up within one business day to walk through the results and discuss next steps.</p>
@@ -1310,8 +1310,25 @@ function genReport() {
         rsf:rentable>0?rentable.toLocaleString():"--",
         industry:currentInd?currentInd.label:"--"
       })
-    }).then(function(r){ console.log("Email API:", r.status); })
-      .catch(function(e){ console.warn("Email send error:", e.message); });
+    }).then(function(r){
+      console.log("Email API:", r.status);
+      if(!r.ok){
+        /* API not yet deployed — save PDF locally as fallback */
+        var link=document.createElement("a");
+        link.href=pdfResult.b64; link.download=pdfResult.filename;
+        link.click();
+        var note=document.getElementById("sucHeadline");
+        if(note) note.textContent="Your report is downloading now.";
+        var seEl2=document.getElementById("sucEmail");
+        if(seEl2) seEl2.parentNode.innerHTML="Chase will follow up within one business day.";
+      }
+    }).catch(function(e){
+      console.warn("Email send error:", e.message);
+      /* Fallback: download locally */
+      var link=document.createElement("a");
+      link.href=pdfResult.b64; link.download=pdfResult.filename;
+      link.click();
+    });
   }
 }
 
