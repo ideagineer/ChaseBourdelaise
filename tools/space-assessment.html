@@ -307,7 +307,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 #deskCalcNote{line-height:1.7;}
 #deskCalcNote strong{color:#051C2C;font-weight:500;}
 /* ── SUCCESS ─────────────────────────────────────────────── */
-.suc{display:none;text-align:center;padding:72px 40px;max-width:580px;margin:0 auto;}
+.suc{display:none;min-height:100vh;background:#fff;padding:80px 40px 120px;}
 .suc.on{display:block;}
 .suc-icon{width:52px;height:52px;background:#051C2C;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
 .suc-icon svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;}
@@ -722,14 +722,14 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 </div><!-- /tool-body -->
 
 <!-- SUCCESS ───────────────────────────────────────────────── -->
-<div class="suc" id="sucScreen">
+<div class="suc" id="sucScreen"><div style="max-width:540px;margin:0 auto;text-align:center;">
   <div class="suc-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-  <h2>Your report is ready.</h2>
-  <p>Your space program PDF is downloading now. Chase will reach out within one business day to walk through the results, discuss the market, and answer any questions.</p>
+  <h2 id="sucHeadline">Your report is on its way.</h2>
+  <p>Your space program PDF has been sent to <strong id="sucEmail">[your email]</strong>. Chase will follow up within one business day to walk through the results and discuss next steps.</p>
   <p style="margin-top:10px;font-size:14px;font-weight:300;color:#4A5568;">This report is the starting point — not the end of the conversation.</p>
   <p style="margin-top:8px;font-size:12px;color:#8A9BB0;">chase.bourdelaise@transwestern.com &nbsp;&middot;&nbsp; (202) 591-1926</p>
   <a href="/tools.html" style="display:inline-block;margin-top:20px;padding:12px 26px;background:#051C2C;color:#fff;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;">Back to Tools</a>
-</div>
+</div></div><!-- /suc inner -->
 
 <!-- FOOTER ────────────────────────────────────────────────── -->
 <footer>
@@ -1291,10 +1291,28 @@ function genReport() {
     alert("PDF error: "+pdfErr.message+"\nChase has been notified and will email your report.");
   }
 
+  /* Show success immediately */
+  var seEl=document.getElementById("sucEmail");
+  if(seEl) seEl.textContent=email;
   document.getElementById("toolBody").style.display="none";
   document.getElementById("sucScreen").className="suc on";
   window.scrollTo({top:0,behavior:"smooth"});
   btn.textContent="Submit & Get My Report →"; btn.disabled=false;
+
+  /* Send PDF via Vercel API route (async, non-blocking) */
+  if(pdfResult && pdfResult.b64){
+    fetch("/api/send-report",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        to:email, name:cntct, company:cname,
+        filename:pdfResult.filename, pdf_b64:pdfResult.b64,
+        rsf:rentable>0?rentable.toLocaleString():"--",
+        industry:currentInd?currentInd.label:"--"
+      })
+    }).then(function(r){ console.log("Email API:", r.status); })
+      .catch(function(e){ console.warn("Email send error:", e.message); });
+  }
 }
 
 /* ── buildPDF: rich executive report ─────────────────── */
@@ -1713,7 +1731,7 @@ function buildPDF(cname,cntct,cTitle,email,cPhone,
 
   /* Save */
   var fname="Space-Program-"+cname.replace(/[^a-zA-Z0-9]/g,"-")+".pdf";
-  doc.save(fname);
+  return {b64:doc.output("datauristring"), filename:fname};
 }
 
 /* ─── INIT ───────────────────────────────────────────── */
