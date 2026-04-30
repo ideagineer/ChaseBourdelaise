@@ -317,22 +317,53 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 
 /* ── MOBILE ──────────────────────────────────────────────── */
 @media(max-width:900px){
-  .hero-inner{padding:0 24px;}
-  .hero-top{grid-template-columns:1fr;}
+  nav{padding:0 20px;}
+  .hero-inner{padding:0 20px;}
+  .hero-top{grid-template-columns:1fr;gap:32px;}
   .out-card{display:none;}
-  .tool-body{grid-template-columns:1fr;}
-  .tool-form{padding:32px 20px 80px;border-right:none;}
-  .tool-sb{position:static;height:auto;border-top:3px solid #2251FF;padding:20px;background:#F8F9FB;}
+  .hero h1{font-size:clamp(28px,8vw,42px);}
+  .hero-desc{font-size:14px;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  /* Stack tool: sidebar on TOP for mobile visibility */
+  .tool-body{display:flex;flex-direction:column;}
+  .tool-sb{position:static;height:auto;border-top:3px solid #2251FF;border-bottom:1px solid #D8DDE5;padding:16px 20px;background:#F8F9FB;order:-1;}
   .sb-cta{display:none;}
+  .sb-top{padding-bottom:14px;margin-bottom:14px;}
+  .sb-num{font-size:36px;}
+  .sb-range{font-size:10px;}
+  .comp-bar{margin:10px 0 10px;}
+  .bk-row{padding:5px 0;font-size:11px;}
+  .bk-total{padding:8px 0 0;}
+  .tool-form{padding:28px 20px 80px;border-right:none;}
   .layout-grid{grid-template-columns:1fr 1fr;}
+  .hc-row{grid-template-columns:1fr 1fr 1fr;}
   .fg{grid-template-columns:1fr;}
   .ff{grid-column:1;}
-  .hc-row{grid-template-columns:1fr 1fr 1fr;}
+  .days-wrap{padding:14px 16px;}
+  .day-num{width:52px;font-size:28px;}
+  .day-btn{width:40px;height:40px;}
+  .room-card{padding:10px 12px;gap:8px;}
+  .rc-name{font-size:13px;}
+  .rc-sf{font-size:9px;}
+  .step-btn{width:36px;height:36px;font-size:18px;}
+  .step-val{width:40px;height:36px;font-size:18px;}
+  .amen-item{padding:10px 12px;min-height:48px;}
+  .amen-name{font-size:13px;}
+  .amen-sub{font-size:11px;}
+  .email-gate{padding:20px;}
+  .submit-btn{padding:14px;}
 }
 @media(max-width:500px){
   .layout-grid{grid-template-columns:1fr;}
   .hc-row{grid-template-columns:1fr 1fr;}
   .hc-box input{font-size:30px;}
+  .hc-box{padding:14px 10px;}
+  .sb-num{font-size:30px;}
+  .lc{padding:14px;}
+  .lc-name{font-size:14px;}
+  .lc-desc{font-size:11px;}
+  .room-card{flex-wrap:nowrap;}
+  .step-ctrl{flex-shrink:0;}
 }
 </style>
 </head>
@@ -469,6 +500,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         Enter your Year 3 headcount above to see desk calculation.
       </div>
     </div>
+    </div><!-- /§01 -->
 
     <!-- § 02 WORKSPACE SETUP ───────────────────────────── -->
     <div class="fs">
@@ -598,7 +630,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
             <div style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#051C2C;" id="lossPctDisplay">15%</div>
             <button type="button" style="width:42px;height:46px;border:none;background:transparent;cursor:pointer;font-size:20px;color:#4A5568;font-family:'DM Sans',sans-serif;" onclick="stepLoss(1)">&#43;</button>
           </div>
-          <p style="font-size:11px;font-weight:300;color:#8A9BB0;margin-top:4px;">Lower (8–12%): flex/suburban buildings, full-floor tenants. Higher (18–22%): CBD Class A towers, multi-tenant floors, large core-to-glass ratios.</p>
+          <p style="font-size:11px;font-weight:300;color:#8A9BB0;margin-top:4px;">Class A/B: 20–30%. Full-floor tenants: 25–30%; multi-tenant/divided floors: 35–45%. Downtown trophy towers run higher (∼27%+); suburban flex buildings lower (∼15–18%). Adjust to match your building.</p>
         </div>
       </div>
     </div>
@@ -678,11 +710,11 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         <div class="bk-v" id="bkAM">—</div>
       </div>
       <div class="bk-row">
-        <div class="bk-l"><div class="bk-dot" style="background:#D8DDE5;border:1px solid #8A9BB0;"></div>Circulation 18%</div>
+        <div class="bk-l" id="bkCircLabel"><div class="bk-dot" style="background:#D8DDE5;border:1px solid #8A9BB0;"></div>Circulation 28%</div>
         <div class="bk-v" id="bkCirc">—</div>
       </div>
       <div class="bk-row">
-        <div class="bk-l"><div class="bk-dot" style="background:#8A9BB0;"></div>Loss factor 15%</div>
+        <div class="bk-l" id="bkLossLabel"><div class="bk-dot" style="background:#8A9BB0;"></div>Loss factor 15%</div>
         <div class="bk-v" id="bkLoss">—</div>
       </div>
       <div class="bk-total">
@@ -1107,11 +1139,11 @@ function recalc() {
   /* Breakdown labels — show dynamic factors */
   var bkCircEl = document.getElementById('bkCirc');
   if (bkCircEl) bkCircEl.textContent = fmtSF(circ);
-  /* Update sidebar labels to show actual % */
-  var circRowEl = document.querySelector('.bk-row:nth-child(4) .bk-l');
-  if (circRowEl) circRowEl.innerHTML = '<div class="bk-dot" style="background:#D8DDE5;border:1px solid #8A9BB0;"></div>Circulation ' + circPct + '%';
-  var lossRowEl = document.querySelector('.bk-row:nth-child(5) .bk-l');
-  if (lossRowEl) lossRowEl.innerHTML = '<div class="bk-dot" style="background:#8A9BB0;"></div>Loss factor ' + lossPct + '%';
+  /* Update sidebar factor labels live */
+  var circLbl = document.getElementById('bkCircLabel');
+  if (circLbl) circLbl.innerHTML = '<div class="bk-dot" style="background:#D8DDE5;border:1px solid #8A9BB0;"></div>Circulation ' + circPct + '%';
+  var lossLbl = document.getElementById('bkLossLabel');
+  if (lossLbl) lossLbl.innerHTML = '<div class="bk-dot" style="background:#8A9BB0;"></div>Loss factor ' + lossPct + '%';
 
   /* Report preview */
   document.getElementById('rpNum').textContent = rentable > 0 ? rentable.toLocaleString() + ' RSF' : '\u2014';
