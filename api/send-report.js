@@ -7,7 +7,6 @@ const BEEHIIV_API_KEY = "cZ1LqaKbzLI6u3jrOsrtXvKv4lQ0S9HhVdWaRsIFw1dj6muYg2QV3VY
 const BEEHIIV_PUB_ID  = "cf9a1761-8853-43a6-94db-9899326ade5c";
 
 module.exports = async function handler(req, res) {
-  // CORS preflight
   res.setHeader("Access-Control-Allow-Origin", "https://chasebourdelaise.com");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -25,6 +24,9 @@ module.exports = async function handler(req, res) {
 
   const firstName = name ? name.split(" ")[0] : "there";
   const errors = [];
+
+  // Strip data URI prefix — Resend needs raw base64 only, not the full data URI
+  const rawBase64 = pdfBase64.replace(/^data:[^;]+;base64,/, "");
 
   // ─── 1. Send PDF via Resend ───────────────────────────────────────────────
   try {
@@ -76,7 +78,7 @@ module.exports = async function handler(req, res) {
         attachments: [
           {
             filename: pdfFilename || "Space-Assessment-Report.pdf",
-            content: pdfBase64,
+            content: rawBase64,
           },
         ],
       }),
@@ -85,14 +87,14 @@ module.exports = async function handler(req, res) {
     if (!resendRes.ok) {
       const errBody = await resendRes.text();
       console.error("Resend error:", resendRes.status, errBody);
-      errors.push(`Resend: ${resendRes.status}`);
+      errors.push(`Resend: ${resendRes.status} — ${errBody}`);
     }
   } catch (err) {
     console.error("Resend exception:", err);
     errors.push("Resend: network error");
   }
 
-  // ─── 2. Subscribe to Beehiiv ──────────────────────────────────────────────
+  // ─── 2. Subscribe to Beehiiv ─────────────────────────────────────────────
   try {
     const beehiivRes = await fetch(
       `https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`,
@@ -121,7 +123,6 @@ module.exports = async function handler(req, res) {
     if (!beehiivRes.ok) {
       const errBody = await beehiivRes.text();
       console.error("Beehiiv error:", beehiivRes.status, errBody);
-      // Non-fatal — don't block success response
       errors.push(`Beehiiv: ${beehiivRes.status}`);
     }
   } catch (err) {
@@ -130,7 +131,6 @@ module.exports = async function handler(req, res) {
   }
 
   // ─── Response ─────────────────────────────────────────────────────────────
-  // If Resend failed, surface the error. Beehiiv failure is non-fatal.
   const resendFailed = errors.some((e) => e.startsWith("Resend"));
   if (resendFailed) {
     return res.status(500).json({ error: "Failed to send report email.", details: errors });
