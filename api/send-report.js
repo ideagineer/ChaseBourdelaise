@@ -1,28 +1,34 @@
-// api/send-report.js  — CommonJS format (required for Vercel without package.json type:module)
-// Node.js 18+ required for built-in fetch  (Vercel default as of 2024)
+// api/send-report.js
+// CommonJS — required for Vercel static-site repos without package.json type:module
+// Vercel automatically parses JSON bodies when Content-Type: application/json
 
 module.exports = async function handler(req, res) {
-  // CORS headers so the browser fetch from the tool can reach this endpoint
+  // CORS — allows browser fetch from any origin
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { to, name, company, filename, pdf_b64, rsf, industry } = req.body || {};
+  // Vercel parses JSON body automatically for Content-Type: application/json
+  const body = req.body || {};
+  const { to, name, company, filename, pdf_b64, rsf, industry } = body;
 
-  if (!to || !pdf_b64) {
-    return res.status(400).json({ error: 'Missing required fields: to, pdf_b64' });
-  }
+  // Validate
+  if (!to) return res.status(400).json({ error: 'Missing: to' });
+  if (!pdf_b64) return res.status(400).json({ error: 'Missing: pdf_b64' });
 
   const RESEND_KEY = process.env.RESEND_API_KEY;
   if (!RESEND_KEY) {
-    console.error('RESEND_API_KEY not configured');
-    return res.status(500).json({ error: 'Email service not configured' });
+    console.error('[send-report] RESEND_API_KEY not set');
+    return res.status(500).json({ error: 'Email service not configured — RESEND_API_KEY missing' });
   }
 
-  // Strip data URI prefix — Resend wants raw base64
+  // Strip the data:application/pdf;base64, prefix if present
   const b64 = pdf_b64.includes(',') ? pdf_b64.split(',')[1] : pdf_b64;
+
+  console.log('[send-report] Sending to:', to, '| company:', company, '| PDF bytes (approx):', Math.round(b64.length * 0.75));
 
   const emailHtml = `<!DOCTYPE html>
 <html>
@@ -40,9 +46,9 @@ module.exports = async function handler(req, res) {
   .metric .lbl{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A9BB0;margin-bottom:4px;}
   .metric .val{font-size:28px;font-weight:700;color:#051C2C;line-height:1;}
   .metric .sub{font-size:12px;color:#8A9BB0;margin-top:4px;}
-  .cta{display:inline-block;background:#2251FF;color:#fff;padding:12px 24px;text-decoration:none;font-size:13px;font-weight:600;letter-spacing:0.08em;margin:8px 0 24px;}
+  .cta{display:inline-block;background:#2251FF;color:#fff !important;padding:12px 24px;text-decoration:none;font-size:13px;font-weight:600;margin:8px 0 24px;}
   .ftr{background:#051C2C;padding:24px 40px;}
-  .ftr p{color:rgba(255,255,255,0.35);font-size:11px;margin:0;line-height:1.7;}
+  .ftr p{color:rgba(255,255,255,0.35);font-size:11px;margin:0;line-height:1.8;}
   .ftr a{color:rgba(255,255,255,0.55);text-decoration:none;}
 </style>
 </head>
@@ -61,10 +67,10 @@ module.exports = async function handler(req, res) {
       <div class="val">${rsf} RSF</div>
       ${industry ? `<div class="sub">${industry} industry benchmark included</div>` : ''}
     </div>` : ''}
-    <p>The attached PDF includes your full space program breakdown, meeting room program, amenity list, a strategic planning guide, and a summary of next steps in the real estate process.</p>
-    <p>I'll be reaching out personally to walk through the numbers, answer any questions, and — if the timing is right — begin looking at the market together.</p>
+    <p>The report includes your full space program breakdown, meeting room program, amenity list, a strategic planning guide, and a summary of next steps in the real estate process.</p>
+    <p>I'll be reaching out personally to walk through the numbers and — if the timing is right — begin looking at the market together. In the meantime, feel free to reply to this email or call me directly.</p>
     <a href="https://www.chasebourdelaise.com/contact.html" class="cta">Schedule a Call</a>
-    <p style="font-size:13px;color:#8A9BB0;margin-top:8px;">This report is preliminary and based solely on your inputs. All figures should be verified through an architect's test-fit.</p>
+    <p style="font-size:12px;color:#8A9BB0;margin-top:4px;">This report is preliminary. Verify all figures through an architect's test-fit.</p>
   </div>
   <div class="ftr">
     <p>
@@ -79,50 +85,65 @@ module.exports = async function handler(req, res) {
 </html>`;
 
   try {
-    // Send to client
-    const r1 = await fetch('https://api.resend.com/emails', {
+    // ── Send to client ────────────────────────────────────────────────────
+    const clientRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + RESEND_KEY,
+        'Authorization': `Bearer ${RESEND_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         from: 'Chase Bourdelaise <hi@send.chasebourdelaise.com>',
         to: [to],
         reply_to: 'chase.bourdelaise@transwestern.com',
-        subject: 'Your Office Space Program \u2014 ' + (company || 'Space Assessment'),
+        subject: `Your Office Space Program \u2014 ${company || 'Space Assessment'}`,
         html: emailHtml,
-        attachments: [{ filename: filename || 'Space-Program.pdf', content: b64 }]
+        attachments: [{
+          filename: filename || 'Space-Program.pdf',
+          content: b64
+        }]
       })
     });
 
-    const d1 = await r1.json();
-    if (!r1.ok) {
-      console.error('Resend client send error:', d1);
-      return res.status(r1.status).json({ error: d1.message || 'Send failed' });
+    const clientData = await clientRes.json();
+
+    if (!clientRes.ok) {
+      console.error('[send-report] Resend error sending to client:', JSON.stringify(clientData));
+      return res.status(clientRes.status).json({ error: clientData.message || 'Send failed', detail: clientData });
     }
 
-    // Send copy to Chase
+    console.log('[send-report] Client email sent, id:', clientData.id);
+
+    // ── Send copy to Chase (fire and forget) ─────────────────────────────
     fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + RESEND_KEY,
+        'Authorization': `Bearer ${RESEND_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         from: 'Space Assessment <hi@send.chasebourdelaise.com>',
         to: ['chase.bourdelaise@transwestern.com'],
         reply_to: to,
-        subject: '[New Lead] ' + (company || 'Unknown') + ' \u2014 ' + to,
-        html: '<p>New assessment submitted by <strong>' + name + '</strong> at <strong>' + company + '</strong> (' + to + ').</p><p>Est. RSF: <strong>' + rsf + '</strong> | Industry: ' + industry + '</p><p>PDF attached &mdash; same report they received.</p>',
-        attachments: [{ filename: filename || 'Space-Program.pdf', content: b64 }]
+        subject: `[New Lead] ${company || 'Unknown'} \u2014 ${to}`,
+        html: `<p><strong>${name}</strong> at <strong>${company}</strong> (${to}) submitted a space assessment.</p>
+               <p>Est. RSF: <strong>${rsf}</strong> | Industry: ${industry}</p>
+               <p>PDF attached &mdash; same report they received.</p>`,
+        attachments: [{
+          filename: filename || 'Space-Program.pdf',
+          content: b64
+        }]
       })
-    }).catch(function(e) { console.warn('Chase copy failed:', e.message); });
+    }).then(r => r.json()).then(d => {
+      console.log('[send-report] Chase copy sent, id:', d.id || d.message);
+    }).catch(e => {
+      console.warn('[send-report] Chase copy failed:', e.message);
+    });
 
-    return res.status(200).json({ success: true, id: d1.id });
+    return res.status(200).json({ success: true, id: clientData.id });
 
   } catch (err) {
-    console.error('Handler error:', err);
+    console.error('[send-report] Unexpected error:', err.message, err.stack);
     return res.status(500).json({ error: err.message });
   }
 };
