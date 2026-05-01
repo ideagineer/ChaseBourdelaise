@@ -1283,7 +1283,7 @@ function genReport() {
     btn.textContent="Submit & Get My Report →"; btn.disabled=false; return;
   }
   try {
-    buildPDF(cname,cntct,contactTitle,email,contactPhone,
+    var pdfResult = buildPDF(cname,cntct,contactTitle,email,contactPhone,
              hc3,desks,numOffices,numWS,wsSF,rmSF,amSF,prog,usable,rentable,
              rsfPerSeat,rmEntries,amEntries,layoutLabel,questions);
   } catch(pdfErr) {
@@ -1305,8 +1305,8 @@ function genReport() {
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
-        to:email, name:cntct, company:cname,
-        filename:pdfResult.filename, pdf_b64:pdfResult.b64,
+        email:email, name:cntct, company:cname,
+        pdfFilename:pdfResult.filename, pdfBase64:pdfResult.b64,
         rsf:rentable>0?rentable.toLocaleString():"--",
         industry:currentInd?currentInd.label:"--"
       })
