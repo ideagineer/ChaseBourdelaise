@@ -1310,11 +1310,19 @@ function genReport() {
         rsf:rentable>0?rentable.toLocaleString():"--",
         industry:currentInd?currentInd.label:"--"
       })
-}).then(function(r){
+    }).then(function(r){
       console.log("Email API:", r.status);
-      if(!r.ok) console.warn("Report email returned status:", r.status);
+      if(!r.ok){
+        r.text().then(function(body){
+          console.warn("Report email error:", r.status, body);
+          var note=document.getElementById("sucHeadline");
+          if(note) note.insertAdjacentHTML("afterend","<p style='color:#b45309;font-size:13px;margin-top:8px;'>Note: report email encountered an issue ("+r.status+"). Chase will follow up directly.</p>");
+        });
+      }
     }).catch(function(e){
       console.warn("Email send error:", e.message);
+      var note=document.getElementById("sucHeadline");
+      if(note) note.insertAdjacentHTML("afterend","<p style='color:#b45309;font-size:13px;margin-top:8px;'>Note: report email could not be sent. Chase will follow up directly.</p>");
     });
   }
 }
