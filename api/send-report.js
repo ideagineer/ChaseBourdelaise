@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
         "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Chase Bourdelaise <hi@send.chasebourdelaise.com>",
+        from: "Chase Bourdelaise <hi@chasebourdelaise.com>",
         reply_to: "chase.bourdelaise@transwestern.com",
         to: [email],
         bcc: ["chase.bourdelaise@transwestern.com"],
