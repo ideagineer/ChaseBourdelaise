@@ -1310,24 +1310,11 @@ function genReport() {
         rsf:rentable>0?rentable.toLocaleString():"--",
         industry:currentInd?currentInd.label:"--"
       })
-    }).then(function(r){
+}).then(function(r){
       console.log("Email API:", r.status);
-      if(!r.ok){
-        /* API not yet deployed — save PDF locally as fallback */
-        var link=document.createElement("a");
-        link.href=pdfResult.b64; link.download=pdfResult.filename;
-        link.click();
-        var note=document.getElementById("sucHeadline");
-        if(note) note.textContent="Your report is downloading now.";
-        var seEl2=document.getElementById("sucEmail");
-        if(seEl2) seEl2.parentNode.innerHTML="Chase will follow up within one business day.";
-      }
+      if(!r.ok) console.warn("Report email returned status:", r.status);
     }).catch(function(e){
       console.warn("Email send error:", e.message);
-      /* Fallback: download locally */
-      var link=document.createElement("a");
-      link.href=pdfResult.b64; link.download=pdfResult.filename;
-      link.click();
     });
   }
 }
