@@ -4,7 +4,7 @@
 // Actions:  1. Email PDF via Resend  2. Subscribe to Beehiiv newsletter
 
 const BEEHIIV_API_KEY = "cZ1LqaKbzLI6u3jrOsrtXvKv4lQ0S9HhVdWaRsIFw1dj6muYg2QV3VY2TZhpyYgd";
-const BEEHIIV_PUB_ID  = "cf9a1761-8853-43a6-94db-9899326ade5c";
+const BEEHIIV_PUB_ID  = "pub_cf9a1761-8853-43a6-94db-9899326ade5c";
 
 module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "https://chasebourdelaise.com");
