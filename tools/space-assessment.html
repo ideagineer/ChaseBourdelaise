@@ -1277,21 +1277,7 @@ function genReport() {
     .catch(function(e){ console.warn("Formspree error:", e.message); });
 
 
-  /* ── Rich PDF Report ──────────────────────────────────── */
-  if (!window.jspdf||!window.jspdf.jsPDF) {
-    alert("PDF library not loaded. Please wait and try again.");
-    btn.textContent="Submit & Get My Report →"; btn.disabled=false; return;
-  }
-  try {
-    var pdfResult = buildPDF(cname,cntct,contactTitle,email,contactPhone,
-             hc3,desks,numOffices,numWS,wsSF,rmSF,amSF,prog,usable,rentable,
-             rsfPerSeat,rmEntries,amEntries,layoutLabel,questions);
-  } catch(pdfErr) {
-    console.error("PDF error:", pdfErr);
-    alert("PDF error: "+pdfErr.message+"\nChase has been notified and will email your report.");
-  }
-
-  /* Show success immediately */
+/* Show success */
   var seEl=document.getElementById("sucEmail");
   if(seEl) seEl.textContent=email;
   document.getElementById("toolBody").style.display="none";
@@ -1299,32 +1285,36 @@ function genReport() {
   window.scrollTo({top:0,behavior:"smooth"});
   btn.textContent="Submit & Get My Report →"; btn.disabled=false;
 
-  /* Send PDF via Vercel API route (async, non-blocking) */
-  if(pdfResult && pdfResult.b64){
-    fetch("/api/send-report",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        email:email, name:cntct, company:cname,
-        pdfFilename:pdfResult.filename, pdfBase64:pdfResult.b64,
-        rsf:rentable>0?rentable.toLocaleString():"--",
-        industry:currentInd?currentInd.label:"--"
-      })
-    }).then(function(r){
-      console.log("Email API:", r.status);
-      if(!r.ok){
-        r.text().then(function(body){
-          console.warn("Report email error:", r.status, body);
-          var note=document.getElementById("sucHeadline");
-          if(note) note.insertAdjacentHTML("afterend","<p style='color:#b45309;font-size:13px;margin-top:8px;'>Note: report email encountered an issue ("+r.status+"). Chase will follow up directly.</p>");
-        });
-      }
-    }).catch(function(e){
-      console.warn("Email send error:", e.message);
-      var note=document.getElementById("sucHeadline");
-      if(note) note.insertAdjacentHTML("afterend","<p style='color:#b45309;font-size:13px;margin-top:8px;'>Note: report email could not be sent. Chase will follow up directly.</p>");
-    });
-  }
+  /* Send structured report data to API */
+  fetch("/api/send-report",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:email, name:cntct, company:cname,
+      title:contactTitle, phone:contactPhone, questions:questions,
+      rsf:rentable>0?rentable:0, rsfPerSeat:rsfPerSeat,
+      industryLabel:currentInd?currentInd.label:"--",
+      industryBenchmark:currentInd?currentInd.rsfPerSeat:0,
+      hcNow:document.getElementById("hcNow").value||"--",
+      hcYr3:String(hc3||"--"),
+      hcYr5:document.getElementById("hcYr5").value||"--",
+      daysInOffice:daysInOffice, sharedPct:sharedPct,
+      totalDesks:desks, deskRatio:hc3>0?(desks/hc3).toFixed(2):"--",
+      numOffices:numOffices, numWS:numWS,
+      layoutLabel:layoutLabel, layoutSF:layoutSF,
+      wsSF:wsSF, rmSF:rmSF, amSF:amSF,
+      prog:prog, usable:usable, circPct:circPct, lossPct:lossPct,
+      rooms:rmEntries, amenities:amEntries,
+      amenNotes:document.getElementById("amenNotes").value.trim()||""
+    })
+  }).then(function(r){
+    console.log("Email API:",r.status);
+    if(!r.ok){r.text().then(function(b){
+      console.warn("Report email error:",r.status,b);
+      var n=document.getElementById("sucHeadline");
+      if(n)n.insertAdjacentHTML("afterend","<p style='color:#b45309;font-size:13px;margin-top:8px;'>Note: report email encountered an issue. Chase will follow up directly.</p>");
+    });}
+  }).catch(function(e){console.warn("Email send error:",e.message);});
 }
 
 /* ── buildPDF: rich executive report ─────────────────── */
