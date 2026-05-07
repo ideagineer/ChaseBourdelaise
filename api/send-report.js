@@ -473,8 +473,8 @@ module.exports = async function handler(req, res) {
     <p style="margin:0 0 3px;font-size:14px;color:#4A5568;font-family:Arial,sans-serif;">Best,</p>
     <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#051C2C;">Chase Bourdelaise</p>
     <p style="margin:0;font-size:13px;color:#4A5568;line-height:2;font-family:Arial,sans-serif;">
-      Managing Director, Global Consulting Services &amp; Portfolio Solutions<br>
-      Transwestern &nbsp;·&nbsp; Laise Capital LLC<br>
+      Managing Director, Tenant Advisory &amp; Corporate Real Estate Consulting<br>
+      Transwestern <br>
       <a href="tel:2025911926" style="color:#051C2C;text-decoration:none;">202-591-1926</a> &nbsp;·&nbsp; <a href="mailto:chase.bourdelaise@transwestern.com" style="color:#051C2C;text-decoration:none;">chase.bourdelaise@transwestern.com</a><br>
       <a href="https://chasebourdelaise.com" style="color:#2251FF;text-decoration:none;">chasebourdelaise.com</a> &nbsp;·&nbsp; <a href="https://linkedin.com/in/tenantadvisor" style="color:#2251FF;text-decoration:none;">LinkedIn</a>
     </p>
