@@ -5,6 +5,194 @@
 const BEEHIIV_API_KEY = "cZ1LqaKbzLI6u3jrOsrtXvKv4lQ0S9HhVdWaRsIFw1dj6muYg2QV3VY2TZhpyYgd";
 const BEEHIIV_PUB_ID  = "pub_cf9a1761-8853-43a6-94db-9899326ade5c";
 
+const DISCOVERY = [
+  {
+    title: "People & Hybrid Work",
+    color: "#2251FF",
+    questions: [
+      "What is your company's official hybrid work policy — and is it enforced or aspirational?",
+      "Does the policy vary by department, seniority, or role type?",
+      "What is the actual average number of days per week employees are in-office (not the policy — the reality)?",
+      "Do you have badge data, calendar analytics, or Wi-Fi utilization data to validate actual occupancy?",
+      "Do you have a 'peak day' problem — Tuesday through Thursday near or at full capacity?",
+      "What percentage of your workforce is fully remote and never comes in?",
+      "Are there employees in other cities or states who may relocate to this office?",
+      "Do any employees work irregular hours or shifts (nights, weekends)?",
+      "Are there any planned hiring surges, reductions, acquisitions, or divestitures in the next five years?",
+      "Is there any scenario in the next 36 months that could materially change your headcount — up or down?",
+      "Do you anticipate any business model changes affecting office use (e.g. moving to fully remote, spinning off a division)?",
+    ]
+  },
+  {
+    title: "Workspace Layout & Culture",
+    color: "#1a8a5e",
+    questions: [
+      "How would you describe your company culture in three words?",
+      "Is the office a destination people want to be — or an obligation?",
+      "Do employees collaborate more in-person or asynchronously?",
+      "Is there a strong internal hierarchy where status correlates with private office size?",
+      "Who qualifies for a private office — is there a defined title threshold or criteria?",
+      "Is there a standard office size by level? Describe it.",
+      "Do employees retain assigned offices when traveling or working remotely?",
+      "Are there any 'sacred' existing offices that leadership will expect to be replicated?",
+      "If moving toward open plan — have you addressed the change management? Who loses their office first?",
+      "What are your current acoustic challenges? Open plan amplifies existing problems.",
+      "Will any workstations require specialized furniture (ergonomic, accessibility, standing desks)?",
+      "What is the one thing employees say they wish the office had?",
+      "Does your workforce skew junior, senior, or mixed — and how does that affect collaboration patterns?",
+      "Do you celebrate milestones, host team events, or hold regular all-hands? What space does that require?",
+      "Are there any cultural or religious observances that affect space needs (prayer rooms, dietary, etc.)?",
+    ]
+  },
+  {
+    title: "Brand Identity & Design Language",
+    color: "#7c3aed",
+    questions: [
+      "What are your brand colors? (hex codes or Pantone references preferred)",
+      "Do you have a logo or brand mark that should appear in the space — entry, walls, glass?",
+      "Describe your desired aesthetic in three words (e.g. 'warm, modern, bold').",
+      "What materials and finishes resonate with your brand? (wood, metal, glass, concrete, textile, stone)",
+      "Do you have existing brand guidelines covering interior environments?",
+      "Are there any brand taboos — colors, patterns, or aesthetics to avoid?",
+      "How do you feel about biophilic design (plants, natural light, living walls, water features)?",
+      "Do you have existing furniture, art, or equipment to incorporate into the new space?",
+      "Share any reference images — offices, hotel lobbies, retail environments — that represent your desired look.",
+      "How important is it for your office to reflect your brand to clients and visitors?",
+      "Do you entertain clients in the office? How frequently, and at what level of formality?",
+    ]
+  },
+  {
+    title: "Meeting Rooms & Conference Technology",
+    color: "#0891b2",
+    questions: [
+      "Do you use a room booking system? (Robin, Envoy, Google Calendar, Microsoft Exchange, etc.)",
+      "Are there conference rooms that need to be bookable externally by clients or visitors?",
+      "Do any rooms need to combine or divide using operable partitions?",
+      "Are there dedicated client-facing or board-level rooms requiring premium finishes and AV?",
+      "What is your current conference room utilization rate — and do you have the data to support it?",
+      "Do you require any outdoor meeting space, rooftop, or terrace access?",
+      "What is your primary video conferencing platform? (Zoom, Teams, Google Meet, Webex)",
+      "Do you want all conference rooms to be video-conference-ready by default?",
+      "Do any rooms need a professional-grade boardroom AV system?",
+      "Do you need room booking display panels at each conference room entrance?",
+      "Do you need digital signage throughout the space?",
+      "Do you need a live-streaming or broadcast-capable space?",
+      "Are any spaces used for audio recording, podcasting, or music production?",
+      "What is your standard laptop connection or docking setup across the organization?",
+    ]
+  },
+  {
+    title: "Reception & Arrival Experience",
+    color: "#b45309",
+    questions: [
+      "Do you need a staffed reception desk — and how many staff simultaneously?",
+      "Should the reception area make a brand statement with premium finishes and signage?",
+      "Is the reception space also an introduction to your brand, product, or culture?",
+      "Do you need a visitor check-in or badge printing station (e.g. Envoy, iLobby)?",
+      "Do you need visitor seating in the lobby or waiting area?",
+      "Is there a package and delivery intake area needed at reception?",
+      "Do you need a product display or brand showcase at the entry?",
+      "How many visitors do you typically receive per day?",
+    ]
+  },
+  {
+    title: "IT Infrastructure & Specialized Systems",
+    color: "#374151",
+    questions: [
+      "Who manages your IT — internal team, managed service provider, or hybrid?",
+      "Do you require a dedicated server room or data room with raised access floor?",
+      "What is the estimated server room cooling requirement (tons or BTUs)?",
+      "How many network closets or IDF rooms do you need?",
+      "What is your primary internet connectivity requirement — and do you need redundancy?",
+      "Do you require redundant power or UPS for critical systems?",
+      "Do you use a cloud-first or on-premise server strategy?",
+      "Do you need dedicated Wi-Fi infrastructure design with high density access points?",
+      "Are there any areas requiring a Faraday cage or RF shielding?",
+      "Do you require emergency power or generator backup?",
+      "Is there any heavy or specialized equipment requiring structural floor load evaluation?",
+      "Are there any 208V or 480V electrical requirements for equipment?",
+      "Do you have plumbing requirements beyond a standard kitchen and restroom?",
+      "Are there any specialized HVAC or ventilation requirements?",
+      "Do you have any requirements for compressed air or specialty gases?",
+      "Is there any noise-generating equipment or operation that requires acoustic isolation?",
+    ]
+  },
+  {
+    title: "Location, Building & Market",
+    color: "#059669",
+    questions: [
+      "What is your target city or market?",
+      "What are your preferred submarkets, listed in priority order?",
+      "Are there any geographic boundaries or hard constraints (e.g. within X miles of a specific address)?",
+      "Are there specific submarkets or buildings to avoid — and why?",
+      "Is proximity to a Metro or transit hub required or strongly preferred?",
+      "Are there specific buildings you are already interested in?",
+      "Are there buildings where you've had a negative experience with a landlord or property manager?",
+      "Do you need to be near specific clients, partners, or suppliers?",
+      "Is proximity to restaurants, hotels, and gyms important for talent recruitment and retention?",
+      "What target building class? (Class A trophy, Class A, Class B, flex/creative)",
+      "Is new construction or newly delivered space preferred, acceptable, or irrelevant?",
+      "What is your preferred floor plate size?",
+      "Which floors are preferred — and are there any floors to avoid?",
+      "Are there minimum ceiling height requirements?",
+      "Do you need column-free space for large open floor areas?",
+      "Do you require direct or exclusive elevator access to your floor?",
+      "Is a dedicated loading dock or freight elevator required?",
+      "Do you require 24/7 building access with after-hours HVAC?",
+      "Is on-site building management and responsive property management important?",
+      "Do you need outdoor space as part of the lease (terrace, rooftop, balcony)?",
+      "Are there any structural requirements — raised floor, specific floor load capacity, dedicated power?",
+    ]
+  },
+  {
+    title: "Parking & Transportation",
+    color: "#6b7280",
+    questions: [
+      "How many reserved parking spaces do you require?",
+      "How many total spaces (reserved plus unreserved) do you need?",
+      "Do you need executive or premium parking spots — covered, assigned, with EV charging?",
+      "Is covered or structured parking required, or will surface lots be accepted?",
+      "Do you need a parking validation program for clients and visitors?",
+      "Is bicycle parking and secure storage needed?",
+      "Are showers and changing rooms needed for cyclists or gym users?",
+      "Is a shuttle or corporate transportation program important?",
+      "Do you have any fleet vehicle parking requirements?",
+      "Is proximity to a ride-share drop-off zone or transit hub a differentiator for your employees?",
+    ]
+  },
+  {
+    title: "Security & Compliance",
+    color: "#dc2626",
+    questions: [
+      "What security zones do you need? (public, employee-only, executive, server room, etc.)",
+      "Do you need card or badge access control on the suite entrance?",
+      "Do you need access control on any interior doors?",
+      "Do you need any mantrap or airlock entry systems?",
+      "Do you need a dedicated security desk or guard station?",
+      "Are there any government security clearance or SCIF requirements?",
+      "Do you need a visitor management system integrated with access control?",
+      "Are there any compliance standards affecting your security design? (SOC 2, HIPAA, FedRAMP, etc.)",
+      "Do you need interior CCTV and camera coverage — and who monitors it?",
+      "Do you have proprietary equipment, IP, or trade secrets that must be in a secured area?",
+      "Do any employees work with highly sensitive, classified, or regulated information?",
+    ]
+  },
+  {
+    title: "Sustainability & Wellness",
+    color: "#16a34a",
+    questions: [
+      "Do you have corporate sustainability or ESG commitments that affect space selection or design?",
+      "Is access to natural light a priority for your team?",
+      "Are there goals around reducing your office carbon footprint?",
+      "Is LEED, WELL Building Standard, or ENERGY STAR certification a goal or requirement?",
+      "Do you have a clear-desk policy or office waste reduction program?",
+      "Is access to outdoor space (terrace, park, rooftop) a significant priority for employee wellness?",
+      "Do you have an existing EV fleet or EV charging benefit for employees?",
+      "Are air quality, biophilic elements, or circadian lighting meaningful to your culture?",
+    ]
+  },
+];
+
 module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "https://chasebourdelaise.com");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -28,44 +216,44 @@ module.exports = async function handler(req, res) {
   const dateStr = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   const errors = [];
 
-  const fmt  = (n) => (n > 0 ? Number(n).toLocaleString() : "—");
+  const fmt   = (n) => (n > 0 ? Number(n).toLocaleString() : "—");
   const fmtSF = (n) => (n > 0 ? Number(n).toLocaleString() + " SF" : "—");
   const lo = rsf > 0 ? Math.round(rsf * 0.92 / 100) * 100 : 0;
   const hi = rsf > 0 ? Math.round(rsf * 1.08 / 100) * 100 : 0;
 
-  // ── Contextual strategic questions ─────────────────────────────────────────
+  // ── Contextual strategic questions (program-aware) ──────────────────────────
   const stratQuestions = [];
 
   if (Number(daysInOffice) <= 2) {
-    stratQuestions.push(`Your team is in the office ${daysInOffice} day(s)/week — one of the lowest hybrid utilization patterns. Before committing to space, confirm with leadership whether this policy is permanent or transitional. A shift to 3+ days could materially increase your peak-day density and require more desks than this program projects.`);
+    stratQuestions.push(`Your team is in the office ${daysInOffice} day(s) per week — one of the lowest hybrid utilization patterns in the market. Before committing to space, confirm with leadership whether this is permanent policy or transitional. A shift to 3+ days could materially increase your peak-day density and require more desks than this program projects.`);
   } else if (Number(daysInOffice) >= 4) {
-    stratQuestions.push(`At ${daysInOffice} days/week in the office, your utilization is above the current market average of ~2.8 days. This validates a higher desk-to-person ratio and suggests you'll get strong ROI from investment in the physical environment — people are actually showing up.`);
+    stratQuestions.push(`At ${daysInOffice} days per week in-office, your utilization is above the current market average of ~2.8 days. This validates a higher desk-to-person ratio and suggests you'll get strong ROI from investment in the physical environment — your people are actually showing up. Make sure the space is worth commuting to.`);
   } else {
-    stratQuestions.push(`Your ${daysInOffice}-day hybrid pattern is at the market average, but peak days (typically Tue–Thu) drive your real space requirement. Have you analyzed badge data or calendar utilization to understand actual peak occupancy vs. average attendance? That number is what truly sizes your footprint.`);
+    stratQuestions.push(`Your ${daysInOffice}-day hybrid pattern is at the market average, but peak days — typically Tuesday through Thursday — drive your real space requirement, not the average. Have you analyzed badge data or calendar utilization to understand actual peak occupancy? That number is what truly sizes your footprint.`);
   }
 
   if (deskRatio && parseFloat(deskRatio) < 0.75) {
-    stratQuestions.push(`Your desk-to-person ratio of ${deskRatio}:1 is aggressive. This works when sharing is actively managed — but without booking systems, clear protocols, and leadership buy-in, shared seating creates friction that erodes culture. What's your plan for day-to-day enforcement?`);
+    stratQuestions.push(`Your desk-to-person ratio of ${deskRatio}:1 is aggressive. This works when sharing is actively managed — but without booking systems, clear protocols, and leadership buy-in, shared seating creates friction that erodes culture faster than it saves rent. What is your enforcement plan?`);
   } else if (deskRatio && parseFloat(deskRatio) > 0.95) {
-    stratQuestions.push(`Your desk-to-person ratio of ${deskRatio}:1 is conservative — nearly one desk per person. This avoids hoteling friction but comes at a cost per seat. Even a modest increase in sharing (10–15%) could meaningfully reduce your footprint and your rent obligation over the lease term.`);
+    stratQuestions.push(`Your desk-to-person ratio of ${deskRatio}:1 is conservative — nearly one desk per person. This avoids hoteling friction but costs rent per seat. Even a modest increase in sharing (10–15%) could meaningfully reduce your footprint and your total lease obligation over the term.`);
   }
 
   if (industryBenchmark && rsfPerSeat) {
     const diff = Number(rsfPerSeat) - Number(industryBenchmark);
     if (diff > 40) {
-      stratQuestions.push(`Your program runs ${diff} RSF/seat above the ${industryLabel} benchmark of ${industryBenchmark} RSF/seat. This typically reflects a higher proportion of private offices, larger conference rooms, or above-average amenity investment. Before finalizing, ask whether these choices reflect genuine operational need — or legacy culture.`);
+      stratQuestions.push(`Your program runs ${diff} RSF/seat above the ${industryLabel} benchmark of ${industryBenchmark} RSF/seat. This typically reflects a higher proportion of private offices, larger conference rooms, or above-average amenity investment. Ask whether these choices reflect genuine operational need — or legacy culture. Every 10 RSF/seat you reduce is real money over a 10-year lease.`);
     } else if (diff < -30) {
-      stratQuestions.push(`Your program runs ${Math.abs(diff)} RSF/seat below the ${industryLabel} benchmark of ${industryBenchmark} RSF/seat. This is efficient — but verify that meeting room counts, focus space, and amenities are truly adequate for your team's work patterns. A tight footprint that constrains collaboration often costs more in productivity than it saves in rent.`);
+      stratQuestions.push(`Your program runs ${Math.abs(diff)} RSF/seat below the ${industryLabel} benchmark of ${industryBenchmark} RSF/seat. This is efficient — but verify that meeting room counts, focus space, and amenities are truly adequate for your team's actual work patterns. A tight footprint that constrains collaboration often costs more in productivity than it saves in rent.`);
     } else {
-      stratQuestions.push(`Your program at ${rsfPerSeat} RSF/seat is closely aligned with the ${industryLabel} benchmark of ${industryBenchmark} RSF/seat. This is a good sign that your inputs reflect market-calibrated assumptions. The test-fit study on your top candidate buildings will confirm whether the program lays out efficiently on their floor plates.`);
+      stratQuestions.push(`Your program at ${rsfPerSeat} RSF/seat is closely aligned with the ${industryLabel} benchmark of ${industryBenchmark} RSF/seat. This is a good signal that your inputs reflect market-calibrated assumptions. The test-fit study on your top candidate buildings will confirm whether the program lays out efficiently on their floor plates.`);
     }
   }
 
-  stratQuestions.push(`Your Year 3 headcount is ${hcYr3} and Year 5 is ${hcYr5}. Are these projections conservative or aggressive? Over-building for growth you don't achieve is expensive. Does your lease structure include expansion options or rights of first refusal on adjacent space? This is one of the most valuable — and most frequently negotiated — lease provisions.`);
+  stratQuestions.push(`Your Year 3 headcount is ${hcYr3} and Year 5 is ${hcYr5}. Are these conservative or aggressive? Over-building for growth you don't achieve is expensive. Under-building creates operational friction and a premature lease renewal from a position of weakness. Does your lease structure include expansion options or rights of first refusal on adjacent space? This is one of the most valuable — and most frequently negotiated — provisions in any lease.`);
 
-  stratQuestions.push(`At what headcount threshold would you need to expand? At what headcount would you start subleasing? Knowing these numbers before you sign protects you from being locked into the wrong size. I'll walk through this with you on our call.`);
+  stratQuestions.push(`At what headcount threshold would you need to expand? At what headcount would you start subleasing? Know these numbers before you sign. They should be embedded in the lease as option triggers, not discovered in year three when you're locked in.`);
 
-  // ── Build rooms table HTML ──────────────────────────────────────────────────
+  // ── Rooms table ─────────────────────────────────────────────────────────────
   let roomsHTML = `<p style="font-size:13px;color:#8A9BB0;margin:0;font-family:Arial,sans-serif;">No meeting rooms specified.</p>`;
   if (rooms && rooms.length > 0) {
     const rows = rooms.map((r, i) => `
@@ -89,7 +277,7 @@ module.exports = async function handler(req, res) {
       </table>`;
   }
 
-  // ── Build amenities HTML ────────────────────────────────────────────────────
+  // ── Amenities ────────────────────────────────────────────────────────────────
   let amenHTML = "";
   if (amenities && amenities.length > 0) {
     amenHTML = `
@@ -105,8 +293,8 @@ module.exports = async function handler(req, res) {
       ${amenNotes ? `<p style="margin:12px 0 0;font-size:13px;color:#4A5568;font-family:Arial,sans-serif;"><strong style="color:#051C2C;">Additional notes:</strong> ${amenNotes}</p>` : ""}`;
   }
 
-  // ── Build strategic questions HTML ──────────────────────────────────────────
-  const questionsHTML = stratQuestions.map((q, i) => `
+  // ── Contextual strategic questions HTML ──────────────────────────────────────
+  const stratQuestionsHTML = stratQuestions.map((q, i) => `
     <tr>
       <td style="padding:14px 0;border-bottom:1px solid #D8DDE5;vertical-align:top;">
         <table cellpadding="0" cellspacing="0"><tr>
@@ -118,7 +306,33 @@ module.exports = async function handler(req, res) {
       </td>
     </tr>`).join("");
 
-  // ── Team metrics rows ───────────────────────────────────────────────────────
+  // ── Discovery questions HTML ─────────────────────────────────────────────────
+  const discoveryHTML = DISCOVERY.map(cat => `
+    <tr>
+      <td style="padding:18px 0 6px;">
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="border-left:3px solid ${cat.color};padding-left:10px;">
+              <p style="margin:0;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:${cat.color};font-family:Arial,sans-serif;">${cat.title}</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    ${cat.questions.map((q, qi) => `
+    <tr>
+      <td style="padding:5px 0 5px 14px;border-bottom:1px solid #F0F2F5;vertical-align:top;">
+        <table cellpadding="0" cellspacing="0"><tr>
+          <td style="width:16px;vertical-align:top;padding-top:5px;">
+            <div style="width:5px;height:5px;background:${cat.color};border-radius:50%;opacity:.5;"></div>
+          </td>
+          <td style="font-size:12px;line-height:1.75;color:#4A5568;font-family:Arial,sans-serif;">${q}</td>
+        </tr></table>
+      </td>
+    </tr>`).join("")}
+  `).join("");
+
+  // ── Team metrics rows ────────────────────────────────────────────────────────
   const teamRows = [
     ["People Today",          hcNow],
     ["Year 3 Headcount",      hcYr3],
@@ -137,7 +351,7 @@ module.exports = async function handler(req, res) {
       <td style="padding:9px 12px;font-size:13px;color:#051C2C;font-weight:600;text-align:right;border-bottom:1px solid #D8DDE5;font-family:Arial,sans-serif;">${val}</td>
     </tr>`).join("");
 
-  // ── Assemble full HTML email ────────────────────────────────────────────────
+  // ── Full email ───────────────────────────────────────────────────────────────
   const html = `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Space Assessment Report — ${company || "Workplace Strategy"}</title></head>
@@ -186,7 +400,7 @@ module.exports = async function handler(req, res) {
   <!-- Greeting -->
   <tr><td style="background:#fff;padding:36px 40px 24px;">
     <p style="margin:0 0 14px;font-size:17px;color:#051C2C;">Hi ${firstName},</p>
-    <p style="margin:0;font-size:15px;line-height:1.8;color:#4A5568;font-family:Arial,sans-serif;">Your space program report is below — built from the inputs you provided and benchmarked against ${industryLabel ? industryLabel + " industry" : "market"} data. I'll follow up within one business day to walk through the findings and discuss next steps for your portfolio.</p>
+    <p style="margin:0;font-size:15px;line-height:1.8;color:#4A5568;font-family:Arial,sans-serif;">Your space program report is below — built from the inputs you provided and benchmarked against ${industryLabel ? industryLabel + " industry" : "market"} data. I'll follow up within one business day to walk through the findings, answer your questions, and discuss next steps for your portfolio.</p>
   </td></tr>
 
   <!-- Space Breakdown -->
@@ -223,18 +437,27 @@ module.exports = async function handler(req, res) {
     ${amenHTML}
   </td></tr>` : ""}
 
-  <!-- Questions from form -->
+  <!-- User questions -->
   ${questions ? `
   <tr><td style="background:#fff;padding:8px 40px 24px;border-top:1px solid #D8DDE5;">
     <p style="margin:0 0 8px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A9BB0;font-family:Arial,sans-serif;padding-top:16px;">Your Questions / Comments</p>
     <p style="margin:0;font-size:14px;color:#4A5568;line-height:1.75;font-family:Arial,sans-serif;">${questions}</p>
   </td></tr>` : ""}
 
-  <!-- Strategic Questions -->
+  <!-- Strategic Questions (program-aware, dynamic) -->
   <tr><td style="background:#F8F9FB;padding:32px 40px;border-top:3px solid #051C2C;">
     <p style="margin:0 0 5px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#2251FF;font-weight:700;font-family:Arial,sans-serif;">Strategic Planning Guide</p>
-    <p style="margin:0 0 20px;font-size:16px;font-weight:700;color:#051C2C;">Questions to consider before you finalize your program</p>
-    <table width="100%" cellpadding="0" cellspacing="0">${questionsHTML}</table>
+    <p style="margin:0 0 20px;font-size:16px;font-weight:700;color:#051C2C;">Questions specific to your program</p>
+    <p style="margin:0 0 18px;font-size:13px;color:#4A5568;line-height:1.7;font-family:Arial,sans-serif;">The following observations are generated directly from your inputs — headcount, days in office, desk ratio, and benchmark comparison. They are not generic; they reflect your specific program.</p>
+    <table width="100%" cellpadding="0" cellspacing="0">${stratQuestionsHTML}</table>
+  </td></tr>
+
+  <!-- Discovery Questions (comprehensive) -->
+  <tr><td style="background:#fff;padding:32px 40px;border-top:3px solid #C9A84C;">
+    <p style="margin:0 0 5px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;font-weight:700;font-family:Arial,sans-serif;">Discovery Questions</p>
+    <p style="margin:0 0 12px;font-size:16px;font-weight:700;color:#051C2C;">Complete workplace strategy intake</p>
+    <p style="margin:0 0 24px;font-size:13px;color:#4A5568;line-height:1.75;font-family:Arial,sans-serif;">These questions form the foundation of a full workplace strategy engagement. You don't need to answer all of them before our call — but reviewing them will help you surface the constraints, preferences, and priorities that shape your program. Bring your thinking. I'll bring the framework.</p>
+    <table width="100%" cellpadding="0" cellspacing="0">${discoveryHTML}</table>
   </td></tr>
 
   <!-- Next Steps -->
@@ -266,7 +489,7 @@ module.exports = async function handler(req, res) {
 </td></tr></table>
 </body></html>`;
 
-  // ── 1. Send via Resend ──────────────────────────────────────────────────────
+  // ── 1. Send via Resend ───────────────────────────────────────────────────────
   try {
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -293,7 +516,7 @@ module.exports = async function handler(req, res) {
     errors.push("Resend: network error");
   }
 
-  // ── 2. Subscribe to Beehiiv ─────────────────────────────────────────────────
+  // ── 2. Subscribe to Beehiiv ──────────────────────────────────────────────────
   try {
     const beehiivRes = await fetch(
       `https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`,
