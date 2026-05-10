@@ -427,7 +427,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         <a href="/tools.html" class="back-link" style="color:rgba(255,255,255,.28);">Tools</a>
         <div class="hero-eyebrow">Space Programming · Free Assessment</div>
         <h1>Find out exactly how much space your organization <em>really</em> needs.</h1>
-        <p class="hero-desc">Most companies lease 20–40% more space than they use — or run out of room before their lease expires. Four sections, ten minutes, and you'll have an architect-ready space program benchmarked against your industry.</p>
+        <p class="hero-desc">Calibrated for organizations of <strong>10–300 people</strong> evaluating new space, validating a program, or pressure-testing what an architect or peer has proposed. Benchmarks reflect 2025 sensor-based workplace data from Density.io, JLL, CBRE, and Gensler — not legacy programming standards.</p>
         <a href="#tool-start" class="hero-btn">
           Begin Assessment
           <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -864,45 +864,57 @@ for (var gi=0; gi<AMEN_GROUPS.length; gi++) {
   for (var ai=0; ai<grp.items.length; ai++) AMEN_SF[grp.items[ai].id] = grp.items[ai].sf;
 }
 
-/* IND properties:
-   rsfPerSeat = median benchmark (HQ); rsfPerSeatSat = satellite median; rsfRange = [low, high] HQ confidence band
-   circAdj    = circulation adjustment (%)
-   wsSFAdj    = multiplier on layoutSF for industry-typical workstation density
-   recLayouts = preferred layout IDs (compatibility warnings shown otherwise)
-   rooms      = benchmark counts at HC=100 baseline
-   amenities  = recommended amenity IDs (HQ); satellite removes a_rb,a_st,a_sh
-   notes      = optional per-room industry-specific guidance (rendered as tip) */
+/* IND properties — recalibrated against:
+   • Density.io Q3 2025 Workplace Benchmark (sensor data, 154 floors, ~1M sf):
+     1-2 person rooms 1:68; 2-4 person 1:34; 5-9 person 1:27; 10-16 person 1:68; 17+ 1:68
+     Companies typically over-program meeting rooms by 18%. No "golden ratio" exists.
+   • JLL Global Occupancy Planning Benchmark Report 2025 (745M sf across 99 orgs):
+     Target density 132 SF/person; current global avg 165; sharing target 1.3:1
+   • CBRE 2026 Global Workplace & Occupancy Insights (303M sf, 99 orgs):
+     Global utilization 53%; target 65%+; Tuesday peak 73% of orgs
+   • Gensler Global Workplace Survey 2025 (16,809 workers, 15 countries):
+     14% want traditional corporate; 26% strongly agree workplace works
+   • Phone booths programmed separately at ~1:12 (modern hybrid standard)
+
+   rsfPerSeat / rsfPerSeatSat: HQ vs satellite median (RSF per desk, post-circ + loss)
+   rsfRange / rsfRangeSat: confidence band [low, high] for sidebar
+   circAdj: circulation % adjustment vs layout base
+   wsSFAdj: multiplier on layoutSF for industry-typical workstation density
+   recLayouts: preferred layout IDs (compatibility warnings shown otherwise)
+   rooms: benchmark counts at HC=100 baseline (calibrated to behavior data)
+   amenities: recommended amenity IDs (HQ); satellite removes a_rb, a_st, a_sh
+   notes: optional per-room industry-specific guidance */
 var IND = {
-  law:       {label:'Law Firm',                 rsfPerSeat:313, rsfPerSeatSat:275, rsfRange:[280,340], rsfRangeSat:[250,300], circAdj:3, wsSFAdj:0.85,
+  law:       {label:'Law Firm',                 rsfPerSeat:290, rsfPerSeatSat:255, rsfRange:[260,320], rsfRangeSat:[230,280], circAdj:3, wsSFAdj:0.85,
     recLayouts:['lc_trad','lc_mixed'],
-    rooms:{rm_pod:4,rm_foc:6,rm_zoom:3,rm_sm4:2,rm_sm6:3,rm_med8:2,rm_med10:1,rm_lg12:1,rm_lg16:0,rm_brd:1,rm_trn:0,rm_evt:0,rm_clb:2,rm_lib:1},
+    rooms:{rm_pod:3, rm_foc:2, rm_zoom:2, rm_sm4:2, rm_sm6:2, rm_med8:1, rm_med10:1, rm_lg12:1, rm_lg16:0, rm_brd:1, rm_trn:0, rm_evt:0, rm_clb:1, rm_lib:1},
     amenities:['a_rd','a_rv','a_rb','a_cf','a_cc','a_cs','a_sf','a_ss','a_si','a_wm','a_wp'],
-    notes:{rm_lib:'Critical for legal research and quiet drafting work.', rm_brd:'Client-facing — premium finishes, often used for depositions and mediations.'}},
-  services:  {label:'Professional Services',     rsfPerSeat:217, rsfPerSeatSat:190, rsfRange:[200,245], rsfRangeSat:[175,215], circAdj:0, wsSFAdj:1.00,
+    notes:{rm_lib:'Critical for legal research and quiet drafting work.', rm_brd:'Client-facing — premium finishes, often used for depositions and mediations.', rm_pod:'Lower phone booth density than other industries — partners take calls in private offices.'}},
+  services:  {label:'Professional Services',     rsfPerSeat:195, rsfPerSeatSat:175, rsfRange:[175,220], rsfRangeSat:[160,195], circAdj:0, wsSFAdj:1.00,
     recLayouts:['lc_mixed','lc_open'],
-    rooms:{rm_pod:5,rm_foc:8,rm_zoom:4,rm_sm4:3,rm_sm6:4,rm_med8:2,rm_med10:2,rm_lg12:1,rm_lg16:1,rm_brd:1,rm_trn:0,rm_evt:0,rm_clb:3,rm_lib:0},
+    rooms:{rm_pod:8, rm_foc:3, rm_zoom:1, rm_sm4:1, rm_sm6:2, rm_med8:1, rm_med10:1, rm_lg12:1, rm_lg16:0, rm_brd:1, rm_trn:0, rm_evt:0, rm_clb:3, rm_lib:0},
     amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_cb','a_ss','a_si','a_wm','a_wp'],
-    notes:{rm_pod:'Hot-desking consultants rely on these for client video calls — program generously.'}},
-  tech:      {label:'Technology',                rsfPerSeat:217, rsfPerSeatSat:180, rsfRange:[195,240], rsfRangeSat:[165,200], circAdj:3, wsSFAdj:1.05,
+    notes:{rm_pod:'Hot-desking consultants live on video calls — phone booth density is critical infrastructure.'}},
+  tech:      {label:'Technology',                rsfPerSeat:185, rsfPerSeatSat:165, rsfRange:[165,210], rsfRangeSat:[150,185], circAdj:3, wsSFAdj:1.05,
     recLayouts:['lc_open','lc_mixed','lc_hot'],
-    rooms:{rm_pod:6,rm_foc:8,rm_zoom:5,rm_sm4:3,rm_sm6:3,rm_med8:2,rm_med10:1,rm_lg12:1,rm_lg16:0,rm_brd:1,rm_trn:0,rm_evt:0,rm_clb:4,rm_lib:1},
+    rooms:{rm_pod:9, rm_foc:3, rm_zoom:2, rm_sm4:1, rm_sm6:2, rm_med8:2, rm_med10:1, rm_lg12:1, rm_lg16:0, rm_brd:1, rm_trn:0, rm_evt:0, rm_clb:4, rm_lib:1},
     amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_cb','a_cp','a_sl','a_ss','a_si','a_wm','a_wp','a_wn'],
-    notes:{rm_pod:'Tech firms typically program 1 phone booth per 15–20 open-plan workstations — engineers use these constantly.', rm_clb:'Open collab lounges are core infrastructure in tech, not amenity — engineers gather here for design discussions.'}},
-  sales:     {label:'Sales / Real Estate',       rsfPerSeat:188, rsfPerSeatSat:160, rsfRange:[165,210], rsfRangeSat:[140,180], circAdj:-2, wsSFAdj:0.85,
+    notes:{rm_pod:'Density.io data shows tech firms have more meetings per person than any other industry — phone booths protect conference rooms from solo-call cannibalization.', rm_clb:'Open collab lounges are core infrastructure in tech — engineers gather here for design discussions.'}},
+  sales:     {label:'Sales / Real Estate',       rsfPerSeat:170, rsfPerSeatSat:150, rsfRange:[150,195], rsfRangeSat:[135,175], circAdj:-2, wsSFAdj:0.85,
     recLayouts:['lc_mixed','lc_open'],
-    rooms:{rm_pod:4,rm_foc:5,rm_zoom:3,rm_sm4:2,rm_sm6:3,rm_med8:2,rm_med10:1,rm_lg12:1,rm_lg16:0,rm_brd:1,rm_trn:2,rm_evt:0,rm_clb:2,rm_lib:0},
+    rooms:{rm_pod:6, rm_foc:2, rm_zoom:2, rm_sm4:2, rm_sm6:2, rm_med8:1, rm_med10:1, rm_lg12:1, rm_lg16:0, rm_brd:1, rm_trn:1, rm_evt:0, rm_clb:2, rm_lib:0},
     amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_sl','a_ss','a_wm','a_wp'],
-    notes:{rm_trn:'Sales orgs treat training rooms as structural — onboarding, kickoffs, product training.'}},
-  callcenter:{label:'Call Center / Operations',  rsfPerSeat:142, rsfPerSeatSat:142, rsfRange:[120,160], rsfRangeSat:[120,160], circAdj:-5, wsSFAdj:0.65,
+    notes:{rm_trn:'Sales orgs treat training rooms as structural — onboarding, kickoffs, product training.', rm_pod:'Outside reps living on calls between client visits drive heavy phone booth demand.'}},
+  callcenter:{label:'Call Center / Operations',  rsfPerSeat:135, rsfPerSeatSat:135, rsfRange:[115,155], rsfRangeSat:[115,155], circAdj:-5, wsSFAdj:0.65,
     recLayouts:['lc_open','lc_hot'],
-    rooms:{rm_pod:2,rm_foc:4,rm_zoom:2,rm_sm4:2,rm_sm6:2,rm_med8:1,rm_med10:1,rm_lg12:0,rm_lg16:0,rm_brd:0,rm_trn:1,rm_evt:0,rm_clb:2,rm_lib:0},
+    rooms:{rm_pod:2, rm_foc:2, rm_zoom:1, rm_sm4:1, rm_sm6:2, rm_med8:1, rm_med10:0, rm_lg12:0, rm_lg16:0, rm_brd:0, rm_trn:1, rm_evt:0, rm_clb:1, rm_lib:0},
     amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_sl','a_ss','a_wm'],
     notes:{rm_trn:'Non-negotiable — agent onboarding requires dedicated training capability.'}},
-  telecom:   {label:'Telecom',                   rsfPerSeat:200, rsfPerSeatSat:165, rsfRange:[175,225], rsfRangeSat:[145,180], circAdj:1, wsSFAdj:1.00,
+  telecom:   {label:'Telecom',                   rsfPerSeat:185, rsfPerSeatSat:160, rsfRange:[165,210], rsfRangeSat:[145,180], circAdj:1, wsSFAdj:1.00,
     recLayouts:['lc_mixed','lc_open'],
-    rooms:{rm_pod:6,rm_foc:8,rm_zoom:4,rm_sm4:3,rm_sm6:4,rm_med8:3,rm_med10:2,rm_lg12:2,rm_lg16:1,rm_brd:1,rm_trn:1,rm_evt:1,rm_clb:3,rm_lib:1},
+    rooms:{rm_pod:8, rm_foc:2, rm_zoom:1, rm_sm4:1, rm_sm6:2, rm_med8:1, rm_med10:1, rm_lg12:1, rm_lg16:0, rm_brd:1, rm_trn:0, rm_evt:0, rm_clb:2, rm_lib:1},
     amenities:['a_rd','a_rv','a_rb','a_cf','a_cc','a_cs','a_cb','a_sl','a_ss','a_si','a_sv','a_wm','a_wp','a_sh','a_sp'],
-    notes:{rm_lg12:'B2B partner meetings and RFP responses drive heavy large-room demand.'}}
+    notes:{rm_lg12:'B2B partner meetings and RFP responses drive heavy large-room demand.', rm_pod:'Engineering, sales and ops populations all need private call space — telecom HQ programs ~1 phone booth per 12 in-office staff.'}}
 };
 
 /* Get the active RSF benchmark for the current officeType */
@@ -916,7 +928,7 @@ function getActiveRsfRange() {
 }
 
 /* Sharing ratio defaults — % of staff using shared/unassigned desks.
-   Indexed by industry × HC tier (tiny=<30, sm=30–100, md=100–200, lg=200–500, xl=500+) */
+   Indexed by industry × HC tier. Reflects JLL 2025 portfolio benchmarks (target sharing 1.3:1) */
 var SHARED_BY_INDUSTRY_HC = {
   law:       {tiny:0,  sm:5,  md:5,  lg:10, xl:15},
   services:  {tiny:5,  sm:15, md:25, lg:30, xl:35},
@@ -924,6 +936,18 @@ var SHARED_BY_INDUSTRY_HC = {
   sales:     {tiny:5,  sm:10, md:20, lg:25, xl:30},
   callcenter:{tiny:0,  sm:5,  md:10, lg:10, xl:15},
   telecom:   {tiny:10, sm:15, md:20, lg:25, xl:30}
+};
+
+/* Office % of total seats by industry × HC tier — reflects the structural reality
+   that smaller HQs have higher exec-to-staff ratios (you can't fractionalize a CEO).
+   At HC<30 the executive density is unavoidably high; the 8% benchmark applies only at HC≥500. */
+var OFFICE_PCT_BY_INDUSTRY_HC = {
+  law:       {tiny:65, sm:68, md:67, lg:67, xl:62},
+  services:  {tiny:25, sm:20, md:16, lg:12, xl:9},
+  tech:      {tiny:18, sm:12, md:9,  lg:7,  xl:5},
+  sales:     {tiny:28, sm:25, md:20, lg:16, xl:13},
+  callcenter:{tiny:5,  sm:5,  md:4,  lg:3,  xl:3},
+  telecom:   {tiny:22, sm:18, md:14, lg:9,  xl:7}
 };
 
 function hcTier(hc) {
@@ -935,9 +959,9 @@ function hcTier(hc) {
 }
 
 /* Room scaling categories — drives applyIndustry sub-linear scaling at extremes.
-   linear  = scale 1:1 with HC (small/everyday rooms)
-   mid     = sqrt-style growth (medium/large conf)
-   fixed   = floor of 1, capped near 2–3 even at large HC (boardrooms, training, event)  */
+   linear  = scale 1:1 with HC (small/everyday rooms scale with workforce)
+   mid     = sqrt-style growth (medium/large conf — diminishing per-capita demand at scale)
+   fixed   = floor + small additions at higher HC (boardrooms, training, event, library) */
 var ROOM_SCALING = {
   rm_pod:'linear', rm_foc:'linear', rm_zoom:'linear', rm_sm4:'linear', rm_sm6:'linear',
   rm_med8:'linear', rm_clb:'linear',
@@ -1177,10 +1201,17 @@ function applyIndustry(key) {
     }
   }
 
-  /* 8.5 — HC tier floor rules */
+  /* HC tier floor rules — calibrated to behavior data thresholds.
+     Boardroom emerges at HC 100+ (formal client/board meetings).
+     Training rooms emerge at HC 150+ (onboarding cohort makes them pencil out).
+     Event/town hall emerges at HC 250+ (smaller orgs use boardroom or off-site).
+     Sales is the exception — training is structural at any scale. */
   var minRooms = {rm_pod:1, rm_foc:1, rm_sm6:1};
   if (hc >= 100 && key !== 'callcenter') minRooms.rm_brd = 1;
-  if (hc >= 200) minRooms.rm_trn = Math.max(minRooms.rm_trn || 0, 1);
+  if (hc >= 150 && key !== 'callcenter') minRooms.rm_trn = 1;
+  if (key === 'sales' && hc >= 30) minRooms.rm_trn = 1;
+  if (hc >= 250) minRooms.rm_evt = Math.max(minRooms.rm_evt || 0, 1);
+  if (hc >= 200) minRooms.rm_lib = Math.max(minRooms.rm_lib || 0, 1);
 
   /* 8.4 — Piecewise scaling instead of naive linear */
   var satMult = (officeType === 'satellite') ? SATELLITE_ROOM_MULT : 1.0;
@@ -1424,28 +1455,28 @@ function computeValidationWarnings(ctx) {
     }
   }
 
-  /* W4 — Office percentage vs industry benchmark (±25%) */
+  /* W4 — Office percentage vs industry × HC tier benchmark
+     Uses OFFICE_PCT_BY_INDUSTRY_HC which reflects that smaller HQs structurally
+     have higher exec-to-staff ratios. The 8% benchmark only applies at HC≥500. */
   if (currentInd && totalSeats > 0 && hc3 >= 30) {
     var officePctActual = (numOffices / totalSeats) * 100;
-    var officePctBench = (LAYOUT_OFFICE_PCT[currentLcId] || 0.25) * 100;
-    /* Compare against industry-typical office % from HC tier; rough lookup */
-    var indOfficeBench = {law:67, services:15, tech:6, sales:20, callcenter:4, telecom:8}[currentIndKey] || officePctBench;
-    var ratio = officePctActual / indOfficeBench;
-    if (ratio > 1.5 && officePctActual - indOfficeBench >= 5) {
-      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> is <strong>~' + indOfficeBench + '%</strong>. Confirm the office count is necessary — every office shifts 40–80 SF off the benchmark per seat.');
-    } else if (ratio < 0.5 && indOfficeBench - officePctActual >= 5) {
-      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> is <strong>~' + indOfficeBench + '%</strong>. Verify executive and partner-level seating needs.');
+    var indOfficeTbl = OFFICE_PCT_BY_INDUSTRY_HC[currentIndKey];
+    var indOfficeBench = indOfficeTbl ? indOfficeTbl[hcTier(hc3)] : (LAYOUT_OFFICE_PCT[currentLcId] || 0.25) * 100;
+    var diffPts = officePctActual - indOfficeBench;
+    if (diffPts >= 8 && officePctActual / indOfficeBench >= 1.4) {
+      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> at HC ' + hcTier(hc3).toUpperCase() + ' tier is <strong>~' + indOfficeBench + '%</strong>. The conversation to have with leadership: who specifically gets each office? If the org chart justifies the count, it holds. If you\'re extending offices below VP, that\'s where the trim opportunity sits.');
+    } else if (diffPts <= -8 && indOfficeBench / Math.max(1, officePctActual) >= 1.5) {
+      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> at this HC tier is <strong>~' + indOfficeBench + '%</strong>. Below-benchmark office counts can work, but verify executive and senior-leader seating preferences before locking the program — adjusting later is expensive.');
     }
   }
 
-  /* W5 — Phone booth density vs open-plan workstation count */
-  if ((currentLcId === 'lc_open' || currentLcId === 'lc_hot') && numWS >= 20) {
-    var podEl = document.getElementById('sv_rm_pod');
-    var podQty = podEl ? (parseInt(podEl.textContent) || 0) : 0;
-    var benchPods = Math.ceil(numWS / 20);
-    if (podQty < benchPods) {
-      warnings.push('Open-plan layouts need <strong>~1 phone booth per 15–20 workstations</strong>. You have ' + podQty + ' booth(s) for ' + numWS + ' workstations — consider adding ' + (benchPods - podQty) + '.');
-    }
+  /* W5 — Phone booth density vs total in-office headcount (Density.io / industry standard 1:10–15)
+     Phone booths are the cheapest, highest-leverage program element in modern hybrid offices. */
+  var podEl = document.getElementById('sv_rm_pod');
+  var podQty = podEl ? (parseInt(podEl.textContent) || 0) : 0;
+  if (hc3 >= 20 && podQty < Math.floor(hc3 / 15)) {
+    var targetPods = Math.ceil(hc3 / 12);
+    warnings.push('Phone booth count of <strong>' + podQty + '</strong> is below the modern hybrid benchmark of <strong>1 per 10–15 in-office staff</strong>. At your HC, target <strong>' + targetPods + ' phone booths</strong>. Density.io sensor data shows half of all meeting room time is occupied by one person on a video call — phone booths prevent solo-call cannibalization of your conference rooms.');
   }
 
   /* W6 — Boardroom missing at HC ≥ 100 (except call center) */
