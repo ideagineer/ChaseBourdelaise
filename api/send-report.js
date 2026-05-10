@@ -202,7 +202,7 @@ module.exports = async function handler(req, res) {
 
   const {
     name, email, company, title, phone, questions,
-    rsf, rsfPerSeat, industryLabel, industryBenchmark,
+    rsf, rsfPerSeat, industryLabel, industryBenchmark, officeType,
     hcNow, hcYr3, hcYr5, daysInOffice, sharedPct,
     totalDesks, deskRatio, numOffices, numWS,
     layoutLabel, layoutSF, wsSF, rmSF, amSF,
@@ -247,6 +247,24 @@ module.exports = async function handler(req, res) {
     } else {
       stratQuestions.push(`Your program at ${rsfPerSeat} RSF/seat is closely aligned with the ${industryLabel} benchmark of ${industryBenchmark} RSF/seat. This is a good signal that your inputs reflect market-calibrated assumptions. The test-fit study on your top candidate buildings will confirm whether the program lays out efficiently on their floor plates.`);
     }
+  }
+
+  // Office type — satellite vs HQ has substantial programmatic implications
+  if (officeType === "satellite") {
+    stratQuestions.push(`You have identified this as a satellite, branch, or regional office — not a primary HQ. The program reflects that distinction with reduced amenity investment and no town hall capability. The strategic question: how is this satellite expected to relate to your HQ? Is it a destination for client meetings, a pure operations hub, or a flexible touchdown space for a regional sales team? Each case implies a different program — and different lease terms. Operational satellites benefit from shorter lease terms (5-7 years) and aggressive expansion/contraction rights, since regional needs change faster than corporate ones.`);
+  } else if (officeType === "hq" && Number(hcYr3) >= 200) {
+    stratQuestions.push(`As your primary HQ, this office is a brand statement, a recruiting tool, and the cultural anchor for your distributed workforce. At your scale (${hcYr3}+ people Year 3), the question isn't whether to invest in visitor experience and amenity — it's whether you're investing in the right things. Modern HQs are increasingly judged on the quality of their public-facing space (lobby, client-facing conference floor) and their wellness program (gym, mothers room, quiet rooms), not the size of executive offices. Where will your investment dollars create the most leverage with employees and clients?`);
+  }
+
+  // Industry-specific strategic considerations
+  const indLower = (industryLabel || "").toLowerCase();
+  if (indLower.includes("telecom")) {
+    stratQuestions.push(`Telecom HQs blend three distinct work types under one roof — corporate, engineering, and operations. Each has a different programmatic logic: corporate floors lean toward private offices and traditional meeting rooms; engineering wants open neighborhoods with heavy phone-booth density; operations needs high-density bench seating with adjacent training and break space. Has your floor stack been planned to keep these populations together where they need to be (engineering + product) and separated where they need to be (NOC + corporate)? The vertical stacking decision drives both employee experience and floor plate efficiency.`);
+    stratQuestions.push(`The customer briefing center or demo space is the single highest-leverage square footage in a modern telecom HQ — it's where 5G, fiber, and edge computing capabilities get sold to enterprise clients. Has this space been programmed against actual client visit volume and the partnerships team's pipeline? Under-investment here forfeits B2B revenue; over-investment ties up rent on space that sits empty between major customer visits.`);
+  } else if (indLower.includes("law")) {
+    stratQuestions.push(`Law firm programs are uniquely office-intensive, and that's reflected in your benchmark RSF/seat. The strategic question is whether your firm should pursue a "universal office" model (partners and associates same-sized, around 150 SF) — which has been adopted by Cleary, Allen & Overy, and others — or maintain the traditional partner/associate hierarchy. The universal model adds 15-20% efficiency and signals a flatter culture, but creates real change-management friction with senior partners. Which direction does your firm's culture point?`);
+  } else if (indLower.includes("technology")) {
+    stratQuestions.push(`Tech companies systematically under-program phone booths and focus rooms. The benchmark is one phone booth per 15-20 open-plan workstations — engineers are constantly on calls, and a shortage creates the kind of low-grade daily friction that drives people back to working from home. Have you walked your existing floor at 10am on a Wednesday and counted how many people are on calls without a private space? That observation usually settles the debate about whether you have enough.`);
   }
 
   stratQuestions.push(`Your Year 3 headcount is ${hcYr3} and Year 5 is ${hcYr5}. Are these conservative or aggressive? Over-building for growth you don't achieve is expensive. Under-building creates operational friction and a premature lease renewal from a position of weakness. Does your lease structure include expansion options or rights of first refusal on adjacent space? This is one of the most valuable — and most frequently negotiated — provisions in any lease.`);
