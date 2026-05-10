@@ -207,6 +207,27 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 .ind-badge.on{display:flex;}
 .ind-badge strong{color:#2251FF;font-weight:500;}
 
+/* ── HQ/SATELLITE TOGGLE ──────────────────────────────────── */
+.oft-wrap{margin-top:6px;}
+.oft-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.oft-btn{border:1.5px solid #D8DDE5;background:#fff;padding:14px 16px;cursor:pointer;text-align:left;font-family:"DM Sans",sans-serif;transition:border-color .15s,background .15s;-webkit-user-select:none;user-select:none;}
+.oft-btn:hover{border-color:#4A5568;}
+.oft-btn.oft-sel{border-color:#2251FF;background:#f0f4ff;}
+.oft-btn-name{font-family:"Cormorant Garamond",serif;font-size:15px;font-weight:600;color:#051C2C;margin-bottom:3px;}
+.oft-btn-desc{font-size:11px;font-weight:300;color:#8A9BB0;line-height:1.5;}
+
+/* ── LAYOUT-INDUSTRY COMPATIBILITY WARNING ────────────────── */
+.layout-warn{display:flex;align-items:flex-start;gap:8px;padding:10px 14px;background:#fff7ed;border-left:3px solid #b45309;font-size:12px;font-weight:300;color:#7c2d12;line-height:1.55;margin-bottom:12px;}
+
+/* ── VALIDATION PANEL ─────────────────────────────────────── */
+.vp-wrap{margin-bottom:24px;border:1px solid #fde6c4;background:#fffbf3;padding:18px 20px;}
+.vp-head{display:flex;align-items:center;gap:8px;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7c2d12;margin-bottom:12px;}
+.vp-item{display:flex;gap:10px;font-size:13px;font-weight:300;color:#4A5568;line-height:1.6;padding:8px 0;border-top:1px solid #fde6c4;}
+.vp-item:first-child{border-top:none;padding-top:0;}
+.vp-item strong{color:#051C2C;font-weight:500;}
+.vp-bullet{color:#b45309;font-weight:500;flex-shrink:0;}
+.vp-foot{font-size:11px;font-weight:300;color:#8A9BB0;margin-top:10px;font-style:italic;}
+
 /* ── FIELDS ───────────────────────────────────────────────── */
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;}
 .ff{grid-column:1/-1;}
@@ -266,6 +287,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
 .rc-sf{font-family:"DM Mono",monospace;font-size:10px;color:#8A9BB0;}
 .rc-bench{font-family:"DM Mono",monospace;font-size:10px;color:#2251FF;display:none;}
 .rc-bench.on{display:inline;}
+.rc-note{font-size:11px;font-weight:300;color:#b45309;line-height:1.55;margin-top:5px;display:none;font-style:italic;}
 .step-ctrl{display:flex;align-items:center;flex-shrink:0;}
 .step-btn{width:38px;height:38px;border:1px solid #D8DDE5;background:#fff;cursor:pointer;font-size:20px;line-height:1;color:#4A5568;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:"DM Sans",sans-serif;user-select:none;}
 .step-btn:hover{border-color:#051C2C;color:#051C2C;}
@@ -448,10 +470,25 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
           <option value="tech">Technology / Software</option>
           <option value="sales">Sales / Real Estate / Insurance</option>
           <option value="callcenter">Call Center / High-Density Operations</option>
+          <option value="telecom">Telecom</option>
         </select>
         <div class="ind-badge" id="indBadge">
           <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#2251FF;fill:none;stroke-width:2;flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
           Benchmarks loaded for <strong id="indBadgeName">—</strong> &nbsp;·&nbsp; <strong id="indBadgeRSF">—</strong> RSF/seat benchmark
+        </div>
+
+        <div class="oft-wrap" id="oftWrap" style="display:none;">
+          <label class="ind-label" style="margin-top:14px;">Office type</label>
+          <div class="oft-toggle">
+            <button type="button" class="oft-btn oft-sel" id="oftHQ" onclick="setOfficeType('hq')">
+              <div class="oft-btn-name">HQ / Primary Office</div>
+              <div class="oft-btn-desc">Full visitor experience, executive presence, brand expression</div>
+            </button>
+            <button type="button" class="oft-btn" id="oftSat" onclick="setOfficeType('satellite')">
+              <div class="oft-btn-name">Satellite / Branch / Regional</div>
+              <div class="oft-btn-desc">Operational focus — lighter amenities, no town hall, modest reception</div>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -568,6 +605,11 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         </div>
       </div>
 
+      <div class="layout-warn" id="layoutWarn" style="display:none;">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#b45309;fill:none;stroke-width:2;flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="layoutWarnText"></span>
+      </div>
+
       <div class="ws-suggest-note" id="wsSuggestNote" style="display:none;font-size:12px;font-weight:300;color:#2251FF;padding:8px 12px;background:#f0f4ff;border-left:3px solid #2251FF;margin-bottom:12px;">
         Suggested based on your team size and selected layout — adjust as needed.
       </div>
@@ -643,6 +685,15 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         <div class="rp-lbl">Your estimated requirement</div>
         <div class="rp-num" id="rpNum">—</div>
         <div class="rp-sub" id="rpSub">Fill in sections above to see your estimate</div>
+      </div>
+
+      <div class="vp-wrap" id="valPanel" style="display:none;">
+        <div class="vp-head">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#b45309;fill:none;stroke-width:2;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Program review — items worth a second look</span>
+        </div>
+        <div id="valList"></div>
+        <p class="vp-foot">These are advisory flags — your program may have good reasons for each. Chase can walk through them on a call.</p>
       </div>
 
       <div class="email-gate">
@@ -813,23 +864,91 @@ for (var gi=0; gi<AMEN_GROUPS.length; gi++) {
   for (var ai=0; ai<grp.items.length; ai++) AMEN_SF[grp.items[ai].id] = grp.items[ai].sf;
 }
 
+/* IND properties:
+   rsfPerSeat = median benchmark (HQ); rsfPerSeatSat = satellite median; rsfRange = [low, high] HQ confidence band
+   circAdj    = circulation adjustment (%)
+   wsSFAdj    = multiplier on layoutSF for industry-typical workstation density
+   recLayouts = preferred layout IDs (compatibility warnings shown otherwise)
+   rooms      = benchmark counts at HC=100 baseline
+   amenities  = recommended amenity IDs (HQ); satellite removes a_rb,a_st,a_sh
+   notes      = optional per-room industry-specific guidance (rendered as tip) */
 var IND = {
-  law:       {label:'Law Firm',                 rsfPerSeat:313, circAdj:3,
+  law:       {label:'Law Firm',                 rsfPerSeat:313, rsfPerSeatSat:275, rsfRange:[280,340], rsfRangeSat:[250,300], circAdj:3, wsSFAdj:0.85,
+    recLayouts:['lc_trad','lc_mixed'],
     rooms:{rm_pod:4,rm_foc:6,rm_zoom:3,rm_sm4:2,rm_sm6:3,rm_med8:2,rm_med10:1,rm_lg12:1,rm_lg16:0,rm_brd:1,rm_trn:0,rm_evt:0,rm_clb:2,rm_lib:1},
-    amenities:['a_rd','a_rv','a_rb','a_cf','a_cc','a_cs','a_sf','a_ss','a_si','a_wm','a_wp']},
-  services:  {label:'Professional Services',     rsfPerSeat:217, circAdj:0,
+    amenities:['a_rd','a_rv','a_rb','a_cf','a_cc','a_cs','a_sf','a_ss','a_si','a_wm','a_wp'],
+    notes:{rm_lib:'Critical for legal research and quiet drafting work.', rm_brd:'Client-facing — premium finishes, often used for depositions and mediations.'}},
+  services:  {label:'Professional Services',     rsfPerSeat:217, rsfPerSeatSat:190, rsfRange:[200,245], rsfRangeSat:[175,215], circAdj:0, wsSFAdj:1.00,
+    recLayouts:['lc_mixed','lc_open'],
     rooms:{rm_pod:5,rm_foc:8,rm_zoom:4,rm_sm4:3,rm_sm6:4,rm_med8:2,rm_med10:2,rm_lg12:1,rm_lg16:1,rm_brd:1,rm_trn:0,rm_evt:0,rm_clb:3,rm_lib:0},
-    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_cb','a_ss','a_si','a_wm','a_wp']},
-  tech:      {label:'Technology',                rsfPerSeat:194, circAdj:3,
+    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_cb','a_ss','a_si','a_wm','a_wp'],
+    notes:{rm_pod:'Hot-desking consultants rely on these for client video calls — program generously.'}},
+  tech:      {label:'Technology',                rsfPerSeat:217, rsfPerSeatSat:180, rsfRange:[195,240], rsfRangeSat:[165,200], circAdj:3, wsSFAdj:1.05,
+    recLayouts:['lc_open','lc_mixed','lc_hot'],
     rooms:{rm_pod:6,rm_foc:8,rm_zoom:5,rm_sm4:3,rm_sm6:3,rm_med8:2,rm_med10:1,rm_lg12:1,rm_lg16:0,rm_brd:1,rm_trn:0,rm_evt:0,rm_clb:4,rm_lib:1},
-    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_cb','a_cp','a_sl','a_ss','a_si','a_wm','a_wp','a_wn']},
-  sales:     {label:'Sales / Real Estate',       rsfPerSeat:168, circAdj:-2,
+    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_cb','a_cp','a_sl','a_ss','a_si','a_wm','a_wp','a_wn'],
+    notes:{rm_pod:'Tech firms typically program 1 phone booth per 15–20 open-plan workstations — engineers use these constantly.', rm_clb:'Open collab lounges are core infrastructure in tech, not amenity — engineers gather here for design discussions.'}},
+  sales:     {label:'Sales / Real Estate',       rsfPerSeat:188, rsfPerSeatSat:160, rsfRange:[165,210], rsfRangeSat:[140,180], circAdj:-2, wsSFAdj:0.85,
+    recLayouts:['lc_mixed','lc_open'],
     rooms:{rm_pod:4,rm_foc:5,rm_zoom:3,rm_sm4:2,rm_sm6:3,rm_med8:2,rm_med10:1,rm_lg12:1,rm_lg16:0,rm_brd:1,rm_trn:2,rm_evt:0,rm_clb:2,rm_lib:0},
-    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_sl','a_ss','a_wm','a_wp']},
-  callcenter:{label:'Call Center / Operations',  rsfPerSeat:142, circAdj:-5,
+    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_sl','a_ss','a_wm','a_wp'],
+    notes:{rm_trn:'Sales orgs treat training rooms as structural — onboarding, kickoffs, product training.'}},
+  callcenter:{label:'Call Center / Operations',  rsfPerSeat:142, rsfPerSeatSat:142, rsfRange:[120,160], rsfRangeSat:[120,160], circAdj:-5, wsSFAdj:0.65,
+    recLayouts:['lc_open','lc_hot'],
     rooms:{rm_pod:2,rm_foc:4,rm_zoom:2,rm_sm4:2,rm_sm6:2,rm_med8:1,rm_med10:1,rm_lg12:0,rm_lg16:0,rm_brd:0,rm_trn:1,rm_evt:0,rm_clb:2,rm_lib:0},
-    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_sl','a_ss','a_wm']}
+    amenities:['a_rd','a_rv','a_cf','a_cc','a_cs','a_sl','a_ss','a_wm'],
+    notes:{rm_trn:'Non-negotiable — agent onboarding requires dedicated training capability.'}},
+  telecom:   {label:'Telecom',                   rsfPerSeat:200, rsfPerSeatSat:165, rsfRange:[175,225], rsfRangeSat:[145,180], circAdj:1, wsSFAdj:1.00,
+    recLayouts:['lc_mixed','lc_open'],
+    rooms:{rm_pod:6,rm_foc:8,rm_zoom:4,rm_sm4:3,rm_sm6:4,rm_med8:3,rm_med10:2,rm_lg12:2,rm_lg16:1,rm_brd:1,rm_trn:1,rm_evt:1,rm_clb:3,rm_lib:1},
+    amenities:['a_rd','a_rv','a_rb','a_cf','a_cc','a_cs','a_cb','a_sl','a_ss','a_si','a_sv','a_wm','a_wp','a_sh','a_sp'],
+    notes:{rm_lg12:'B2B partner meetings and RFP responses drive heavy large-room demand.'}}
 };
+
+/* Get the active RSF benchmark for the current officeType */
+function getActiveRsfPerSeat() {
+  if (!currentInd) return 0;
+  return officeType === 'satellite' && currentInd.rsfPerSeatSat ? currentInd.rsfPerSeatSat : currentInd.rsfPerSeat;
+}
+function getActiveRsfRange() {
+  if (!currentInd) return null;
+  return officeType === 'satellite' && currentInd.rsfRangeSat ? currentInd.rsfRangeSat : currentInd.rsfRange;
+}
+
+/* Sharing ratio defaults — % of staff using shared/unassigned desks.
+   Indexed by industry × HC tier (tiny=<30, sm=30–100, md=100–200, lg=200–500, xl=500+) */
+var SHARED_BY_INDUSTRY_HC = {
+  law:       {tiny:0,  sm:5,  md:5,  lg:10, xl:15},
+  services:  {tiny:5,  sm:15, md:25, lg:30, xl:35},
+  tech:      {tiny:10, sm:20, md:25, lg:30, xl:35},
+  sales:     {tiny:5,  sm:10, md:20, lg:25, xl:30},
+  callcenter:{tiny:0,  sm:5,  md:10, lg:10, xl:15},
+  telecom:   {tiny:10, sm:15, md:20, lg:25, xl:30}
+};
+
+function hcTier(hc) {
+  if (hc < 30)  return 'tiny';
+  if (hc < 100) return 'sm';
+  if (hc < 200) return 'md';
+  if (hc < 500) return 'lg';
+  return 'xl';
+}
+
+/* Room scaling categories — drives applyIndustry sub-linear scaling at extremes.
+   linear  = scale 1:1 with HC (small/everyday rooms)
+   mid     = sqrt-style growth (medium/large conf)
+   fixed   = floor of 1, capped near 2–3 even at large HC (boardrooms, training, event)  */
+var ROOM_SCALING = {
+  rm_pod:'linear', rm_foc:'linear', rm_zoom:'linear', rm_sm4:'linear', rm_sm6:'linear',
+  rm_med8:'linear', rm_clb:'linear',
+  rm_med10:'mid', rm_lg12:'mid', rm_lg16:'mid',
+  rm_brd:'fixed', rm_trn:'fixed', rm_evt:'fixed', rm_lib:'fixed'
+};
+
+/* Amenities removed when officeType=satellite */
+var SATELLITE_REMOVE_AMEN = ['a_rb','a_st','a_sh'];
+var SATELLITE_REMOVE_ROOMS = ['rm_evt'];  /* counts zeroed out */
+var SATELLITE_ROOM_MULT = 0.85;
 
 /* Circulation base by layout — workplace strategy benchmarks:
    Enclosed private offices: 22% (predictable corridors, limited open circulation)
@@ -845,11 +964,14 @@ var daysInOffice  = 3;
 var layoutSF      = 95;
 var currentLcId   = 'lc_mixed';
 var currentInd    = null;
+var currentIndKey = null;
+var officeType    = 'hq';   /* 'hq' or 'satellite' */
 var sharedPct     = 30;
 var circPct       = 28;  /* set dynamically when layout/industry change */
 var lossPct       = 15;
 var userOverrodeWS = false;  /* true when user manually edits office/workstation counts */
 var userOverrodeCirc = false;
+var userOverrodeShared = false;  /* true once user clicks the shared % stepper */
 
 /* ─── DAYS STEPPER ───────────────────────────────────── */
 function stepDays(d) {
@@ -864,6 +986,7 @@ function stepDays(d) {
 
 /* ─── SHARED % STEPPER ───────────────────────────────── */
 function stepShared(d) {
+  userOverrodeShared = true;
   sharedPct = Math.min(100, Math.max(0, sharedPct + d));
   document.getElementById('sharedPctDisplay').textContent = sharedPct + '%';
   recalc();
@@ -907,8 +1030,28 @@ function selectLayout(el) {
   layoutSF    = parseFloat(el.getAttribute('data-sf')) || 95;
   currentLcId = el.getAttribute('id') || 'lc_mixed';
   updateCirc();
+  updateLayoutWarning();
   recalcWSSuggestion();
   recalc();
+}
+
+/* ─── 8.8 LAYOUT-INDUSTRY COMPATIBILITY WARNING ──────── */
+function updateLayoutWarning() {
+  var warn = document.getElementById('layoutWarn');
+  var txt  = document.getElementById('layoutWarnText');
+  if (!warn || !txt || !currentInd) {
+    if (warn) warn.style.display = 'none';
+    return;
+  }
+  var rec = currentInd.recLayouts || [];
+  if (rec.indexOf(currentLcId) === -1) {
+    var labels = {lc_trad:'Traditional', lc_mixed:'Mixed', lc_open:'Mostly Open Plan', lc_hot:'Activity-Based'};
+    var recNames = rec.map(function(r){ return labels[r] || r; }).join(' or ');
+    txt.innerHTML = 'Most ' + currentInd.label.toLowerCase() + ' programs select <strong>' + recNames + '</strong>. Verify your layout choice or expect deviations from industry benchmark RSF/seat.';
+    warn.style.display = 'flex';
+  } else {
+    warn.style.display = 'none';
+  }
 }
 
 /* ─── WS SUGGESTION ──────────────────────────────────── */
@@ -981,51 +1124,134 @@ function toggleAmen(el) {
   recalc();
 }
 
+/* ─── ROOM SCALING (piecewise) ───────────────────────── */
+/* Replaces naive Math.round(bench * scale). Prevents zeroing out boardrooms
+   at low HC and stops fixed-room counts from exploding at very high HC.    */
+function scaleRoom(rid, bench, hc) {
+  if (bench <= 0 || hc <= 0) return 0;
+  var category = ROOM_SCALING[rid] || 'linear';
+  var scale = hc / 100;
+  if (category === 'linear') {
+    return Math.max(0, Math.round(bench * scale));
+  }
+  if (category === 'mid') {
+    /* sqrt-style growth: ~half rate above HC=100, slower below */
+    var s = Math.sqrt(scale);
+    return Math.max(0, Math.round(bench * s));
+  }
+  /* fixed: floor of bench, soft cap. e.g. bench=1: 1 until HC=300, then 2; cap at 3.
+     bench=2: 2 until HC=300, 3 at 500, cap at 4. */
+  var floor = bench;
+  var extra = Math.floor(Math.max(0, hc - 200) / 300);
+  return Math.min(bench + 3, floor + extra);
+}
+
+/* ─── OFFICE TYPE TOGGLE ─────────────────────────────── */
+function setOfficeType(t) {
+  officeType = t;
+  document.getElementById('oftHQ').className  = 'oft-btn' + (t === 'hq' ? ' oft-sel' : '');
+  document.getElementById('oftSat').className = 'oft-btn' + (t === 'satellite' ? ' oft-sel' : '');
+  if (currentIndKey) applyIndustry(currentIndKey);
+  else recalc();
+}
+
 /* ─── APPLY INDUSTRY ─────────────────────────────────── */
 function applyIndustry(key) {
+  currentIndKey = key || null;
   currentInd = key ? IND[key] : null;
-  if (!currentInd) return;
+  if (!currentInd) {
+    document.getElementById('oftWrap').style.display = 'none';
+    return;
+  }
+  document.getElementById('oftWrap').style.display = 'block';
   var hc = parseFloat(document.getElementById('hcYr3').value) || 100;
-  var scale = hc / 100;
+  var tier = hcTier(hc);
+
+  /* 8.3 — Industry-aware sharing ratio default */
+  if (!userOverrodeShared) {
+    var sharedTbl = SHARED_BY_INDUSTRY_HC[key];
+    if (sharedTbl) {
+      sharedPct = sharedTbl[tier];
+      var spDisp = document.getElementById('sharedPctDisplay');
+      if (spDisp) spDisp.textContent = sharedPct + '%';
+    }
+  }
+
+  /* 8.5 — HC tier floor rules */
   var minRooms = {rm_pod:1, rm_foc:1, rm_sm6:1};
+  if (hc >= 100 && key !== 'callcenter') minRooms.rm_brd = 1;
+  if (hc >= 200) minRooms.rm_trn = Math.max(minRooms.rm_trn || 0, 1);
+
+  /* 8.4 — Piecewise scaling instead of naive linear */
+  var satMult = (officeType === 'satellite') ? SATELLITE_ROOM_MULT : 1.0;
+  var satRoomZero = {};
+  if (officeType === 'satellite') {
+    for (var sri = 0; sri < SATELLITE_REMOVE_ROOMS.length; sri++) satRoomZero[SATELLITE_REMOVE_ROOMS[sri]] = true;
+  }
+
   for (var rid in currentInd.rooms) {
     var bench = currentInd.rooms[rid];
     var qty;
-    if (bench === 0) { qty = 0; }
-    else {
-      qty = Math.max(0, Math.round(bench * scale));
-      if (hc < 30 && minRooms[rid]) qty = Math.max(minRooms[rid], qty);
+    if (satRoomZero[rid]) {
+      qty = 0;
+    } else {
+      qty = scaleRoom(rid, bench, hc);
+      qty = Math.max(0, Math.round(qty * satMult));
+      if (minRooms[rid]) qty = Math.max(minRooms[rid], qty);
     }
     var el = document.getElementById('sv_' + rid);
     if (el) { el.textContent = qty; document.getElementById('rc_' + rid).className = 'room-card' + (qty > 0 ? ' has-val' : ''); }
     var bench_el = document.getElementById('bench_' + rid);
     if (bench_el) { bench_el.textContent = bench > 0 ? 'Benchmark: ' + qty : ''; bench_el.className = 'rc-bench' + (bench > 0 && qty > 0 ? ' on' : ''); }
+    /* 8.10 — render industry-specific note when present */
+    var noteEl = document.getElementById('rcnote_' + rid);
+    if (noteEl) {
+      var note = (currentInd.notes && currentInd.notes[rid]) ? currentInd.notes[rid] : '';
+      noteEl.textContent = note;
+      noteEl.style.display = note ? 'block' : 'none';
+    }
   }
+
+  /* Amenities — clear all, apply benchmark, then strip satellite-removed,
+     and add HC≥50 a_wm floor rule */
   var allItems = document.querySelectorAll('.amen-item');
   for (var ai=0; ai<allItems.length; ai++) allItems[ai].classList.remove('sel');
+  var satRemoveAmen = {};
+  if (officeType === 'satellite') {
+    for (var sai = 0; sai < SATELLITE_REMOVE_AMEN.length; sai++) satRemoveAmen[SATELLITE_REMOVE_AMEN[sai]] = true;
+  }
   for (var bi=0; bi<currentInd.amenities.length; bi++) {
-    var aEl = document.getElementById('ai_' + currentInd.amenities[bi]);
+    var amenId = currentInd.amenities[bi];
+    if (satRemoveAmen[amenId]) continue;
+    var aEl = document.getElementById('ai_' + amenId);
     if (aEl) aEl.classList.add('sel');
   }
+  /* HC ≥ 50 → require a_wm (mothers room) */
+  if (hc >= 50) {
+    var wmEl = document.getElementById('ai_a_wm');
+    if (wmEl) wmEl.classList.add('sel');
+  }
+
   document.getElementById('indBadge').className = 'ind-badge on';
-  document.getElementById('indBadgeName').textContent = currentInd.label;
-  document.getElementById('indBadgeRSF').textContent  = currentInd.rsfPerSeat;
+  document.getElementById('indBadgeName').textContent = currentInd.label + (officeType === 'satellite' ? ' · Satellite' : '');
+  document.getElementById('indBadgeRSF').textContent  = getActiveRsfPerSeat();
   document.getElementById('benchNoteRooms').className  = 'bench-note on';
   document.getElementById('benchNoteInd').textContent  = currentInd.label;
   document.getElementById('benchNoteAmen').className   = 'bench-note on';
   document.getElementById('benchNoteInd2').textContent = currentInd.label;
   document.getElementById('sbIndBox').className = 'sb-ind-box on';
-  document.getElementById('sbIndVal').textContent = currentInd.label + ' \u00b7 ' + currentInd.rsfPerSeat + ' RSF/seat';
+  document.getElementById('sbIndVal').textContent = currentInd.label + (officeType === 'satellite' ? ' (Satellite)' : '') + ' \u00b7 ' + getActiveRsfPerSeat() + ' RSF/seat';
   document.getElementById('indSel2').value = key;
   /* Update circulation for new industry */
   updateCirc();
+  updateLayoutWarning();
   recalcWSSuggestion();
   recalc();
 }
 
 function reapplyBenchmarks() {
-  if (!currentInd) return;
-  applyIndustry(document.getElementById('indSel').value);
+  if (!currentIndKey) return;
+  applyIndustry(currentIndKey);
 }
 
 /* ─── RECALC ─────────────────────────────────────────── */
@@ -1042,17 +1268,20 @@ function recalc() {
   var totalDesks     = assignedDesks + hotelingDesks;
   updateDeskNote(hc3, assignedDesks, hotelingDesks, totalDesks);
 
-  /* Workspace SF — use user-entered values if overridden, else auto-compute */
+  /* Workspace SF — use user-entered values if overridden, else auto-compute.
+     8.7 — apply industry-typical workstation SF adjustment when industry selected */
+  var wsAdj = (currentInd && currentInd.wsSFAdj) ? currentInd.wsSFAdj : 1.0;
+  var effLayoutSF = Math.round(layoutSF * wsAdj);
   var numOffices, numWS, wsSF = 0;
   if (userOverrodeWS) {
     numOffices = parseFloat(document.getElementById('numOffices').value) || 0;
     numWS      = parseFloat(document.getElementById('numWorkstations').value) || 0;
-    wsSF = Math.round(numOffices * 140 + numWS * layoutSF);
+    wsSF = Math.round(numOffices * 140 + numWS * effLayoutSF);
   } else {
     var officePct  = LAYOUT_OFFICE_PCT[currentLcId] || 0.25;
     numOffices = totalDesks > 0 ? Math.round(totalDesks * officePct) : 0;
     numWS      = totalDesks > 0 ? totalDesks - numOffices : 0;
-    wsSF       = Math.round(numOffices * 140 + numWS * layoutSF);
+    wsSF       = Math.round(numOffices * 140 + numWS * effLayoutSF);
     var offEl = document.getElementById('numOffices');
     var wsEl  = document.getElementById('numWorkstations');
     if (offEl) offEl.value = numOffices || '';
@@ -1092,15 +1321,30 @@ function recalc() {
   document.getElementById('sbNum').textContent = rentable > 0 ? rentable.toLocaleString() : '\u2014';
   if (rentable > 0 && hc3 > 0) {
     var rnd = rentable > 5000 ? 100 : 50;
-    var lo  = Math.round(rentable * 0.92 / rnd) * rnd;
-    var hi  = Math.round(rentable * 1.08 / rnd) * rnd;
+    var lo, hi;
+    /* 8.9 — industry-aware confidence band:
+       use industry RSF/seat range × actual seat count when industry selected,
+       else fall back to ±8% on rentable */
+    var activeRange = getActiveRsfRange();
+    if (currentInd && activeRange && totalDesks > 0) {
+      var seatBase = totalDesks;
+      lo = Math.round(activeRange[0] * seatBase / rnd) * rnd;
+      hi = Math.round(activeRange[1] * seatBase / rnd) * rnd;
+      /* If user's program is outside the industry band, widen to include it */
+      if (rentable < lo) lo = Math.round(rentable * 0.95 / rnd) * rnd;
+      if (rentable > hi) hi = Math.round(rentable * 1.05 / rnd) * rnd;
+    } else {
+      lo = Math.round(rentable * 0.92 / rnd) * rnd;
+      hi = Math.round(rentable * 1.08 / rnd) * rnd;
+    }
     var rsfPerSeat = totalDesks > 0 ? Math.round(rentable / totalDesks) : Math.round(rentable / hc3);
     var rangeStr = lo.toLocaleString() + ' \u2013 ' + hi.toLocaleString() + ' RSF range';
     rangeStr += '  \u00b7  ' + rsfPerSeat + ' RSF/seat';
     if (totalDesks > 0 && hc3 > 0) rangeStr += '  \u00b7  ' + totalDesks + ' desks / ' + hc3 + ' people';
     document.getElementById('sbRange').textContent = rangeStr;
     if (currentInd) {
-      var diff = rsfPerSeat - currentInd.rsfPerSeat;
+      var activeBench = getActiveRsfPerSeat();
+      var diff = rsfPerSeat - activeBench;
       var sign = diff >= 0 ? '+' : '';
       document.getElementById('sbIndCmp').textContent =
         'Your program: ' + rsfPerSeat + ' RSF/seat (' + sign + diff + ' vs. benchmark)';
@@ -1142,8 +1386,96 @@ function recalc() {
     ? totalDesks + ' desks (' + hc3 + ' people) \u00b7 ' + prog.toLocaleString() + ' USF program'
     : 'Fill in sections above to see your estimate';
 
+  /* 8.6 — Validation warnings (soft flags) */
+  computeValidationWarnings({hc3:hc3, totalDesks:totalDesks, numOffices:numOffices, numWS:numWS,
+                             rsfPerSeat:totalDesks>0?Math.round(rentable/totalDesks):0});
+
   return {wsSF:wsSF,rmSF:rmSF,amSF:amSF,prog:prog,usable:usable,rentable:rentable,
           desks:totalDesks,hc3:hc3,circ:circ,loss:loss,numOffices:numOffices,numWS:numWS};
+}
+
+/* ─── 8.6 VALIDATION WARNINGS ────────────────────────── */
+function computeValidationWarnings(ctx) {
+  var panel = document.getElementById('valPanel');
+  var list  = document.getElementById('valList');
+  if (!panel || !list) return;
+  var warnings = [];
+  var hc3 = ctx.hc3, totalDesks = ctx.totalDesks, numOffices = ctx.numOffices, numWS = ctx.numWS;
+  var totalSeats = (numOffices || 0) + (numWS || 0);
+
+  /* W1 — Sharing 0% combined with hybrid policy ≤3 days */
+  if (sharedPct === 0 && daysInOffice <= 3 && hc3 >= 30) {
+    warnings.push('A <strong>0% shared-desk</strong> assumption combined with a <strong>' + daysInOffice + '-day</strong> hybrid policy will leave 30–40% of desks unused on most days. Consider raising shared-desk % to align with policy.');
+  }
+
+  /* W2 — Sharing 0% with tech/services/telecom (industries that typically share) */
+  if (sharedPct < 10 && currentIndKey && hc3 >= 100 &&
+      (currentIndKey === 'tech' || currentIndKey === 'services' || currentIndKey === 'telecom')) {
+    var sharedTbl = SHARED_BY_INDUSTRY_HC[currentIndKey];
+    var bench = sharedTbl ? sharedTbl[hcTier(hc3)] : 25;
+    warnings.push('Industry benchmark for <strong>' + currentInd.label + '</strong> at this scale is <strong>' + bench + '%</strong> shared desks. You\'re currently at ' + sharedPct + '%. Verify this matches your hybrid strategy.');
+  }
+
+  /* W3 — Mothers room missing at HC ≥ 50 */
+  if (hc3 >= 50) {
+    var wmEl = document.getElementById('ai_a_wm');
+    if (wmEl && !wmEl.classList.contains('sel')) {
+      warnings.push('No <strong>Wellness / Mothers Room</strong> selected. This is required by federal law (PUMP Act) for most workplaces above 50 employees.');
+    }
+  }
+
+  /* W4 — Office percentage vs industry benchmark (±25%) */
+  if (currentInd && totalSeats > 0 && hc3 >= 30) {
+    var officePctActual = (numOffices / totalSeats) * 100;
+    var officePctBench = (LAYOUT_OFFICE_PCT[currentLcId] || 0.25) * 100;
+    /* Compare against industry-typical office % from HC tier; rough lookup */
+    var indOfficeBench = {law:67, services:15, tech:6, sales:20, callcenter:4, telecom:8}[currentIndKey] || officePctBench;
+    var ratio = officePctActual / indOfficeBench;
+    if (ratio > 1.5 && officePctActual - indOfficeBench >= 5) {
+      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> is <strong>~' + indOfficeBench + '%</strong>. Confirm the office count is necessary — every office shifts 40–80 SF off the benchmark per seat.');
+    } else if (ratio < 0.5 && indOfficeBench - officePctActual >= 5) {
+      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> is <strong>~' + indOfficeBench + '%</strong>. Verify executive and partner-level seating needs.');
+    }
+  }
+
+  /* W5 — Phone booth density vs open-plan workstation count */
+  if ((currentLcId === 'lc_open' || currentLcId === 'lc_hot') && numWS >= 20) {
+    var podEl = document.getElementById('sv_rm_pod');
+    var podQty = podEl ? (parseInt(podEl.textContent) || 0) : 0;
+    var benchPods = Math.ceil(numWS / 20);
+    if (podQty < benchPods) {
+      warnings.push('Open-plan layouts need <strong>~1 phone booth per 15–20 workstations</strong>. You have ' + podQty + ' booth(s) for ' + numWS + ' workstations — consider adding ' + (benchPods - podQty) + '.');
+    }
+  }
+
+  /* W6 — Boardroom missing at HC ≥ 100 (except call center) */
+  if (hc3 >= 100 && currentIndKey !== 'callcenter') {
+    var brdEl = document.getElementById('sv_rm_brd');
+    var brdQty = brdEl ? (parseInt(brdEl.textContent) || 0) : 0;
+    if (brdQty === 0) {
+      warnings.push('Programs of <strong>100+ people</strong> typically include at least one boardroom for client and leadership meetings.');
+    }
+  }
+
+  /* W7 — Layout/industry mismatch flagged separately by updateLayoutWarning,
+     but echo here if industry's recLayouts don't include current */
+  if (currentInd && currentInd.recLayouts && currentInd.recLayouts.indexOf(currentLcId) === -1) {
+    var layLbls = {lc_trad:'Traditional', lc_mixed:'Mixed', lc_open:'Mostly Open', lc_hot:'Activity-Based'};
+    warnings.push('Layout selection (<strong>' + (layLbls[currentLcId] || currentLcId) + '</strong>) is uncommon for ' + currentInd.label + '. RSF/seat may deviate from the published benchmark.');
+  }
+
+  /* Render */
+  if (warnings.length === 0) {
+    panel.style.display = 'none';
+    list.innerHTML = '';
+    return;
+  }
+  var html = '';
+  for (var wi = 0; wi < warnings.length; wi++) {
+    html += '<div class="vp-item"><span class="vp-bullet">!</span><span>' + warnings[wi] + '</span></div>';
+  }
+  list.innerHTML = html;
+  panel.style.display = 'block';
 }
 
 /* ─── BUILD ROOM LIST ────────────────────────────────── */
@@ -1159,6 +1491,7 @@ function buildRooms() {
             '<span class="rc-sf">' + r.sf + ' SF \u00b7 ' + r.m + '</span>' +
             '<span class="rc-bench" id="bench_' + r.id + '"></span>' +
           '</div>' +
+          '<div class="rc-note" id="rcnote_' + r.id + '"></div>' +
         '</div>' +
         '<div class="step-ctrl">' +
           '<button type="button" class="step-btn step-minus" data-id="' + r.id + '" data-d="-1" onclick="stepRoomBtn(this)">&#8722;</button>' +
@@ -1293,8 +1626,9 @@ function genReport() {
       email:email, name:cntct, company:cname,
       title:contactTitle, phone:contactPhone, questions:questions,
       rsf:rentable>0?rentable:0, rsfPerSeat:rsfPerSeat,
-      industryLabel:currentInd?currentInd.label:"--",
-      industryBenchmark:currentInd?currentInd.rsfPerSeat:0,
+      industryLabel:currentInd?(currentInd.label + (officeType==='satellite'?' (Satellite)':'')):"--",
+      industryBenchmark:currentInd?getActiveRsfPerSeat():0,
+      officeType:officeType,
       hcNow:document.getElementById("hcNow").value||"--",
       hcYr3:String(hc3||"--"),
       hcYr5:document.getElementById("hcYr5").value||"--",
