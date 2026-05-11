@@ -427,7 +427,7 @@ body{font-family:"DM Sans",sans-serif;background:#fff;color:#051C2C;-webkit-font
         <a href="/tools.html" class="back-link" style="color:rgba(255,255,255,.28);">Tools</a>
         <div class="hero-eyebrow">Space Programming · Free Assessment</div>
         <h1>Find out exactly how much space your organization <em>really</em> needs.</h1>
-        <p class="hero-desc">Calibrated for organizations of <strong>10–300 people</strong> evaluating new space, validating a program, or pressure-testing what an architect or peer has proposed. Benchmarks reflect 2025 sensor-based workplace data from Density.io, JLL, CBRE, and Gensler — not legacy programming standards.</p>
+        <p class="hero-desc">Calibrated for requirements of 10 – 500 people evaluating space needs, validating a program, or pressure-testing what an architect or landlord has proposed. Benchmarks reflect current sensor-based occupancy research and are tested against real transaction experience across industries and markets.</p>
         <a href="#tool-start" class="hero-btn">
           Begin Assessment
           <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -889,7 +889,7 @@ var IND = {
     recLayouts:['lc_trad','lc_mixed'],
     rooms:{rm_pod:3, rm_foc:2, rm_zoom:2, rm_sm4:2, rm_sm6:2, rm_med8:1, rm_med10:1, rm_lg12:1, rm_lg16:0, rm_brd:1, rm_trn:0, rm_evt:0, rm_clb:1, rm_lib:1},
     amenities:['a_rd','a_rv','a_rb','a_cf','a_cc','a_cs','a_sf','a_ss','a_si','a_wm','a_wp'],
-    notes:{rm_lib:'Critical for legal research and quiet drafting work.', rm_brd:'Client-facing — premium finishes, often used for depositions and mediations.', rm_pod:'Lower phone booth density than other industries — partners take calls in private offices.'}},
+    notes:{rm_lib:'Library/quiet room emerges at HC 200+. Below that, a neighborhood of acoustically-treated workstations serves the same purpose with more flexibility.', rm_brd:'Client-facing — premium finishes, often used for depositions and mediations.', rm_pod:'Lower phone booth density than other industries — partners take calls in private offices.'}},
   services:  {label:'Professional Services',     rsfPerSeat:195, rsfPerSeatSat:175, rsfRange:[175,220], rsfRangeSat:[160,195], circAdj:0, wsSFAdj:1.00,
     recLayouts:['lc_mixed','lc_open'],
     rooms:{rm_pod:8, rm_foc:3, rm_zoom:1, rm_sm4:1, rm_sm6:2, rm_med8:1, rm_med10:1, rm_lg12:1, rm_lg16:0, rm_brd:1, rm_trn:0, rm_evt:0, rm_clb:3, rm_lib:0},
@@ -1151,6 +1151,19 @@ function toggleAmen(el) {
 /* ─── ROOM SCALING (piecewise) ───────────────────────── */
 /* Replaces naive Math.round(bench * scale). Prevents zeroing out boardrooms
    at low HC and stops fixed-room counts from exploding at very high HC.    */
+
+/* Peak in-office attendance factor by hybrid policy.
+   Reflects observed Tue–Thu peak: even with assigned desks, not everyone shows
+   on the peak day due to PTO, sick, travel, and informal flex.
+   Used to size phone booths against actual peak demand, not nominal HC. */
+function getPeakAttendanceFactor(days) {
+  if (days >= 5) return 0.95;
+  if (days >= 4) return 0.88;
+  if (days >= 3) return 0.80;
+  if (days >= 2) return 0.65;
+  return 0.50;
+}
+
 function scaleRoom(rid, bench, hc) {
   if (bench <= 0 || hc <= 0) return 0;
   var category = ROOM_SCALING[rid] || 'linear';
@@ -1225,8 +1238,20 @@ function applyIndustry(key) {
     var qty;
     if (satRoomZero[rid]) {
       qty = 0;
+    } else if (rid === 'rm_pod') {
+      /* Phone booths sized against peak in-office attendance, not total HC.
+         Avoids overcounting booths for people who aren't physically present
+         on peak days (Tue–Thu). Industry baseline (bench/100) sets intensity. */
+      var peakAtt = getPeakAttendanceFactor(daysInOffice);
+      var podRatio = bench / 100;
+      qty = Math.ceil(hc * peakAtt * podRatio);
+      qty = Math.max(0, Math.round(qty * satMult));
+      if (minRooms[rid]) qty = Math.max(minRooms[rid], qty);
     } else {
       qty = scaleRoom(rid, bench, hc);
+      /* Library: dedicated quiet room only emerges at HC≥200. Below that,
+         a neighborhood of quiet workstations does the same work with more flex. */
+      if (rid === 'rm_lib' && hc < 200) qty = 0;
       qty = Math.max(0, Math.round(qty * satMult));
       if (minRooms[rid]) qty = Math.max(minRooms[rid], qty);
     }
@@ -1309,7 +1334,16 @@ function recalc() {
     numWS      = parseFloat(document.getElementById('numWorkstations').value) || 0;
     wsSF = Math.round(numOffices * 140 + numWS * effLayoutSF);
   } else {
-    var officePct  = LAYOUT_OFFICE_PCT[currentLcId] || 0.25;
+    /* Office split — use industry × HC tier % when industry is selected.
+       OFFICE_PCT_BY_INDUSTRY_HC reflects that smaller HQs have higher exec
+       density (you can't fractionalize a CEO). Falls back to layout % when
+       no industry is selected so the tool still works without one. */
+    var officePct;
+    if (currentIndKey && OFFICE_PCT_BY_INDUSTRY_HC[currentIndKey]) {
+      officePct = (OFFICE_PCT_BY_INDUSTRY_HC[currentIndKey][hcTier(hc3)] || 15) / 100;
+    } else {
+      officePct = LAYOUT_OFFICE_PCT[currentLcId] || 0.25;
+    }
     numOffices = totalDesks > 0 ? Math.round(totalDesks * officePct) : 0;
     numWS      = totalDesks > 0 ? totalDesks - numOffices : 0;
     wsSF       = Math.round(numOffices * 140 + numWS * effLayoutSF);
@@ -1457,26 +1491,34 @@ function computeValidationWarnings(ctx) {
 
   /* W4 — Office percentage vs industry × HC tier benchmark
      Uses OFFICE_PCT_BY_INDUSTRY_HC which reflects that smaller HQs structurally
-     have higher exec-to-staff ratios. The 8% benchmark only applies at HC≥500. */
+     have higher exec-to-staff ratios. The 8% benchmark only applies at HC≥500.
+     If offices are above benchmark, surface the office-as-flex-resource insight. */
   if (currentInd && totalSeats > 0 && hc3 >= 30) {
     var officePctActual = (numOffices / totalSeats) * 100;
     var indOfficeTbl = OFFICE_PCT_BY_INDUSTRY_HC[currentIndKey];
     var indOfficeBench = indOfficeTbl ? indOfficeTbl[hcTier(hc3)] : (LAYOUT_OFFICE_PCT[currentLcId] || 0.25) * 100;
     var diffPts = officePctActual - indOfficeBench;
     if (diffPts >= 8 && officePctActual / indOfficeBench >= 1.4) {
-      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> at HC ' + hcTier(hc3).toUpperCase() + ' tier is <strong>~' + indOfficeBench + '%</strong>. The conversation to have with leadership: who specifically gets each office? If the org chart justifies the count, it holds. If you\'re extending offices below VP, that\'s where the trim opportunity sits.');
+      var excessOffices = Math.max(0, numOffices - Math.round(totalSeats * indOfficeBench / 100));
+      warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> at this HC tier is <strong>~' + indOfficeBench + '%</strong>. The right conversation: walk the org chart and confirm who specifically gets each office. <strong>Strategic note:</strong> each of the ~' + excessOffices + ' offices above benchmark is a flex resource. A 140 SF private office converts directly into a 4–6 person huddle room at zero net SF cost. If your meeting room count is also light, trimming offices through the VP layer solves both problems.');
     } else if (diffPts <= -8 && indOfficeBench / Math.max(1, officePctActual) >= 1.5) {
       warnings.push('Your private office mix is <strong>' + Math.round(officePctActual) + '%</strong>; benchmark for <strong>' + currentInd.label + '</strong> at this HC tier is <strong>~' + indOfficeBench + '%</strong>. Below-benchmark office counts can work, but verify executive and senior-leader seating preferences before locking the program — adjusting later is expensive.');
     }
   }
 
-  /* W5 — Phone booth density vs total in-office headcount (Density.io / industry standard 1:10–15)
-     Phone booths are the cheapest, highest-leverage program element in modern hybrid offices. */
+  /* W5 — Phone booth density vs peak in-office attendance.
+     Sized against actual peak demand (Tue–Thu), not nominal HC. Density.io sensor
+     data shows half of all meeting room time is occupied by one person on a call —
+     phone booths protect conference rooms from solo-call cannibalization. */
   var podEl = document.getElementById('sv_rm_pod');
   var podQty = podEl ? (parseInt(podEl.textContent) || 0) : 0;
-  if (hc3 >= 20 && podQty < Math.floor(hc3 / 15)) {
-    var targetPods = Math.ceil(hc3 / 12);
-    warnings.push('Phone booth count of <strong>' + podQty + '</strong> is below the modern hybrid benchmark of <strong>1 per 10–15 in-office staff</strong>. At your HC, target <strong>' + targetPods + ' phone booths</strong>. Density.io sensor data shows half of all meeting room time is occupied by one person on a video call — phone booths prevent solo-call cannibalization of your conference rooms.');
+  if (hc3 >= 20) {
+    var peakInOffice = Math.round(hc3 * getPeakAttendanceFactor(daysInOffice));
+    var targetPodsLow = Math.ceil(peakInOffice / 15);
+    var targetPodsHigh = Math.ceil(peakInOffice / 10);
+    if (podQty < targetPodsLow) {
+      warnings.push('Phone booth count of <strong>' + podQty + '</strong> is below the modern hybrid benchmark. At your peak in-office population of ~<strong>' + peakInOffice + '</strong> people (' + daysInOffice + '-day policy), target <strong>' + targetPodsLow + '–' + targetPodsHigh + ' phone booths</strong> (1 per 10–15 in-office staff). Without them, every conference room becomes a solo-call booth.');
+    }
   }
 
   /* W6 — Boardroom missing at HC ≥ 100 (except call center) */
