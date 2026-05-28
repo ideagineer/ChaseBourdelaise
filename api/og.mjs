@@ -1,17 +1,9 @@
-// api/og.js  ← must be .js, not .jsx
+// api/og.mjs
 // Vercel Edge Function — dynamic OG image for any article.
-// Uses React.createElement instead of JSX so no build step is required.
-//
-// PARAMS
-//   eyebrow   Category label          e.g. "Tenant Advisory · Field Guide"
-//   tl        White headline line(s)  repeat for each line
-//   tlg       Gold final headline line (optional)
-//   title     Fallback if no tl params
-//   s         Stat tiles              "value|label"  (max 3)
-//   c         Right-panel checklist   "Title|Subtitle"  (max 8)
-//   a         Also-covers items       plain text  (max 6)
+// Uses React.createElement (no JSX, no build step needed).
 
 import { ImageResponse } from '@vercel/og';
+import React from 'react';
 
 export const config = { runtime: 'edge' };
 
@@ -25,7 +17,7 @@ const LITXT = '#A5B9C8';
 const LINK  = '#466074';
 const DIM   = '#0E2030';
 
-const e = (type, props, ...children) => ({ type, props: { ...props, children: children.length === 1 ? children[0] : children.length ? children : undefined } });
+const h = React.createElement;
 
 async function loadFont(family, weight) {
   try {
@@ -42,7 +34,7 @@ async function loadFont(family, weight) {
 export default async function handler(req) {
   const { searchParams } = new URL(req.url);
 
-  const eyebrow   = searchParams.get('eyebrow') || 'Chase Bourdelaise';
+  const eyebrow    = searchParams.get('eyebrow') || 'Chase Bourdelaise';
   const titleLines = searchParams.getAll('tl');
   const titleGold  = searchParams.get('tlg') || '';
   const fallback   = searchParams.get('title') || 'Chase Bourdelaise · Insights';
@@ -69,114 +61,102 @@ export default async function handler(req) {
 
   const RP = 730;
 
-  // ── helper: div with display:flex ──────────────────────────────────────────
-  const div = (style, ...kids) => ({
-    type: 'div',
-    props: { style: { display: 'flex', ...style }, children: kids.filter(Boolean) }
-  });
+  const image = h('div', {
+    style: { display: 'flex', width: 1200, height: 630, background: NAVY, fontFamily: sans }
+  },
 
-  const span = (style, text) => ({
-    type: 'div', // satori uses div for text nodes too
-    props: { style, children: text }
-  });
-
-  // ── Stat tiles ──────────────────────────────────────────────────────────────
-  const statTiles = stats.length > 0
-    ? div({ gap: 6, marginBottom: 20 },
-        ...stats.map((s, i) =>
-          div({ flexDirection: 'column', flex: 1, background: RULE, borderLeft: `3px solid ${GOLD}`, padding: '10px 14px', marginRight: i < stats.length - 1 ? 6 : 0 },
-            span({ fontFamily: serif, fontWeight: 700, fontSize: 28, color: WHITE, lineHeight: 1 }, s.val),
-            span({ fontSize: 11, color: MUTED, marginTop: 8, lineHeight: 1.5 }, s.label)
-          )
-        )
-      )
-    : null;
-
-  // ── Also covers ─────────────────────────────────────────────────────────────
-  const alsoCovers = also.length > 0
-    ? div({ flexDirection: 'column' },
-        span({ fontSize: 10, color: MUTED, letterSpacing: '1.5px', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 }, 'ALSO COVERS:'),
-        div({ gap: 0 },
-          div({ flexDirection: 'column', flex: 1 },
-            ...also.slice(0, Math.ceil(also.length / 2)).map(t =>
-              span({ color: LITXT, fontSize: 12, marginBottom: 8 }, `→  ${t}`)
-            )
-          ),
-          div({ flexDirection: 'column', flex: 1 },
-            ...also.slice(Math.ceil(also.length / 2)).map(t =>
-              span({ color: LITXT, fontSize: 12, marginBottom: 8 }, `→  ${t}`)
-            )
-          )
-        )
-      )
-    : null;
-
-  // ── Headline lines ───────────────────────────────────────────────────────────
-  const headlineBlock = div({ flexDirection: 'column', marginBottom: 18 },
-    ...(titleLines.length > 0
-      ? [
-          ...titleLines.map(line =>
-            span({ fontFamily: serif, fontWeight: 700, fontSize: 54, lineHeight: 1.05, color: WHITE, letterSpacing: '-1px' }, line)
-          ),
-          titleGold
-            ? span({ fontFamily: serif, fontWeight: 700, fontSize: 48, lineHeight: 1.05, color: GOLD, letterSpacing: '-1px' }, titleGold)
-            : null,
-        ]
-      : [span({ fontFamily: serif, fontWeight: 700, fontSize: 52, lineHeight: 1.1, color: WHITE, letterSpacing: '-1px', maxWidth: 620 }, fallback)]
-    ).filter(Boolean)
-  );
-
-  // ── Checklist items ──────────────────────────────────────────────────────────
-  const checklistItems = checklist.map((item, i) =>
-    div({
-      alignItems: 'flex-start',
-      paddingBottom: 10,
-      marginBottom: 10,
-      borderBottom: i < checklist.length - 1 ? `1px solid ${DIM}` : 'none',
+    // ── LEFT PANEL ──────────────────────────────────────────────────────────
+    h('div', {
+      style: { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: RP, height: 630, padding: '50px 52px 44px' }
     },
-      div({ width: 10, height: 10, background: GOLD, marginTop: 4, marginRight: 14, flexShrink: 0 }),
-      div({ flexDirection: 'column' },
-        span({ color: WHITE, fontSize: 13, fontWeight: 500 }, item.title),
-        span({ color: MUTED, fontSize: 11, marginTop: 2 }, item.sub)
-      )
-    )
-  );
 
-  // ── Full layout ──────────────────────────────────────────────────────────────
-  const tree = div({ width: 1200, height: 630, background: NAVY, fontFamily: sans },
+      // Top content block
+      h('div', { style: { display: 'flex', flexDirection: 'column' } },
 
-    // LEFT PANEL
-    div({ flexDirection: 'column', justifyContent: 'space-between', width: RP, height: 630, padding: '50px 52px 44px' },
-
-      div({ flexDirection: 'column' },
         // Eyebrow
-        div({ alignItems: 'center', marginBottom: 24 },
-          div({ width: 28, height: 1, background: GOLD, marginRight: 14 }),
-          span({ color: GOLD, fontSize: 12, letterSpacing: '2.5px', textTransform: 'uppercase' }, eyebrow)
+        h('div', { style: { display: 'flex', alignItems: 'center', marginBottom: 24 } },
+          h('div', { style: { width: 28, height: 1, background: GOLD, marginRight: 14 } }),
+          h('div', { style: { color: GOLD, fontSize: 12, letterSpacing: '2.5px', textTransform: 'uppercase' } }, eyebrow)
         ),
-        headlineBlock,
-        div({ width: '100%', height: 1, background: RULE, marginBottom: 16 }),
-        statTiles,
-        alsoCovers,
+
+        // Headline
+        h('div', { style: { display: 'flex', flexDirection: 'column', marginBottom: 18 } },
+          ...(titleLines.length > 0
+            ? [
+                ...titleLines.map((line, i) =>
+                  h('div', { key: i, style: { fontFamily: serif, fontWeight: 700, fontSize: 54, lineHeight: 1.05, color: WHITE, letterSpacing: '-1px' } }, line)
+                ),
+                titleGold && h('div', { style: { fontFamily: serif, fontWeight: 700, fontSize: 48, lineHeight: 1.05, color: GOLD, letterSpacing: '-1px' } }, titleGold),
+              ].filter(Boolean)
+            : [h('div', { style: { fontFamily: serif, fontWeight: 700, fontSize: 52, lineHeight: 1.1, color: WHITE, letterSpacing: '-1px', maxWidth: 620 } }, fallback)]
+          )
+        ),
+
+        // Rule
+        h('div', { style: { width: '100%', height: 1, background: RULE, marginBottom: 16 } }),
+
+        // Stat tiles
+        stats.length > 0 && h('div', { style: { display: 'flex', marginBottom: 20 } },
+          ...stats.map((s, i) =>
+            h('div', { key: i, style: { display: 'flex', flexDirection: 'column', flex: 1, background: RULE, borderLeft: `3px solid ${GOLD}`, padding: '10px 14px', marginRight: i < stats.length - 1 ? 6 : 0 } },
+              h('div', { style: { fontFamily: serif, fontWeight: 700, fontSize: 28, color: WHITE, lineHeight: 1 } }, s.val),
+              h('div', { style: { fontSize: 11, color: MUTED, marginTop: 8, lineHeight: 1.5 } }, s.label)
+            )
+          )
+        ),
+
+        // Also covers
+        also.length > 0 && h('div', { style: { display: 'flex', flexDirection: 'column' } },
+          h('div', { style: { fontSize: 10, color: MUTED, letterSpacing: '1.5px', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 } }, 'ALSO COVERS:'),
+          h('div', { style: { display: 'flex' } },
+            h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1 } },
+              ...also.slice(0, Math.ceil(also.length / 2)).map((t, i) =>
+                h('div', { key: i, style: { color: LITXT, fontSize: 12, marginBottom: 8 } }, `→  ${t}`)
+              )
+            ),
+            h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1 } },
+              ...also.slice(Math.ceil(also.length / 2)).map((t, i) =>
+                h('div', { key: i, style: { color: LITXT, fontSize: 12, marginBottom: 8 } }, `→  ${t}`)
+              )
+            )
+          )
+        ),
+
       ),
 
       // Footer
-      div({ flexDirection: 'column' },
-        div({ width: '100%', height: 1, background: RULE, marginBottom: 12 }),
-        span({ color: LINK, fontSize: 12 }, 'chasebourdelaise.com')
+      h('div', { style: { display: 'flex', flexDirection: 'column' } },
+        h('div', { style: { width: '100%', height: 1, background: RULE, marginBottom: 12 } }),
+        h('div', { style: { color: LINK, fontSize: 12 } }, 'chasebourdelaise.com')
       )
     ),
 
-    // RIGHT PANEL
-    div({ flexDirection: 'column', width: 1200 - RP, height: 630, background: DARK2, borderLeft: `1px solid ${RULE}`, padding: '44px 28px 28px' },
-      span({ color: GOLD, fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 500, marginBottom: 14 }, 'INSIDE THIS GUIDE'),
-      div({ width: '100%', height: 1, background: RULE, marginBottom: 12 }),
-      div({ flexDirection: 'column', flex: 1 }, ...checklistItems),
-      div({ background: GOLD, padding: '12px 20px', justifyContent: 'center', marginTop: 8 },
-        span({ color: NAVY, fontSize: 14, fontWeight: 700 }, 'Read the full guide  →')
+    // ── RIGHT PANEL ──────────────────────────────────────────────────────────
+    h('div', {
+      style: { display: 'flex', flexDirection: 'column', width: 1200 - RP, height: 630, background: DARK2, borderLeft: `1px solid ${RULE}`, padding: '44px 28px 28px' }
+    },
+      h('div', { style: { color: GOLD, fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 500, marginBottom: 14 } }, 'INSIDE THIS GUIDE'),
+      h('div', { style: { width: '100%', height: 1, background: RULE, marginBottom: 12 } }),
+
+      // Checklist
+      h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1 } },
+        ...checklist.map((item, i) =>
+          h('div', { key: i, style: { display: 'flex', alignItems: 'flex-start', paddingBottom: 10, marginBottom: 10, borderBottom: i < checklist.length - 1 ? `1px solid ${DIM}` : 'none' } },
+            h('div', { style: { width: 10, height: 10, background: GOLD, marginTop: 4, marginRight: 14, flexShrink: 0 } }),
+            h('div', { style: { display: 'flex', flexDirection: 'column' } },
+              h('div', { style: { color: WHITE, fontSize: 13, fontWeight: 500 } }, item.title),
+              h('div', { style: { color: MUTED, fontSize: 11, marginTop: 2 } }, item.sub)
+            )
+          )
+        )
+      ),
+
+      // CTA
+      h('div', { style: { display: 'flex', background: GOLD, padding: '12px 20px', justifyContent: 'center', marginTop: 8 } },
+        h('div', { style: { color: NAVY, fontSize: 14, fontWeight: 700 } }, 'Read the full guide  →')
       )
     )
   );
 
-  return new ImageResponse(tree, { width: 1200, height: 630, fonts });
+  return new ImageResponse(image, { width: 1200, height: 630, fonts });
 }
