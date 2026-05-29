@@ -200,14 +200,163 @@ module.exports = async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-// ── Facilities Move Checklist branch ──────────────────────────────────────
+  // ── Facilities Move Checklist branch ──────────────────────────────────────
   const resourceType = (req.body || {}).resourceType;
-  if (resourceType === 'facilities-move-checklist') {
+  if (resourceType === "facilities-move-checklist") {
     const to        = (req.body || {}).to || (req.body || {}).email;
-    const firstName = (req.body || {}).firstName || 'there';
-    const company   = (req.body || {}).company || '';
-    const role      = (req.body || {}).role || '';
-    if (!to) return res.status(400).json({ error: 'Missing email' });
+    const firstName = (req.body || {}).firstName || "there";
+    const co        = (req.body || {}).company || "";
+    if (!to) return res.status(400).json({ error: "Missing email" });
+
+    const phases = [
+      { num:"01", title:"Needs Assessment & Authorization", weeks:"Weeks 1–3", color:"#2251FF", items:[
+        ["Receive Formal Space Request","Written request from BU head — headcount (current + 18-mo projection), function type, target market, hard open date"],
+        ["Headcount & Density Analysis","Confirm seats-per-person ratio (150–250 USF/person); determine hybrid vs. full-time occupancy model before sizing"],
+        ["Special Use Requirements","Identify non-standard needs: server/MDF room, training room, lab, warehouse, showroom, loading dock, generator"],
+        ["Parking Requirement","Confirm ratio needed; check if fleet vehicles require covered or secured parking"],
+        ["Hard Date vs. Target Date","Establish lease commencement deadline and move-in deadline separately; work backward to confirm feasibility"],
+        ["Preliminary Budget","TI allowance target, base rent ceiling ($/RSF), capex budget for FF&E/IT — get CFO buy-in before broker engagement"],
+        ["Lease vs. Own Analysis","Quick NPV comparison if ownership is on the table; typically lease wins for non-HQ locations"],
+        ["Executive Authorization","Signed approval memo from CFO/COO; defines budget authority and approval thresholds"],
+        ["Engage Tenant Rep Broker","Execute broker representation agreement; confirm exclusivity, market, and commission structure"],
+      ]},
+      { num:"02", title:"Site Search & Selection", weeks:"Weeks 3–8", color:"#1a8a5e", items:[
+        ["Market Survey Issued","Broker pulls all availabilities matching program; target 8–15 options first pass"],
+        ["Preliminary Tour","Tour top 6–8 with internal stakeholder (ops lead, IT rep); score each"],
+        ["Scoring Matrix","Rate each option: location, building class, floor plate efficiency, parking, HVAC, TI allowance, rent, LL financial strength"],
+        ["Confirm Building Infrastructure","For each shortlist: fiber in building, generator/UPS capacity, HVAC after-hours cost, security, dock doors"],
+        ["Check LL Financial Health","Confirm owner is not in loan default or special servicing; pull CMBS data; avoid distressed LL"],
+        ["Zoning Confirmation","Confirm proposed use is permitted as-of-right; identify if variance or CUP needed (adds 2–6 months)"],
+        ["Preferred Site Selection","Internal review meeting; select top 1–2 for LOI; keep #2 alive as leverage"],
+        ["Engage Legal","Outside RE counsel retained now; brief on deal structure and timeline"],
+      ]},
+      { num:"03", title:"LOI & Lease Negotiation", weeks:"Weeks 6–14", color:"#7c3aed", items:[
+        ["LOI Drafted","Confirm all key business terms: base rent, escalations, free rent, TI, term, commencement, renewal options, termination right, ROFO/ROFR, permitted use, parking"],
+        ["Submit Competing LOIs","Submit to top 2 simultaneously — creates leverage and pricing discipline"],
+        ["Test Fit / Preliminary Space Plan","Architect confirms headcount fits floor plate with your program; ~2 weeks; critical before lease execution"],
+        ["Lease Redline Rounds 1–3","Key issues: assignment/sublease rights, CAM audit rights and cap (3–5%), SNDA, default cure periods, personal property exclusion from LL lien"],
+        ["SNDA Negotiation","Non-disturbance agreement from LL's lender — require before execution on any long-term lease"],
+        ["Internal Lease Abstract","Legal produces 2-page deal summary; routed for exec approval"],
+        ["Lease Execution","Authorized officer executes; confirm notarization if required"],
+        ["Commission Agreement Executed","Broker commission letter countersigned by LL"],
+      ]},
+      { num:"04", title:"Pre-Construction Planning", weeks:"Weeks 10–18", color:"#b45309", items:[
+        ["Hire Architect of Record","RFP to 2–3 firms; award on experience, fee, schedule; execute AIA B101 contract"],
+        ["Programming Session","AOR meets with BU lead, IT, HR, facilities; confirms adjacencies, headcount, room types, storage"],
+        ["Schematic Design through CDs","SD block plan, DD full layout, CDs including MEP/fire suppression/structural; ~8–10 weeks total"],
+        ["Landlord Plan Review & Approval","Submit CDs to LL before permit; most leases give LL 10–15 business days — do not permit without this"],
+        ["ISP Order — Day of Lease Execution","Enterprise fiber circuits take 60–120 days. Order immediately. Do not wait for permits."],
+        ["Redundant Circuit Order","Order backup circuit (different carrier) simultaneously with primary"],
+        ["MDF/IDF Room Design","Confirm location with AOR; dedicated HVAC, 20A circuits, proper grounding, ladder rack"],
+        ["Structured Cabling & Low-Voltage RFP","Cat6A standard; specify drops per workstation (2 data + 1 voice minimum)"],
+        ["AV Design","AOR/AV integrator designs conference rooms, huddle rooms, lobby; order AV equipment early (8–14 wk lead times)"],
+        ["Permit Submission","AHJ timeline: suburban 2–4 wks; mid-size city 4–8 wks; major metro 8–16 wks — build into schedule"],
+        ["GC RFP & Award","Issue to 3 GCs with 5-day site walk; level bids line by line; AIA A101 contract; include liquidated damages"],
+        ["Furniture Award","Lead times 10–16 weeks on major manufacturers — order at permit submittal, not at CO"],
+        ["TI Draw Process Confirmed","Understand LL draw process: frequency, documentation (AIA G702/703 + lien waivers), LL funding timeline"],
+      ]},
+      { num:"05", title:"Construction", weeks:"Weeks 18–34", color:"#059669", items:[
+        ["Pre-Construction Meeting","GC, AOR, PM, IT, AV, security on-site; confirm schedule, submittal log, RFI process, safety plan"],
+        ["MEP Rough-In Inspection","AHJ inspects before drywall — do not allow drywall until rough-in passes"],
+        ["Low-Voltage Rough-In Walk","IT rep walks before drywall to confirm cabling coverage at every workstation"],
+        ["Weekly OAC Meetings","Owner, Architect, Contractor; minutes same day; track open items, RFIs, submittals, schedule"],
+        ["RFI Log — Escalate at 7 Days","Any RFI open >7 days gets escalated; unanswered RFIs are the #1 cause of schedule slippage"],
+        ["HVAC Balancing","Required for CO in most jurisdictions; schedule 1–2 weeks before target CO"],
+        ["Fire Alarm Acceptance Test Scheduled","Schedule 2–3 weeks before target CO date — any device failure means a re-test and another wait"],
+        ["Cabling Termination & Certification","Low-voltage sub terminates and certifies all runs; produce certification report for IT; 1–2 weeks"],
+        ["AV & Security Installation","AV integrator and security vendor; requires network to be live; allow 1–2 weeks for commissioning"],
+        ["Punch List Walk #1","VP Facilities + AOR walk 2 weeks before target completion; GC has 1 week to close"],
+        ["Substantial Completion / Punch List #2","AOR certifies SC; LL walks; issue AIA G704"],
+        ["Monthly TI Draw Submissions","AIA G702/703 with conditional lien waivers; track LL funding against lease-required timeframe"],
+      ]},
+      { num:"06", title:"Certificate of Occupancy", weeks:"Weeks 32–35", color:"#dc2626", items:[
+        ["All Life Safety Systems Operational","Fire alarm fully installed and tested; sprinkler pressure-tested; emergency lighting operational; extinguishers mounted"],
+        ["Fire Alarm Acceptance Test","Fire marshal witnesses test of every device — schedule 2–3 weeks out; failures require re-test"],
+        ["Egress Confirmed","All exit doors operational with proper hardware; corridors clear; exit signage posted"],
+        ["Electrical Final","Panel schedules accurate; GFCI where required; no open junction boxes; arc-fault protection"],
+        ["Mechanical & Plumbing Finals","HVAC operational; exhaust fans functional; fixtures operational; backflow preventer inspected"],
+        ["Building Department Final Inspection","AHJ walks entire space against approved plans — field deviations = red tag"],
+        ["ADA Compliance Final","Accessible route, restroom compliance, door hardware, signage, parking"],
+        ["CO Issued","Original filed with lease record; if TCO, track expiration date and complete remaining items immediately"],
+      ]},
+      { num:"07", title:"Insurance", weeks:"Weeks 10–34", color:"#6b7280", items:[
+        ["Review Lease Insurance Exhibit","CGL: $1M/$2M (some LLs require $3M); property at replacement cost; umbrella $5M–$10M; workers comp statutory"],
+        ["Additional Insured Endorsement","LL and LL's lender named as additional insured — CG 20 10 or CG 20 26 form; wrong form = no keys"],
+        ["Certificate of Insurance Issued","ACORD 25 certificate naming LL, LL's lender, and LL's management company as additional insureds"],
+        ["GC Builder's Risk Confirmed","If TI > $500K, confirm either LL or GC carries builder's risk covering materials and work in place"],
+        ["Property Policy Updated","Add new location: address, SF, TI value, FF&E value to broker; update company property policy"],
+        ["Annual Renewal Calendar","Add new location to insurance renewal calendar; LL will require updated COI annually"],
+      ]},
+      { num:"08", title:"Pre-Occupancy Activation", weeks:"Weeks 32–36", color:"#0891b2", items:[
+        ["Electric & Gas Account Setup","2–3 weeks lead time; confirm rate class and demand charge structure; budget for deposit"],
+        ["Telecom/Internet Activation","Confirm ISP circuit live and handed off; IT tests throughput; VPN and firewall configured; Wi-Fi tested"],
+        ["Phone Numbers Activated","DIDs assigned and routed; auto-attendant programmed; main number updated in company directory"],
+        ["Janitorial Contract Executed","Spec frequency, key/access, supplies included vs. billed separately, green cleaning if required"],
+        ["HVAC PM Contract Executed","Quarterly PM minimum; confirm after-hours call protocol and cost"],
+        ["Emergency Action Plan","Written EAP required under OSHA 29 CFR 1910.38 — evacuation routes, assembly points, floor warden assignments"],
+        ["Evacuation Maps Posted","Required at each exit; produce from as-built drawings; laminated and framed"],
+        ["AED Placement & Registration","AED mounted, registered with local EMS, staff trained, inspection log started"],
+        ["Building Access / Key Control","Master key system documented; access cards programmed with levels by role; lobby directory updated"],
+        ["Parking Assignments","Reserved vs. unreserved confirmed; hang tags or access cards issued; validated with building manager"],
+        ["Employee Communication Package","New address, parking, badge process, IT setup, building amenities, emergency procedures — distribute 2 weeks before move"],
+        ["IRS & Vendor Address Update","Form 8822-B, state tax agencies, bank, insurance, all vendor accounts updated"],
+      ]},
+      { num:"09", title:"Move Execution", weeks:"Weeks 34–36", color:"#374151", items:[
+        ["Move Plan Finalized","Phased by department; furniture layouts distributed; color-coded box label system"],
+        ["Server Room Move Scheduled Separately","Night before or weekend before employee move; confirm network is live at new location before servers decommissioned at old"],
+        ["Electronics Chain-of-Custody","IT disconnects and labels all computers, phones, monitors; sensitive equipment documented"],
+        ["Move Executed — Weekend/After Hours","Confirm elevator reservations and freight access at both buildings"],
+        ["Day-1 IT Readiness Check","All workstations online, printers mapped, phones active, VPN functional before employees arrive"],
+        ["Day-1 Facilities Walk","VP Facilities on-site opening morning before employees arrive; walk entire space"],
+        ["Welcome Kit at Each Workstation","Building guide, Wi-Fi credentials, parking info, emergency contacts, facilities contacts"],
+      ]},
+      { num:"10", title:"Project Close-Out", weeks:"Weeks 36–42", color:"#16a34a", items:[
+        ["Final TI Draw Submitted","AIA G702/703 with unconditional lien waivers; confirm full TI reimbursement received"],
+        ["Lien Releases — All Subs","GC provides unconditional final lien waivers from all subcontractors and suppliers; file with project record"],
+        ["As-Built Drawings Received","AOR and GC produce as-builts reflecting field changes; file in lease record and facilities database"],
+        ["O&M Manuals & Warranties","GC delivers manuals for all installed systems; log all warranty start dates, durations, service contacts"],
+        ["Critical Date Calendar","Rent commencement, free rent expiration, CPI dates, option exercise windows (12–18 months before expiry), lease expiration"],
+        ["Lease Abstract Filed","In IWMS or lease management system with all key dates and option deadlines"],
+        ["Final Budget Reconciliation","Actual vs. authorized; document all change orders; file for finance/audit"],
+        ["30-Day Post-Move Survey","Collect punch items; submit to GC under warranty in writing within warranty period"],
+        ["Lessons Learned Document","1-page debrief: what went well, what didn't, timeline variances, vendor performance"],
+      ]},
+    ];
+
+    const criticalPath = [
+      ["Internet / Fiber Circuit","60–120 days","Day of lease execution"],
+      ["Redundant Circuit","60–120 days","Simultaneously with primary"],
+      ["Furniture (major manufacturers)","10–16 weeks","At permit submittal"],
+      ["AV Equipment","8–14 weeks","At permit submittal"],
+      ["GC Permit (major metro)","8–16 weeks","At CD completion"],
+      ["Fire Alarm Acceptance Test","Schedule 2–3 weeks out","At substantial completion"],
+      ["Certificate of Insurance","1–2 weeks","30 days before occupancy"],
+      ["Utility Account Setup","2–3 weeks","At substantial completion"],
+    ];
+
+    const phasesHtml = phases.map(p => `
+  <tr><td style="background:#fff;padding:20px 40px 6px;border-top:1px solid #D8DDE5;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="border-left:3px solid ${p.color};padding-left:10px;">
+        <p style="margin:0 0 2px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:${p.color};font-family:Arial,sans-serif;">Phase ${p.num} &nbsp;·&nbsp; ${p.weeks}</p>
+        <p style="margin:0;font-size:15px;font-weight:700;color:#051C2C;font-family:Arial,sans-serif;">${p.title}</p>
+      </td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="background:#fff;padding:0 40px 18px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+      ${p.items.map(([label, detail], i) => `
+      <tr style="background:${i % 2 === 0 ? "#fff" : "#F8F9FB"};">
+        <td style="padding:9px 10px;border-bottom:1px solid #EEF0F3;vertical-align:top;width:18px;">
+          <div style="width:13px;height:13px;border:1.5px solid #D8DDE5;border-radius:2px;"></div>
+        </td>
+        <td style="padding:9px 12px;border-bottom:1px solid #EEF0F3;vertical-align:top;">
+          <p style="margin:0 0 2px;font-size:13px;font-weight:600;color:#051C2C;font-family:Arial,sans-serif;">${label}</p>
+          <p style="margin:0;font-size:12px;color:#4A5568;line-height:1.6;font-family:Arial,sans-serif;">${detail}</p>
+        </td>
+      </tr>`).join("")}
+    </table>
+  </td></tr>`).join("");
 
     const checklistHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VP of Facilities Master Checklist</title></head>
 <body style="margin:0;padding:0;background:#ECEEF1;font-family:Arial,sans-serif;">
@@ -222,7 +371,7 @@ module.exports = async function handler(req, res) {
   <tr><td style="background:#051C2C;padding:4px 40px 32px;">
     <p style="margin:0 0 4px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);font-family:Arial,sans-serif;">Companion Resource</p>
     <p style="margin:0;font-size:42px;font-weight:700;color:#fff;letter-spacing:-2px;line-height:1;font-family:Arial,sans-serif;">Site to Move-In</p>
-    <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,.4);font-family:Arial,sans-serif;">10 phases · 100+ items · every workstream</p>
+    <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,.4);font-family:Arial,sans-serif;">10 phases &nbsp;·&nbsp; 100+ items &nbsp;·&nbsp; every workstream</p>
   </td></tr>
 
   <tr><td style="background:#fff;padding:32px 40px 20px;">
@@ -230,161 +379,17 @@ module.exports = async function handler(req, res) {
     <p style="margin:0;font-size:15px;line-height:1.8;color:#4A5568;font-family:Arial,sans-serif;">Here is your VP of Facilities Master Checklist — the 10-phase, 100+ item framework I distribute to every facilities team before a relocation. Use it as a live working document throughout the project, not as a reference you file away.</p>
   </td></tr>
 
-  ${[
-    { num:'01', title:'Needs Assessment & Authorization', weeks:'Weeks 1–3', color:'#2251FF', items:[
-      ['Receive Formal Space Request','Written request from BU head — headcount (current + 18-mo projection), function type, target market, hard open date'],
-      ['Headcount & Density Analysis','Confirm seats-per-person ratio (150–250 USF/person); determine hybrid vs. full-time model before sizing'],
-      ['Special Use Requirements','Identify non-standard needs: server/MDF room, training room, lab, warehouse, showroom, loading dock, generator'],
-      ['Parking Requirement','Confirm ratio needed; check if fleet vehicles require covered or secured parking'],
-      ['Hard Date vs. Target Date','Establish lease commencement deadline and move-in deadline separately; work backward to confirm feasibility'],
-      ['Preliminary Budget','TI allowance target, base rent ceiling ($/RSF), capex budget for FF&E/IT — get CFO buy-in before broker engagement'],
-      ['Lease vs. Own Analysis','Quick NPV comparison if ownership is on the table; typically lease wins for non-HQ locations'],
-      ['Executive Authorization','Signed approval memo from CFO/COO; defines budget authority and approval thresholds'],
-      ['Engage Tenant Rep Broker','Execute broker representation agreement; confirm exclusivity, market, and commission structure'],
-    ]},
-    { num:'02', title:'Site Search & Selection', weeks:'Weeks 3–8', color:'#1a8a5e', items:[
-      ['Market Survey Issued','Broker pulls all availabilities matching program; target 8–15 options first pass'],
-      ['Preliminary Tour','Tour top 6–8 with internal stakeholder (ops lead, IT rep); score each'],
-      ['Scoring Matrix','Rate each option: location, building class, floor plate efficiency, parking, HVAC, TI allowance, rent, LL strength'],
-      ['Confirm Building Infrastructure','For each shortlist: fiber in building, generator/UPS capacity, HVAC after-hours cost, security, dock doors'],
-      ['Check LL Financial Health','Confirm owner is not in loan default or special servicing; pull CMBS data; avoid distressed LL'],
-      ['Zoning Confirmation','Confirm proposed use is permitted as-of-right; identify if variance or CUP needed (adds 2–6 months)'],
-      ['Preferred Site Selection','Internal review meeting; select top 1–2 for LOI; keep #2 alive as leverage'],
-      ['Engage Legal','Outside RE counsel retained now; brief on deal structure and timeline'],
-    ]},
-    { num:'03', title:'LOI & Lease Negotiation', weeks:'Weeks 6–14', color:'#7c3aed', items:[
-      ['LOI Drafted','Confirm all key business terms: base rent, escalations, free rent, TI, term, commencement, renewal options, termination right, ROFO/ROFR, permitted use, parking'],
-      ['Submit Competing LOIs','Submit to top 2 simultaneously — creates leverage and pricing discipline'],
-      ['Test Fit / Preliminary Space Plan','Architect confirms headcount fits floor plate with your program; ~2 weeks; critical before lease execution'],
-      ['Lease Redline Rounds 1–3','Key issues: assignment/sublease rights, casualty/condemnation, CAM audit rights, CAM cap (3–5%), SNDA, default cure periods, personal property exclusion from LL lien'],
-      ['SNDA Negotiation','Non-disturbance agreement from LL\'s lender — require before execution on any long-term lease'],
-      ['Internal Lease Abstract','Legal produces 2-page deal summary; routed for exec approval'],
-      ['Lease Execution','Authorized officer executes; confirm notarization if required'],
-      ['Commission Agreement Executed','Broker commission letter countersigned by LL'],
-    ]},
-    { num:'04', title:'Pre-Construction Planning', weeks:'Weeks 10–18', color:'#b45309', items:[
-      ['Hire Architect of Record','RFP to 2–3 firms; award on experience, fee, schedule; execute AIA B101 contract'],
-      ['Programming Session','AOR meets with BU lead, IT, HR, facilities; confirms adjacencies, headcount, room types, storage'],
-      ['Schematic Design → CDs','SD block plan, DD full layout, CDs including MEP/fire suppression/structural; ~8–10 weeks total'],
-      ['Landlord Plan Review & Approval','Submit CDs to LL before permit; most leases give LL 10–15 business days — do not permit without this'],
-      ['ISP Order — Day of Lease Execution','Enterprise fiber circuits take 60–120 days. Order immediately. Do not wait for permits.'],
-      ['Redundant Circuit Order','Order backup circuit (different carrier) simultaneously with primary'],
-      ['MDF/IDF Room Design','Confirm location with AOR; dedicated HVAC, 20A circuits, proper grounding, ladder rack'],
-      ['Structured Cabling & Low-Voltage RFP','Cat6A standard; specify drops per workstation (2 data + 1 voice minimum)'],
-      ['AV Design','AOR/AV integrator designs conference rooms, huddle rooms, lobby; order AV equipment early (8–14 wk lead times)'],
-      ['Permit Submission','AHJ timeline: suburban 2–4 wks; mid-size city 4–8 wks; major metro 8–16 wks — build into schedule'],
-      ['GC RFP & Award','Issue to 3 GCs with 5-day site walk; level bids line by line; AIA A101 contract; include liquidated damages'],
-      ['Furniture Award','Lead times 10–16 weeks on major manufacturers — order at permit submittal, not at CO'],
-      ['TI Draw Process Confirmed','Understand LL draw process: frequency, documentation (AIA G702/703 + lien waivers), LL funding timeline'],
-    ]},
-    { num:'05', title:'Construction', weeks:'Weeks 18–34', color:'#059669', items:[
-      ['Pre-Construction Meeting','GC, AOR, PM, IT, AV, security on-site; confirm schedule, submittal log, RFI process, safety plan'],
-      ['MEP Rough-In Inspection','AHJ inspects before drywall — do not allow drywall until rough-in passes'],
-      ['Low-Voltage Rough-In Walk','IT rep walks before drywall to confirm cabling coverage at every workstation'],
-      ['Weekly OAC Meetings','Owner, Architect, Contractor; minutes same day; track open items, RFIs, submittals, schedule'],
-      ['RFI Log — Escalate at 7 Days','Any RFI open >7 days gets escalated; unanswered RFIs are the #1 cause of schedule slippage'],
-      ['HVAC Balancing','Required for CO in most jurisdictions; schedule 1–2 weeks before target CO'],
-      ['Fire Alarm Acceptance Test Scheduled','Schedule 2–3 weeks before target CO date — any device failure means a re-test and another wait'],
-      ['Cabling Termination & Certification','Low-voltage sub terminates and certifies all runs; produce certification report for IT; 1–2 weeks'],
-      ['AV & Security Installation','AV integrator and security vendor; requires network to be live; allow 1–2 weeks for commissioning'],
-      ['Punch List Walk #1','VP Facilities + AOR walk 2 weeks before target completion; GC has 1 week to close'],
-      ['Substantial Completion / Punch List #2','AOR certifies SC; LL walks; issue AIA G704'],
-      ['Monthly TI Draw Submissions','AIA G702/703 with conditional lien waivers; track LL funding against lease-required timeframe'],
-    ]},
-    { num:'06', title:'Certificate of Occupancy', weeks:'Weeks 32–35', color:'#dc2626', items:[
-      ['All Life Safety Systems Operational','Fire alarm fully installed and tested; sprinkler pressure-tested; emergency lighting operational; extinguishers mounted'],
-      ['Fire Alarm Acceptance Test','Fire marshal witnesses test of every device — schedule 2–3 weeks out; failures require re-test'],
-      ['Egress Confirmed','All exit doors operational with proper hardware; corridors clear; exit signage posted'],
-      ['Electrical Final','Panel schedules accurate; GFCI where required; no open junction boxes; arc-fault protection'],
-      ['Mechanical & Plumbing Finals','HVAC operational; exhaust fans functional; fixtures operational; backflow preventer inspected'],
-      ['Building Department Final Inspection','AHJ walks entire space against approved plans — field deviations = red tag'],
-      ['ADA Compliance Final','Accessible route, restroom compliance, door hardware, signage, parking'],
-      ['CO Issued','Original filed with lease record; if TCO, track expiration date and complete remaining items immediately'],
-    ]},
-    { num:'07', title:'Insurance', weeks:'Weeks 10–34', color:'#6b7280', items:[
-      ['Review Lease Insurance Exhibit','CGL: $1M/$2M (some LLs require $3M); property at replacement cost; umbrella $5M–$10M; workers comp statutory'],
-      ['Additional Insured Endorsement','LL and LL\'s lender named as additional insured — CG 20 10 or CG 20 26 form; wrong form = no keys'],
-      ['Certificate of Insurance Issued','ACORD 25 certificate naming LL, LL\'s lender, and LL\'s management company as additional insureds'],
-      ['GC Builder\'s Risk Confirmed','If TI > $500K, confirm either LL or GC carries builder\'s risk covering materials and work in place'],
-      ['Property Policy Updated','Add new location: address, SF, TI value, FF&E value to broker; update company property policy'],
-      ['Annual Renewal Calendar','Add new location to insurance renewal calendar; LL will require updated COI annually'],
-    ]},
-    { num:'08', title:'Pre-Occupancy Activation', weeks:'Weeks 32–36', color:'#0891b2', items:[
-      ['Electric & Gas Account Setup','2–3 weeks lead time; confirm rate class and demand charge structure; budget for deposit'],
-      ['Telecom/Internet Activation','Confirm ISP circuit live and handed off; IT tests throughput; VPN and firewall configured; Wi-Fi tested'],
-      ['Phone Numbers Activated','DIDs assigned and routed; auto-attendant programmed; main number updated in company directory'],
-      ['Janitorial Contract Executed','Spec frequency, key/access, supplies included vs. billed separately, green cleaning if required'],
-      ['HVAC PM Contract Executed','Quarterly PM minimum; confirm after-hours call protocol and cost'],
-      ['Emergency Action Plan','Written EAP required under OSHA 29 CFR 1910.38 — evacuation routes, assembly points, floor warden assignments'],
-      ['Evacuation Maps Posted','Required at each exit; produce from as-built drawings; laminated and framed'],
-      ['AED Placement & Registration','AED mounted, registered with local EMS, staff trained, inspection log started'],
-      ['Building Access / Key Control','Master key system documented; access cards programmed with levels by role; lobby directory updated'],
-      ['Parking Assignments','Reserved vs. unreserved confirmed; hang tags or access cards issued; validated with building manager'],
-      ['Employee Communication Package','New address, parking, badge process, IT setup, building amenities, emergency procedures — distribute 2 weeks before move'],
-      ['IRS & Vendor Address Update','Form 8822-B, state tax agencies, bank, insurance, all vendor accounts updated'],
-    ]},
-    { num:'09', title:'Move Execution', weeks:'Weeks 34–36', color:'#374151', items:[
-      ['Move Plan Finalized','Phased by department; furniture layouts distributed; color-coded box label system'],
-      ['Server Room Move Scheduled Separately','Night before or weekend before employee move; confirm network is live at new location before servers decommissioned at old'],
-      ['Electronics Chain-of-Custody','IT disconnects and labels all computers, phones, monitors; sensitive equipment documented'],
-      ['Move Executed — Weekend/After Hours','Confirm elevator reservations and freight access at both buildings'],
-      ['Day-1 IT Readiness Check','All workstations online, printers mapped, phones active, VPN functional before employees arrive'],
-      ['Day-1 Facilities Walk','VP Facilities on-site opening morning before employees arrive; walk entire space'],
-      ['Welcome Kit at Each Workstation','Building guide, Wi-Fi credentials, parking info, emergency contacts, facilities contacts'],
-    ]},
-    { num:'10', title:'Project Close-Out', weeks:'Weeks 36–42', color:'#16a34a', items:[
-      ['Final TI Draw Submitted','AIA G702/703 with unconditional lien waivers; confirm full TI reimbursement received'],
-      ['Lien Releases — All Subs','GC provides unconditional final lien waivers from all subcontractors and suppliers; file with project record'],
-      ['As-Built Drawings Received','AOR and GC produce as-builts reflecting field changes; file in lease record and facilities database'],
-      ['O&M Manuals & Warranties','GC delivers manuals for all installed systems; log all warranty start dates, durations, service contacts'],
-      ['Critical Date Calendar','Rent commencement, free rent expiration, CPI dates, option exercise windows (12–18 months before expiry), lease expiration'],
-      ['Lease Abstract Filed','In IWMS or lease management system with all key dates and option deadlines'],
-      ['Final Budget Reconciliation','Actual vs. authorized; document all change orders; file for finance/audit'],
-      ['30-Day Post-Move Survey','Collect punch items; submit to GC under warranty in writing within warranty period'],
-      ['Lessons Learned Document','1-page debrief: what went well, what didn\'t, timeline variances, vendor performance'],
-    ]},
-  ].map(phase => `
-  <tr><td style="background:#fff;padding:24px 40px 8px;border-top:1px solid #D8DDE5;">
-    <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="border-left:3px solid ${phase.color};padding-left:12px;">
-        <p style="margin:0 0 2px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:${phase.color};font-family:Arial,sans-serif;">Phase ${phase.num} &nbsp;·&nbsp; ${phase.weeks}</p>
-        <p style="margin:0;font-size:16px;font-weight:700;color:#051C2C;font-family:Arial,sans-serif;">${phase.title}</p>
-      </td>
-    </tr></table>
-  </td></tr>
-  <tr><td style="background:#fff;padding:0 40px 20px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-      ${phase.items.map(([label, detail], i) => `
-      <tr style="background:${i % 2 === 0 ? '#fff' : '#F8F9FB'};">
-        <td style="padding:10px 12px;border-bottom:1px solid #EEF0F3;vertical-align:top;width:20px;">
-          <div style="width:14px;height:14px;border:1.5px solid #D8DDE5;border-radius:2px;"></div>
-        </td>
-        <td style="padding:10px 12px;border-bottom:1px solid #EEF0F3;vertical-align:top;">
-          <p style="margin:0 0 3px;font-size:13px;font-weight:600;color:#051C2C;font-family:Arial,sans-serif;">${label}</p>
-          <p style="margin:0;font-size:12px;color:#4A5568;line-height:1.6;font-family:Arial,sans-serif;">${detail}</p>
-        </td>
-      </tr>`).join('')}
-    </table>
-  </td></tr>`).join('')}
+  ${phasesHtml}
 
   <tr><td style="background:#051C2C;padding:24px 40px;">
     <p style="margin:0 0 4px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;font-family:Arial,sans-serif;">Critical Path — Longest Lead Items</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
-      ${[
-        ['Internet / Fiber Circuit','60–120 days','Day of lease execution'],
-        ['Redundant Circuit','60–120 days','Simultaneously with primary'],
-        ['Furniture (major manufacturers)','10–16 weeks','At permit submittal'],
-        ['AV Equipment','8–14 weeks','At permit submittal'],
-        ['GC Permit (major metro)','8–16 weeks','At CD completion'],
-        ['Fire Alarm Acceptance Test','Schedule 2–3 weeks out','At substantial completion'],
-        ['Certificate of Insurance','1–2 weeks','30 days before occupancy'],
-        ['Utility Account Setup','2–3 weeks','At substantial completion'],
-      ].map(([item, lead, when], i) => `
-      <tr style="background:${i % 2 === 0 ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.02)'};">
+      ${criticalPath.map(([item, lead, when], i) => `
+      <tr style="background:${i % 2 === 0 ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)"};">
         <td style="padding:8px 10px;font-size:12px;color:#fff;font-family:Arial,sans-serif;">${item}</td>
         <td style="padding:8px 10px;font-size:11px;color:#C9A84C;font-family:Arial,sans-serif;text-align:center;white-space:nowrap;">${lead}</td>
         <td style="padding:8px 10px;font-size:11px;color:rgba(255,255,255,.45);font-family:Arial,sans-serif;text-align:right;white-space:nowrap;">${when}</td>
-      </tr>`).join('')}
+      </tr>`).join("")}
     </table>
   </td></tr>
 
@@ -410,32 +415,44 @@ module.exports = async function handler(req, res) {
 
     const errors2 = [];
     try {
-      const r = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.RESEND_API_KEY}` },
+      const r = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${process.env.RESEND_API_KEY}` },
         body: JSON.stringify({
-          from: 'Chase Bourdelaise <hi@chasebourdelaise.com>',
-          reply_to: 'chase.bourdelaise@transwestern.com',
+          from: "Chase Bourdelaise <hi@chasebourdelaise.com>",
+          reply_to: "chase.bourdelaise@transwestern.com",
           to: [to],
-          bcc: ['chase.bourdelaise@transwestern.com'],
-          subject: 'Your VP of Facilities Master Checklist — Chase Bourdelaise',
+          bcc: ["chase.bourdelaise@transwestern.com"],
+          subject: "Your VP of Facilities Master Checklist — Chase Bourdelaise",
           html: checklistHtml,
         }),
       });
-      if (!r.ok) { const t = await r.text(); console.error('Resend checklist error:', r.status, t); errors2.push(`Resend: ${r.status}`); }
-    } catch (err) { console.error('Resend checklist exception:', err); errors2.push('Resend: network error'); }
+      if (!r.ok) { const t = await r.text(); console.error("Resend checklist error:", r.status, t); errors2.push(`Resend: ${r.status}`); }
+    } catch (err) { console.error("Resend checklist exception:", err); errors2.push("Resend: network error"); }
 
     try {
       const b = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BEEHIIV_API_KEY}` },
-        body: JSON.stringify({ email: to, reactivate_existing: false, send_welcome_email: true, utm_source: 'facilities-move-checklist', utm_medium: 'website', custom_fields: [{ name: 'First Name', value: firstName }, { name: 'Company', value: company }] }),
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${BEEHIIV_API_KEY}` },
+        body: JSON.stringify({
+          email: to,
+          reactivate_existing: false,
+          send_welcome_email: true,
+          utm_source: "facilities-move-checklist",
+          utm_medium: "website",
+          custom_fields: [
+            { name: "First Name", value: firstName },
+            { name: "Company",    value: co },
+          ],
+        }),
       });
-      if (!b.ok) { const t = await b.text(); console.error('Beehiiv checklist error:', b.status, t); errors2.push(`Beehiiv: ${b.status}`); }
-    } catch (err) { console.error('Beehiiv checklist exception:', err); errors2.push('Beehiiv: network error'); }
+      if (!b.ok) { const t = await b.text(); console.error("Beehiiv checklist error:", b.status, t); errors2.push(`Beehiiv: ${b.status}`); }
+    } catch (err) { console.error("Beehiiv checklist exception:", err); errors2.push("Beehiiv: network error"); }
 
-    if (errors2.some(e => e.startsWith('Resend'))) return res.status(500).json({ error: 'Failed to send checklist email.', details: errors2 });
-    return res.status(200).json({ success: true, message: 'Checklist sent.' });
+    if (errors2.some(e => e.startsWith("Resend"))) {
+      return res.status(500).json({ error: "Failed to send checklist email.", details: errors2 });
+    }
+    return res.status(200).json({ success: true, message: "Checklist sent." });
   }
   // ── End facilities checklist branch ───────────────────────────────────────
 
@@ -460,7 +477,7 @@ module.exports = async function handler(req, res) {
   const lo = rsf > 0 ? Math.round(rsf * 0.92 / 100) * 100 : 0;
   const hi = rsf > 0 ? Math.round(rsf * 1.08 / 100) * 100 : 0;
 
-  // ── Contextual strategic questions (program-aware) ──────────────────────────
+  // ── Contextual strategic questions (program-aware) ────────────────────────
   const stratQuestions = [];
 
   if (Number(daysInOffice) <= 2) {
@@ -488,14 +505,12 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  // Office type — satellite vs HQ has substantial programmatic implications
   if (officeType === "satellite") {
     stratQuestions.push(`You have identified this as a satellite, branch, or regional office — not a primary HQ. The program reflects that distinction with reduced amenity investment and no town hall capability. The strategic question: how is this satellite expected to relate to your HQ? Is it a destination for client meetings, a pure operations hub, or a flexible touchdown space for a regional sales team? Each case implies a different program — and different lease terms. Operational satellites benefit from shorter lease terms (5-7 years) and aggressive expansion/contraction rights, since regional needs change faster than corporate ones.`);
   } else if (officeType === "hq" && Number(hcYr3) >= 200) {
     stratQuestions.push(`As your primary HQ, this office is a brand statement, a recruiting tool, and the cultural anchor for your distributed workforce. At your scale (${hcYr3}+ people Year 3), the question isn't whether to invest in visitor experience and amenity — it's whether you're investing in the right things. Modern HQs are increasingly judged on the quality of their public-facing space (lobby, client-facing conference floor) and their wellness program (gym, mothers room, quiet rooms), not the size of executive offices. Where will your investment dollars create the most leverage with employees and clients?`);
   }
 
-  // Industry-specific strategic considerations
   const indLower = (industryLabel || "").toLowerCase();
   if (indLower.includes("telecom")) {
     stratQuestions.push(`Telecom HQs blend three distinct work types under one roof — corporate, engineering, and operations. Each has a different programmatic logic: corporate floors lean toward private offices and traditional meeting rooms; engineering wants open neighborhoods with heavy phone-booth density; operations needs high-density bench seating with adjacent training and break space. Has your floor stack been planned to keep these populations together where they need to be (engineering + product) and separated where they need to be (NOC + corporate)? The vertical stacking decision drives both employee experience and floor plate efficiency.`);
@@ -510,7 +525,7 @@ module.exports = async function handler(req, res) {
 
   stratQuestions.push(`At what headcount threshold would you need to expand? At what headcount would you start subleasing? Know these numbers before you sign. They should be embedded in the lease as option triggers, not discovered in year three when you're locked in.`);
 
-  // ── Rooms table ─────────────────────────────────────────────────────────────
+  // ── Rooms table ───────────────────────────────────────────────────────────
   let roomsHTML = `<p style="font-size:13px;color:#8A9BB0;margin:0;font-family:Arial,sans-serif;">No meeting rooms specified.</p>`;
   if (rooms && rooms.length > 0) {
     const rows = rooms.map((r, i) => `
@@ -534,7 +549,7 @@ module.exports = async function handler(req, res) {
       </table>`;
   }
 
-  // ── Amenities ────────────────────────────────────────────────────────────────
+  // ── Amenities ─────────────────────────────────────────────────────────────
   let amenHTML = "";
   if (amenities && amenities.length > 0) {
     amenHTML = `
@@ -550,7 +565,7 @@ module.exports = async function handler(req, res) {
       ${amenNotes ? `<p style="margin:12px 0 0;font-size:13px;color:#4A5568;font-family:Arial,sans-serif;"><strong style="color:#051C2C;">Additional notes:</strong> ${amenNotes}</p>` : ""}`;
   }
 
-  // ── Contextual strategic questions HTML ──────────────────────────────────────
+  // ── Strategic questions HTML ──────────────────────────────────────────────
   const stratQuestionsHTML = stratQuestions.map((q, i) => `
     <tr>
       <td style="padding:14px 0;border-bottom:1px solid #D8DDE5;vertical-align:top;">
@@ -563,7 +578,7 @@ module.exports = async function handler(req, res) {
       </td>
     </tr>`).join("");
 
-  // ── Discovery questions HTML ─────────────────────────────────────────────────
+  // ── Discovery questions HTML ──────────────────────────────────────────────
   const discoveryHTML = DISCOVERY.map(cat => `
     <tr>
       <td style="padding:18px 0 6px;">
@@ -589,26 +604,26 @@ module.exports = async function handler(req, res) {
     </tr>`).join("")}
   `).join("");
 
-  // ── Team metrics rows ────────────────────────────────────────────────────────
+  // ── Team metrics rows ─────────────────────────────────────────────────────
   const teamRows = [
-    ["People Today",          hcNow],
-    ["Year 3 Headcount",      hcYr3],
-    ["Year 5 Headcount",      hcYr5],
-    ["Days In-Office / Week", daysInOffice + " days"],
-    ["Shared Seating",        sharedPct + "% of staff"],
-    ["Total Desks (Yr 3)",    fmt(totalDesks)],
-    ["Desk : Person Ratio",   deskRatio + " : 1"],
-    ["Private Offices",       fmt(numOffices)],
-    ["Open Workstations",     fmt(numWS)],
-    ["Layout Type",           layoutLabel],
-    ["SF Per Desk",           layoutSF + " SF"],
+    ["People Today",           hcNow],
+    ["Year 3 Headcount",       hcYr3],
+    ["Year 5 Headcount",       hcYr5],
+    ["Days In-Office / Week",  daysInOffice + " days"],
+    ["Shared Seating",         sharedPct + "% of staff"],
+    ["Total Desks (Yr 3)",     fmt(totalDesks)],
+    ["Desk : Person Ratio",    deskRatio + " : 1"],
+    ["Private Offices",        fmt(numOffices)],
+    ["Open Workstations",      fmt(numWS)],
+    ["Layout Type",            layoutLabel],
+    ["SF Per Desk",            layoutSF + " SF"],
   ].map(([label, val], i) => `
     <tr style="background:${i % 2 === 0 ? "#F8F9FB" : "#fff"};">
       <td style="padding:9px 12px;font-size:13px;color:#4A5568;border-bottom:1px solid #D8DDE5;font-family:Arial,sans-serif;">${label}</td>
       <td style="padding:9px 12px;font-size:13px;color:#051C2C;font-weight:600;text-align:right;border-bottom:1px solid #D8DDE5;font-family:Arial,sans-serif;">${val}</td>
     </tr>`).join("");
 
-  // ── Full email ───────────────────────────────────────────────────────────────
+  // ── Full email ────────────────────────────────────────────────────────────
   const html = `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Space Assessment Report — ${company || "Workplace Strategy"}</title></head>
@@ -701,7 +716,7 @@ module.exports = async function handler(req, res) {
     <p style="margin:0;font-size:14px;color:#4A5568;line-height:1.75;font-family:Arial,sans-serif;">${questions}</p>
   </td></tr>` : ""}
 
-  <!-- Strategic Questions (program-aware, dynamic) -->
+  <!-- Strategic Questions -->
   <tr><td style="background:#F8F9FB;padding:32px 40px;border-top:3px solid #051C2C;">
     <p style="margin:0 0 5px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#2251FF;font-weight:700;font-family:Arial,sans-serif;">Strategic Planning Guide</p>
     <p style="margin:0 0 20px;font-size:16px;font-weight:700;color:#051C2C;">Questions specific to your program</p>
@@ -709,7 +724,7 @@ module.exports = async function handler(req, res) {
     <table width="100%" cellpadding="0" cellspacing="0">${stratQuestionsHTML}</table>
   </td></tr>
 
-  <!-- Discovery Questions (comprehensive) -->
+  <!-- Discovery Questions -->
   <tr><td style="background:#fff;padding:32px 40px;border-top:3px solid #C9A84C;">
     <p style="margin:0 0 5px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;font-weight:700;font-family:Arial,sans-serif;">Discovery Questions</p>
     <p style="margin:0 0 12px;font-size:16px;font-weight:700;color:#051C2C;">Complete workplace strategy intake</p>
@@ -731,7 +746,7 @@ module.exports = async function handler(req, res) {
     <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#051C2C;">Chase Bourdelaise</p>
     <p style="margin:0;font-size:13px;color:#4A5568;line-height:2;font-family:Arial,sans-serif;">
       Managing Director, Tenant Advisory &amp; Corporate Real Estate Consulting<br>
-      Transwestern <br>
+      Transwestern<br>
       <a href="tel:2025911926" style="color:#051C2C;text-decoration:none;">202-591-1926</a> &nbsp;·&nbsp; <a href="mailto:chase.bourdelaise@transwestern.com" style="color:#051C2C;text-decoration:none;">chase.bourdelaise@transwestern.com</a><br>
       <a href="https://chasebourdelaise.com" style="color:#2251FF;text-decoration:none;">chasebourdelaise.com</a> &nbsp;·&nbsp; <a href="https://linkedin.com/in/tenantadvisor" style="color:#2251FF;text-decoration:none;">LinkedIn</a>
     </p>
@@ -746,7 +761,7 @@ module.exports = async function handler(req, res) {
 </td></tr></table>
 </body></html>`;
 
-  // ── 1. Send via Resend ───────────────────────────────────────────────────────
+  // ── 1. Send via Resend ────────────────────────────────────────────────────
   try {
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -773,7 +788,7 @@ module.exports = async function handler(req, res) {
     errors.push("Resend: network error");
   }
 
-  // ── 2. Subscribe to Beehiiv ──────────────────────────────────────────────────
+  // ── 2. Subscribe to Beehiiv ───────────────────────────────────────────────
   try {
     const beehiivRes = await fetch(
       `https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`,
