@@ -23,8 +23,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--navy);-webkit-font-smoothing:antialiased;padding-top:64px;min-height:100vh;}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 64px;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);}
 .nav-name{font-family:"Cormorant Garamond",serif;font-size:18px;font-weight:600;color:var(--navy);text-decoration:none;letter-spacing:-.3px;}
 .nav-links{display:flex;gap:32px;list-style:none;align-items:center;}
@@ -42,12 +40,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .nav-mobile-menu a{padding:14px 24px;font-size:13px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--rule);}
 .nav-mobile-menu a:last-child{border-bottom:none;}
 @media(max-width:1000px){.nav-links{display:none;}.nav-hamburger{display:flex;}.nav-cta{display:none;}nav{padding:0 24px;}}
-
-/* LAYOUT */
 .wrap{max-width:1160px;margin:0 auto;padding:0 64px;}
 @media(max-width:1000px){.wrap{padding:0 24px;}}
-
-/* HERO */
 .tool-hero{background:var(--navy);padding:80px 0 72px;}
 .tool-hero .wrap{display:grid;grid-template-columns:1fr 480px;gap:80px;align-items:center;}
 .hero-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;}
@@ -59,8 +53,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .hero-bullets li::before{content:"—";color:var(--blue);font-size:10px;flex-shrink:0;}
 .hero-bullets li strong{color:rgba(255,255,255,.85);font-weight:500;}
 @media(max-width:900px){.tool-hero .wrap{grid-template-columns:1fr;gap:48px;}}
-
-/* FORM CARD */
 .form-card{background:#fff;padding:44px 40px;border:1px solid rgba(255,255,255,.1);}
 .form-eyebrow{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
 .form-card h3{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:600;color:var(--navy);margin-bottom:6px;}
@@ -77,8 +69,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .form-success .success-eyebrow{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
 .form-success h4{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:var(--navy);margin-bottom:8px;}
 .form-success p{font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;}
-
-/* WHAT'S INSIDE */
 .inside-section{padding:80px 0;background:var(--off);}
 .inside-header{margin-bottom:52px;}
 .inside-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:16px;}
@@ -90,8 +80,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .phase-card h3{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600;color:var(--navy);margin-bottom:10px;line-height:1.2;}
 .phase-card p{font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;}
 @media(max-width:700px){.phases-grid{grid-template-columns:1fr;}}
-
-/* ABOUT SECTION */
 .about-section{padding:80px 0;background:var(--bg);}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
 .about-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--light);margin-bottom:16px;}
@@ -104,8 +92,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 .about-stat-num sup{font-size:18px;color:var(--blue);vertical-align:super;}
 .about-stat-label{font-size:12px;font-weight:300;color:var(--light);}
 @media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:40px;}}
-
-/* FOOTER */
 footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,255,255,.05);}
 .footer-inner{display:flex;justify-content:space-between;align-items:center;max-width:1160px;margin:0 auto;}
 .footer-name{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;color:rgba(255,255,255,.85);}
@@ -121,7 +107,6 @@ footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,25
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTZJQLZT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-<!-- NAV -->
 <nav>
   <a href="https://www.chasebourdelaise.com" class="nav-name">Chase Bourdelaise</a>
   <ul class="nav-links">
@@ -146,7 +131,6 @@ footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,25
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- HERO -->
 <div class="tool-hero">
   <div class="wrap">
     <div>
@@ -205,7 +189,6 @@ footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,25
   </div>
 </div>
 
-<!-- WHAT'S INSIDE -->
 <section class="inside-section">
   <div class="wrap">
     <div class="inside-header">
@@ -258,7 +241,6 @@ footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,25
   </div>
 </section>
 
-<!-- ABOUT -->
 <section class="about-section">
   <div class="wrap">
     <div class="about-grid">
@@ -291,7 +273,6 @@ footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,25
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div>
@@ -314,42 +295,17 @@ footer{background:var(--navy);padding:48px 64px;border-top:1px solid rgba(255,25
 <script>
 document.getElementById('checklist-form').addEventListener('submit', async function(e) {
   e.preventDefault();
-  const btn = document.getElementById('submit-btn');
-  btn.textContent = 'Sending…';
+  var btn = document.getElementById('submit-btn');
+  btn.textContent = 'Sending\u2026';
   btn.disabled = true;
 
-  const firstName = document.getElementById('firstName').value;
-  const email = document.getElementById('email').value;
-  const company = document.getElementById('company').value;
-  const role = document.getElementById('role').value;
+  var firstName = document.getElementById('firstName').value;
+  var email    = document.getElementById('email').value;
+  var company  = document.getElementById('company').value;
+  var role     = document.getElementById('role').value;
 
   try {
-    // Subscribe to Beehiiv
-    const beehiivPubId = 'pub_ca6de65d-6a58-4680-9e8a-55ff7e90da19';
-    const beehiivApiKey = 'v1.s3a8f0b3-01c0-4c76-8aac-6ced18f58c48.jU9g9l9WOj5FHQYa3JZFWM0WKXE3EUxFLO3PLQ7VmTQ';
-
-    await fetch(`https://api.beehiiv.com/v2/publications/${beehiivPubId}/subscriptions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${beehiivApiKey}`
-      },
-      body: JSON.stringify({
-        email: email,
-        reactivate_existing: true,
-        send_welcome_email: false,
-        utm_source: 'facilities-move-checklist',
-        utm_medium: 'tool',
-        custom_fields: [
-          { name: 'first_name', value: firstName },
-          { name: 'company', value: company },
-          { name: 'role', value: role }
-        ]
-      })
-    });
-
-    // Send the checklist email via the site's report endpoint
-    await fetch('/api/send-report', {
+    var response = await fetch('/api/send-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -357,18 +313,22 @@ document.getElementById('checklist-form').addEventListener('submit', async funct
         firstName: firstName,
         company: company,
         role: role,
-        resourceType: 'facilities-move-checklist',
-        subject: 'Your VP of Facilities Master Checklist — Chase Bourdelaise'
+        resourceType: 'facilities-move-checklist'
       })
     });
 
-    // Show success
+    if (!response.ok) {
+      var body = {};
+      try { body = await response.json(); } catch(x) {}
+      throw new Error(body.error || 'Server error ' + response.status);
+    }
+
     document.getElementById('checklist-form').style.display = 'none';
     document.getElementById('form-success').style.display = 'block';
 
   } catch (err) {
     console.error(err);
-    btn.textContent = 'Send Me the Checklist →';
+    btn.textContent = 'Send Me the Checklist \u2192';
     btn.disabled = false;
     alert('Something went wrong. Please try again or email chase.bourdelaise@transwestern.com directly.');
   }
