@@ -5,7 +5,7 @@
 import { ImageResponse } from '@vercel/og';
 import React from 'react';
 
-export const config = { runtime: 'edge' };
+export const config = { runtime: 'nodejs' };
 
 const NAVY  = '#051C2C';
 const DARK2 = '#08141E';
